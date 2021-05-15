@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Floydfish&#39;s Garden</title>
+  
+  <subtitle>In the garden of sinners</subtitle>
+  <link href="https://floydfish.xyz/atom.xml" rel="self"/>
+  
+  <link href="https://floydfish.xyz/"/>
+  <updated>2021-05-15T16:32:45.531Z</updated>
+  <id>https://floydfish.xyz/</id>
+  
+  <author>
+    <name>Floyd-Fish</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://floydfish.xyz/2021/05/16/hello-world/"/>
+    <id>https://floydfish.xyz/2021/05/16/hello-world/</id>
+    <published>2021-05-15T16:32:45.531Z</published>
+    <updated>2021-05-15T16:32:45.531Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>未来规划</title>
+    <link href="https://floydfish.xyz/2021/01/06/wei-lai-gui-hua/"/>
+    <id>https://floydfish.xyz/2021/01/06/wei-lai-gui-hua/</id>
+    <published>2021-01-06T15:38:30.000Z</published>
+    <updated>2021-01-06T17:03:16.553Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;迷茫是人生的常态吗？&quot;&gt;&lt;a href=&quot;#迷茫是人生的常态吗？&quot; class=&quot;headerlink&quot; title=&quot;迷茫是人生的常态吗？&quot;&gt;&lt;/a&gt;迷茫是人生的常态吗？&lt;/h1&gt;&lt;p&gt;对此我心存疑问。不管怎么说，过去的4年我肯定是迷茫的(2016-2020)。  &lt;/p&gt;
+&lt;p&gt;接触到了太多未知的技术，反而一时失去了方向，随后更失去了学习的动力——&lt;br&gt;也跟我低下的自制力有关，总是管不住自己摸鱼的念头)  &lt;/p&gt;
+&lt;p&gt;总之是想借新时代的开端，梳理一下自己未来要学习的方向吧~&lt;br&gt;为此我做了个&lt;code&gt;5年计划&lt;/code&gt;,象征着我接下来5年要前进的方向！  &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Life" scheme="https://floydfish.xyz/categories/Life/"/>
+    
+    
+    <category term="Life" scheme="https://floydfish.xyz/tags/Life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>生活随笔-2020</title>
+    <link href="https://floydfish.xyz/2020/12/11/sheng-huo-sui-bi/"/>
+    <id>https://floydfish.xyz/2020/12/11/sheng-huo-sui-bi/</id>
+    <published>2020-12-11T12:21:30.000Z</published>
+    <updated>2020-12-11T19:04:24.409Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;赶在2020过去之前,记录一下这一年的动荡——&lt;/p&gt;
+&lt;h1 id=&quot;1月-6月—Blocking&quot;&gt;&lt;a href=&quot;#1月-6月—Blocking&quot; class=&quot;headerlink&quot; title=&quot;1月-6月—Blocking&quot;&gt;&lt;/a&gt;1月-6月—Blocking&lt;/h1&gt;&lt;p&gt;因为新冠疫情,家住湖北的我在1月至4月差不多都在家里蹲。5月时情况好转,疫情得到了有效的控制,我又能重获自由了——  &lt;/p&gt;
+&lt;p&gt;虽然在家上网课很枯燥,但是摸鱼还是很愉快的~ (鸭类鸭类)  &lt;/p&gt;
+&lt;p&gt;在封锁稍微放宽的时候,我出门拍照——记录了我家楼下这条平常喧闹的街道安静的样子。  &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Life" scheme="https://floydfish.xyz/categories/Life/"/>
+    
+    
+    <category term="Life" scheme="https://floydfish.xyz/tags/Life/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>STM32的Bootloader-跟各种Link分手吧~</title>
+    <link href="https://floydfish.xyz/2020/07/08/stm32-de-bootloader-gen-ge-chong-link-fen-shou-ba/"/>
+    <id>https://floydfish.xyz/2020/07/08/stm32-de-bootloader-gen-ge-chong-link-fen-shou-ba/</id>
+    <published>2020-07-08T13:52:26.000Z</published>
+    <updated>2020-07-08T14:14:10.698Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;声明&quot;&gt;&lt;a href=&quot;#声明&quot; class=&quot;headerlink&quot; title=&quot;声明&quot;&gt;&lt;/a&gt;声明&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;本文首发于我参与运营的网站&lt;a href=&quot;https://www.emoe.xyz/archives/1308&quot;&gt;E萌工作室&lt;/a&gt;&lt;br&gt;作者也是我，所以不存在什么侵权问题~   &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;正文&quot;&gt;&lt;a href=&quot;#正文&quot; class=&quot;headerlink&quot; title=&quot;正文&quot;&gt;&lt;/a&gt;正文&lt;/h1&gt;&lt;p&gt;我们给STM32单片机下载程序通常会使用ST-LINK或者J-LINK等使用SWD接口的下载/调试器,可是我们现在要跟他们说再见辣——  &lt;/p&gt;
+&lt;h2 id=&quot;事前准备&quot;&gt;&lt;a href=&quot;#事前准备&quot; class=&quot;headerlink&quot; title=&quot;事前准备&quot;&gt;&lt;/a&gt;事前准备&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.st.com/zh/development-tools/stm32cubeprog.html&quot;&gt;下载STM32CubeProgrammer&lt;/a&gt;  &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf&quot;&gt;下载这个PDF&lt;/a&gt;  &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.st.com/zh/development-tools/stsw-stm32080.html&quot;&gt;下载DFUSE软件,因为它包含了DFU驱动&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;Bootloader&quot;&gt;&lt;a href=&quot;#Bootloader&quot; class=&quot;headerlink&quot; title=&quot;Bootloader&quot;&gt;&lt;/a&gt;Bootloader&lt;/h1&gt;&lt;p&gt;提到bootloader,你可能会想到计算机中的引导程序,它是计算机开机完成自检后装载操作系统或者其他系统软件的计算机程序。&lt;br&gt;引导在英文中为&lt;code&gt;Boot&lt;/code&gt;,是&lt;code&gt;Bootstrap&lt;/code&gt;的缩写,源自于短语&lt;code&gt;Pull oneself up by one&#39;s Bootstraps.&lt;/code&gt;,即&lt;code&gt;靠自己振作起来&lt;/code&gt;。如果大部分软件需要通过其他已经运行的程序加载到计算机中,则必须存在一个将初始软件加载到计算机中的机制——也就是 &lt;strong&gt;Bootloader&lt;/strong&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/categories/electronics/STM32/"/>
+    
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电子瑞士军刀</title>
+    <link href="https://floydfish.xyz/2020/06/30/dian-zi-rui-shi-jun-dao/"/>
+    <id>https://floydfish.xyz/2020/06/30/dian-zi-rui-shi-jun-dao/</id>
+    <published>2020-06-30T08:50:00.000Z</published>
+    <updated>2020-07-08T15:12:22.983Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;可曾听过”电子瑞士军刀…-”&quot;&gt;&lt;a href=&quot;#可曾听过”电子瑞士军刀…-”&quot; class=&quot;headerlink&quot; title=&quot;可曾听过”电子瑞士军刀…?”&quot;&gt;&lt;/a&gt;可曾听过”电子瑞士军刀…?”&lt;/h1&gt;&lt;p&gt;我想大概是没有吧。&lt;/p&gt;
+&lt;p&gt;提到瑞士军刀，我们脑海里可能想到的是什么呢？&lt;code&gt;功能强大、齐全，野外生存必备用品？&lt;/code&gt;&lt;br&gt;也许有点夸张,可你看贝爷拿着一把小刀也能在野外生存,何况瑞士军刀上可不止有小刀片)  &lt;/p&gt;
+&lt;p&gt;话说回来,电子瑞士军刀是要做什么呢？&lt;br&gt;其实这个理念很简单解读,可以理解为一个功能全面且强大的手持式仪器,具有多种检测环境、辅助的功能,因为它是基于电子元器件和MEMS传感器等实现的,所以我们叫它&lt;code&gt;电子瑞士军刀&lt;/code&gt;。&lt;/p&gt;
+&lt;h1 id=&quot;脑洞大开&quot;&gt;&lt;a href=&quot;#脑洞大开&quot; class=&quot;headerlink&quot; title=&quot;脑洞大开&quot;&gt;&lt;/a&gt;脑洞大开&lt;/h1&gt;&lt;p&gt;那么我们先来列举一下一个电子瑞士军刀应具有的功能吧。虽说可能大多数我们日常是用不到的，但是理念先行，我倒是很好奇它能做的多全面——&lt;br&gt;下面来列个表吧:  &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;可实现的功能&lt;/th&gt;
+&lt;th&gt;所用传感器/电子元件型号&lt;/th&gt;
+&lt;th&gt;接口&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;温度湿度测量&lt;/td&gt;
+&lt;td&gt;SHT30&lt;/td&gt;
+&lt;td&gt;I2C&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;气压测量(附带温度)&lt;/td&gt;
+&lt;td&gt;BMP280&lt;/td&gt;
+&lt;td&gt;I2C&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;紫外线强度测量&lt;/td&gt;
+&lt;td&gt;S12SD&lt;/td&gt;
+&lt;td&gt;Analog&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;光强测量(色温测量)&lt;/td&gt;
+&lt;td&gt;TCS34725&lt;/td&gt;
+&lt;td&gt;I2C&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;GPS定位+授时+对地航速航向&lt;/td&gt;
+&lt;td&gt;ATGM336H&lt;/td&gt;
+&lt;td&gt;USART&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;电子水平仪/角加速度&lt;/td&gt;
+&lt;td&gt;MPU6050&lt;/td&gt;
+&lt;td&gt;I2C&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;NFC卡包功能&lt;/td&gt;
+&lt;td&gt;未定&lt;/td&gt;
+&lt;td&gt;未定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;未定&lt;/td&gt;
+&lt;td&gt;未定&lt;/td&gt;
+&lt;td&gt;未定&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="-KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>光影记忆-1</title>
+    <link href="https://floydfish.xyz/2020/04/22/guang-ying-ji-yi-1/"/>
+    <id>https://floydfish.xyz/2020/04/22/guang-ying-ji-yi-1/</id>
+    <published>2020-04-22T13:51:30.000Z</published>
+    <updated>2020-04-22T14:21:11.049Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;光与影的故事&quot;&gt;&lt;a href=&quot;#光与影的故事&quot; class=&quot;headerlink&quot; title=&quot;光与影的故事&quot;&gt;&lt;/a&gt;光与影的故事&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://imgchr.com/i/JUMdfS&quot;&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/04/22/JUMdfS.md.png&quot; alt=&quot;JUMdfS.md.png&quot;&gt;&lt;/a&gt;&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="life" scheme="https://floydfish.xyz/categories/life/"/>
+    
+    
+    <category term="Photography" scheme="https://floydfish.xyz/tags/Photography/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>EVMeter-石剑篇</title>
+    <link href="https://floydfish.xyz/2020/03/18/evmeter-shi-jian-pian/"/>
+    <id>https://floydfish.xyz/2020/03/18/evmeter-shi-jian-pian/</id>
+    <published>2020-03-18T15:19:50.000Z</published>
+    <updated>2020-12-11T12:16:35.170Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;EVMeter-石剑篇&quot;&gt;&lt;a href=&quot;#EVMeter-石剑篇&quot; class=&quot;headerlink&quot; title=&quot;EVMeter-石剑篇&quot;&gt;&lt;/a&gt;EVMeter-石剑篇&lt;/h1&gt;&lt;p&gt;在阅读本文之前，你也许应该看看 &lt;strong&gt;&lt;a href=&quot;https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/&quot;&gt;EVMeter-理论篇&lt;/a&gt;&lt;/strong&gt;   &lt;/p&gt;
+&lt;h1 id=&quot;设计蓝图&quot;&gt;&lt;a href=&quot;#设计蓝图&quot; class=&quot;headerlink&quot; title=&quot;设计蓝图&quot;&gt;&lt;/a&gt;设计蓝图&lt;/h1&gt;&lt;p&gt;继上次我们分析了测光表的原理，并do了一点math之后，我们得到了lux与曝光参数之间的直接关联，由此我们可以设计一个测光表，我想让它具有这样的特性:  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用高精度平面入射型光传感器,直接输出lux值  &lt;/li&gt;
+&lt;li&gt;配备辅助RGB传感器，同时可以得到色温数据(其实就是一个光传感器+拜尔滤色镜)    &lt;/li&gt;
+&lt;li&gt;使用0.96英寸128x64的OLED屏幕实现数据可视化,并提供良好的UI互动界面  &lt;/li&gt;
+&lt;li&gt;使用3个按键进行人机交互,其中一个切换功能键，另外2个调整数据  &lt;/li&gt;
+&lt;li&gt;小型化，电路板大小3x5cm,配备3D打印外壳,可以直接安装到相机的热靴上    &lt;/li&gt;
+&lt;li&gt;使用锂电池供电,尽量采用低功耗设计思路,使用600mAh的电池,同时提供micro-usb接口充电  &lt;/li&gt;
+&lt;li&gt;具有升级接口(ST-LINK),方便后续调试、升级算法    &lt;/li&gt;
+&lt;li&gt;具有掉电保存上次操作设置的功能。使用外接EEPROM实现(因为便宜(￣▽￣)”)  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;并且,这是初代鸡。我还想给他添加更多更酷的特性，比如用旋转编码器(类似单反上的拨轮)来代替3个笨拙的按键,使用镀漆的航空铝型材做外壳,将micro-usb升级成type-c,并且板载ST-LINK,只需一根usb type-c数据线即可轻松升级……等等等等(坑逐渐扩张.jpg)  &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>EVMeter-理论篇</title>
+    <link href="https://floydfish.xyz/2020/03/17/evmeter-li-lun-pian/"/>
+    <id>https://floydfish.xyz/2020/03/17/evmeter-li-lun-pian/</id>
+    <published>2020-03-17T11:17:53.000Z</published>
+    <updated>2021-05-15T18:09:10.073Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;EVMeter-理论篇&quot;&gt;&lt;a href=&quot;#EVMeter-理论篇&quot; class=&quot;headerlink&quot; title=&quot;EVMeter-理论篇&quot;&gt;&lt;/a&gt;EVMeter-理论篇&lt;/h1&gt;&lt;p&gt;一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。&lt;br&gt;直到我看到了一个 &lt;strong&gt;&lt;a href=&quot;http://www.kevinkadooka.com/other-cameras&quot;&gt;老外做的测光表&lt;/a&gt;&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好)&lt;br&gt;难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333  &lt;/p&gt;
+&lt;h1 id=&quot;EV-Exposure-Value&quot;&gt;&lt;a href=&quot;#EV-Exposure-Value&quot; class=&quot;headerlink&quot; title=&quot;EV-Exposure Value&quot;&gt;&lt;/a&gt;EV-Exposure Value&lt;/h1&gt;&lt;p&gt;曝光值代表能够给出同样曝光的所有相机光圈和快门的组合。这一概念是在一九五零年代在德国发展起来的，被试图用以简化在等价的拍摄参数之间进行选择的过程。曝光值同样也可以表示曝光刻度上的一个级差，1EV对应于两倍的曝光比例并通常被称为“一挡”  &lt;/p&gt;
+&lt;p&gt;曝光值最早是使用符号Ev来表示,ISO标准中(不是感光的那个ISO,是国际标准化组织)延续了这一标记法,但在其他地方EV这个缩写更常见~  &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ESP32-sensorKit 填坑记录</title>
+    <link href="https://floydfish.xyz/2020/03/06/esp32-sensorkit-tian-keng-ji-lu/"/>
+    <id>https://floydfish.xyz/2020/03/06/esp32-sensorkit-tian-keng-ji-lu/</id>
+    <published>2020-03-06T06:12:32.000Z</published>
+    <updated>2020-04-22T13:53:57.667Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;ESP32-sensorKit-填坑记录&quot;&gt;&lt;a href=&quot;#ESP32-sensorKit-填坑记录&quot; class=&quot;headerlink&quot; title=&quot;ESP32-sensorKit 填坑记录&quot;&gt;&lt;/a&gt;ESP32-sensorKit 填坑记录&lt;/h1&gt;&lt;p&gt;ESP32是一系列强大的集成WiFi和BLE的Soc，用它来开发各种与物联网相关的小项目当然是最好不过啦~&lt;br&gt;继上一次的EndWorld_Kit，我想添加数据上传到远端服务器这一选项，顺便做个漂亮的GUI(在屏幕上做)，所以想先用ESP32做个devkit试试水。  &lt;/p&gt;
+&lt;h1 id=&quot;硬件设计&quot;&gt;&lt;a href=&quot;#硬件设计&quot; class=&quot;headerlink&quot; title=&quot;硬件设计&quot;&gt;&lt;/a&gt;硬件设计&lt;/h1&gt;&lt;p&gt;以前用习惯了AD,突然想试试朋友推荐的开源CAD软件-KiCad,发现KiCad还是很强大的。。可能刚开始用有些操作和快捷键不习惯(小声bb:用AD的时候也没习惯过),用了一天时间边熟悉边画schematic,算是完成了大部分电路图的绘制~  &lt;/p&gt;
+&lt;center&gt;
+&lt;img src=&quot;https://s2.ax1x.com/2020/03/07/3Xom3d.png&quot; alt=&quot;3Xom3d.png&quot; border=&quot;0&quot;&gt;
+&lt;/center&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="ESP32" scheme="https://floydfish.xyz/tags/ESP32/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>End-world Kit</title>
+    <link href="https://floydfish.xyz/2020/03/02/mo-shi-sheng-cun-instrument/"/>
+    <id>https://floydfish.xyz/2020/03/02/mo-shi-sheng-cun-instrument/</id>
+    <published>2020-03-02T08:46:07.000Z</published>
+    <updated>2020-03-23T07:46:44.130Z</updated>
+    
+    
+    <summary type="html">&lt;h1 id=&quot;想象一下有一天…&quot;&gt;&lt;a href=&quot;#想象一下有一天…&quot; class=&quot;headerlink&quot; title=&quot;想象一下有一天…&quot;&gt;&lt;/a&gt;想象一下有一天…&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;地球上爆发了核战争，毁灭性的攻击使得地表生灵涂炭，辐射超标，大量浮尘与有毒有害气体漂浮在大气中，强烈的紫外线照射……&lt;br&gt;这样的世界在许多科幻电影和游戏中都曾出现过，比如Fallout 4:  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;center&gt;
+&lt;a href=&quot;https://imgchr.com/i/1e3H2V&quot;&gt;&lt;img src=&quot;https://s2.ax1x.com/2020/01/25/1e3H2V.md.jpg&quot; alt=&quot;1e3H2V.jpg&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://imgchr.com/i/1e3780&quot;&gt;&lt;img src=&quot;https://s2.ax1x.com/2020/01/25/1e3780.md.png&quot; alt=&quot;1e3780.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/center&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;总之，这将是一个不太适合生存的世界，如果我们想要在这种环境生存下去，此时你需要的不仅仅是一部动力装甲，你更需要这个宝贝…(把头伸过来，我给你看个宝贝.jpg)&lt;/p&gt;
+&lt;/blockquote&gt;</summary>
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="Arduino" scheme="https://floydfish.xyz/tags/Arduino/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>First blog</title>
+    <link href="https://floydfish.xyz/2020/03/02/first-blog/"/>
+    <id>https://floydfish.xyz/2020/03/02/first-blog/</id>
+    <published>2020-03-01T18:31:12.000Z</published>
+    <updated>2020-03-23T07:47:16.615Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;Floydfishのfirst-blog&quot;&gt;&lt;a href=&quot;#Floydfishのfirst-blog&quot; class=&quot;headerlink&quot; title=&quot;Floydfishのfirst blog&quot;&gt;&lt;/a&gt;Floydfishのfirst</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>
