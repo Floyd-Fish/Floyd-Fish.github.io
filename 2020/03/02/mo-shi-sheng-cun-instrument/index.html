@@ -499,11 +499,6 @@
         
 
         
-        <!-- 代码块折行 -->
-        <style type="text/css">
-            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
-        </style>
-        
 
         <div class="card-content article-card-content">
             <div id="articleContent">
@@ -550,7 +545,7 @@
 
 
 <p>等所有的模块都通过了测试(QC Pass!)，你就可以着手设计电路连线怎样合理了，其实也没什么需要注意的，IIC协议是固定的2根信号线，UART端口我直接用了默认的下载口(我偷了个懒，因为这样连的话，下载程序时必须断开PMS7003传感器的连接，不然串口会冲突导致下载失败)<br>至于OLED，我买的SPI的版本，主控是SH1106，对应U8g2的初始化是这样的: </p>
-<pre class="language-C" data-language="C"><code class="language-C">/*
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">/*
   代码不够闲话来凑
   代码不够闲话来凑
   代码不够闲话来凑
@@ -561,7 +556,7 @@ U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* r
 
 <p>看代码可以看出，<strong>CS(片选)</strong> 连D7，<strong>DC(指令/数据选择)</strong> 连D6，<strong>RST(复位)</strong> 连D5。  </p>
 <p>我的测试代码我也在这里贴一遍吧~ 看完你就知道调库(白嫖)是多么的快乐了！  </p>
-<pre class="language-C" data-language="C"><code class="language-C">#include &lt;Arduino.h&gt;
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">#include &lt;Arduino.h&gt;
 #include &lt;Wire.h&gt;
 #include &lt;SPI.h&gt;
 
@@ -1432,8 +1427,6 @@ void _homePage(void)
 
 <!-- 代码语言 -->
 
-<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
-
 
 <!-- 代码块复制 -->
 
@@ -1441,8 +1434,6 @@ void _homePage(void)
 
 
 <!-- 代码块收缩 -->
-
-<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
 
     </div>
@@ -1548,6 +1539,51 @@ void _homePage(void)
 
     <footer class="page-footer bg-color">
     
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="song"
+                   id="448065"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
     <div class="container row center-align" style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
@@ -1561,7 +1597,7 @@ void _homePage(void)
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">14.9k</span>&nbsp;字
+                class="white-color">14.8k</span>&nbsp;字
             
             
             

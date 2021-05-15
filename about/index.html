@@ -367,7 +367,7 @@
                     <div class="post-statis col l4 hide-on-med-and-down" data-aos="zoom-in-right">
                         
 <div class="statis">
-    <span class="count"><a href="/">11</a></span>
+    <span class="count"><a href="/">10</a></span>
     <span class="name">文章</span>
 </div>
 
@@ -397,7 +397,7 @@
                                 <div class="post-statis hide-on-large-only" data-aos="zoom-in-right">
                                     
 <div class="statis">
-    <span class="count"><a href="/">11</a></span>
+    <span class="count"><a href="/">10</a></span>
     <span class="name">文章</span>
 </div>
 
@@ -555,7 +555,7 @@
                 name: '文章篇数',
                 type: 'line',
                 color: ['#6772e5'],
-                data: [0,1,1,0,0,0,0,1,1,0,0,0,1],
+                data: [0,1,1,0,0,0,0,1,1,0,0,0,0],
                 markPoint: {
                     symbolSize: 45,
                     color: ['#fa755a','#3ecf8e','#82d3f4'],
@@ -597,7 +597,7 @@
                 type: 'pie',
                 radius: '50%',
                 color: ['#6772e5', '#ff9e0f', '#fa755a', '#3ecf8e', '#82d3f4', '#ab47bc', '#525f7f', '#f51c47', '#26A69A'],
-                data: [{"name":"electronics","value":6},{"name":"STM32","value":1},{"name":"life","value":1},{"name":"Life","value":2}],
+                data: [{"name":"electronics","value":6},{"name":"STM32","value":1},{"name":"Life","value":2},{"name":"life","value":1}],
                 itemStyle: {
                     emphasis: {
                         shadowBlur: 10,
@@ -806,6 +806,12 @@
             
             
             
+            <a href="/tags/STM32/">
+                <span class="chip center-align waves-effect waves-light chip-default">STM32</span>
+            </a>
+            
+            
+            
             
             
             <a href="/tags/ESP32/">
@@ -814,20 +820,14 @@
             
             
             
-            <a href="/tags/STM32/">
-                <span class="chip center-align waves-effect waves-light chip-default">STM32</span>
+            <a href="/tags/Life/">
+                <span class="chip center-align waves-effect waves-light chip-default">Life</span>
             </a>
             
             
             
             <a href="/tags/Photography/">
                 <span class="chip center-align waves-effect waves-light chip-default">Photography</span>
-            </a>
-            
-            
-            
-            <a href="/tags/Life/">
-                <span class="chip center-align waves-effect waves-light chip-default">Life</span>
             </a>
             
             
@@ -861,6 +861,51 @@
 
     <footer class="page-footer bg-color">
     
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="song"
+                   id="448065"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
     <div class="container row center-align" style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
@@ -874,7 +919,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">14.9k</span>&nbsp;字
+                class="white-color">14.8k</span>&nbsp;字
             
             
             

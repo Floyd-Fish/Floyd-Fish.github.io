@@ -6,7 +6,7 @@
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-05-15T16:32:45.531Z</updated>
+  <updated>2021-01-06T17:03:16.553Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -15,27 +15,6 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://floydfish.xyz/2021/05/16/hello-world/"/>
-    <id>https://floydfish.xyz/2021/05/16/hello-world/</id>
-    <published>2021-05-15T16:32:45.531Z</published>
-    <updated>2021-05-15T16:32:45.531Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
   
   <entry>
     <title>未来规划</title>
@@ -209,7 +188,7 @@
     <link href="https://floydfish.xyz/2020/03/18/evmeter-shi-jian-pian/"/>
     <id>https://floydfish.xyz/2020/03/18/evmeter-shi-jian-pian/</id>
     <published>2020-03-18T15:19:50.000Z</published>
-    <updated>2020-12-11T12:16:35.170Z</updated>
+    <updated>2021-05-15T18:41:19.359Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;EVMeter-石剑篇&quot;&gt;&lt;a href=&quot;#EVMeter-石剑篇&quot; class=&quot;headerlink&quot; title=&quot;EVMeter-石剑篇&quot;&gt;&lt;/a&gt;EVMeter-石剑篇&lt;/h1&gt;&lt;p&gt;在阅读本文之前，你也许应该看看 &lt;strong&gt;&lt;a href=&quot;https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/&quot;&gt;EVMeter-理论篇&lt;/a&gt;&lt;/strong&gt;   &lt;/p&gt;
@@ -233,9 +212,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
-    
     <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
     
   </entry>
   
@@ -244,7 +223,7 @@
     <link href="https://floydfish.xyz/2020/03/17/evmeter-li-lun-pian/"/>
     <id>https://floydfish.xyz/2020/03/17/evmeter-li-lun-pian/</id>
     <published>2020-03-17T11:17:53.000Z</published>
-    <updated>2021-05-15T18:09:10.073Z</updated>
+    <updated>2021-05-15T18:35:40.071Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;EVMeter-理论篇&quot;&gt;&lt;a href=&quot;#EVMeter-理论篇&quot; class=&quot;headerlink&quot; title=&quot;EVMeter-理论篇&quot;&gt;&lt;/a&gt;EVMeter-理论篇&lt;/h1&gt;&lt;p&gt;一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。&lt;br&gt;直到我看到了一个 &lt;strong&gt;&lt;a href=&quot;http://www.kevinkadooka.com/other-cameras&quot;&gt;老外做的测光表&lt;/a&gt;&lt;/strong&gt;  &lt;/p&gt;
@@ -259,9 +238,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
-    
     <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
     
   </entry>
   

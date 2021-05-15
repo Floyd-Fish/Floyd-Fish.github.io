@@ -438,12 +438,12 @@
                                 <span class="chip bg-color">diy</span>
                             </a>
                         
-                            <a href="/tags/KiCad/">
-                                <span class="chip bg-color">KiCad</span>
-                            </a>
-                        
                             <a href="/tags/STM32/">
                                 <span class="chip bg-color">STM32</span>
+                            </a>
+                        
+                            <a href="/tags/KiCad/">
+                                <span class="chip bg-color">KiCad</span>
                             </a>
                         
                     </div>
@@ -474,7 +474,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-12-11
+                    2021-05-16
                 </div>
                 
 
@@ -502,11 +502,6 @@
         <link rel="stylesheet" href="/libs/prism/prism.css">
         
 
-        
-        <!-- 代码块折行 -->
-        <style type="text/css">
-            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
-        </style>
         
 
         <div class="card-content article-card-content">
@@ -572,42 +567,42 @@
 <img src="https://s1.ax1x.com/2020/04/04/GwZVqH.png" alt="GwZVqH.png" border="0">
 
 <p>根据一些niubi的公式,得到伪代码如下:  </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/* RGB to XYZ transformation */</span>
-X <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.14282</span><span class="token punctuation">)</span><span class="token punctuation">(</span>R<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1.54924</span><span class="token punctuation">)</span><span class="token punctuation">(</span>G<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.95641</span><span class="token punctuation">)</span><span class="token punctuation">(</span>B<span class="token punctuation">)</span>
-Y <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.32466</span><span class="token punctuation">)</span><span class="token punctuation">(</span>R<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1.57837</span><span class="token punctuation">)</span><span class="token punctuation">(</span>G<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.73191</span><span class="token punctuation">)</span><span class="token punctuation">(</span>B<span class="token punctuation">)</span> <span class="token operator">=</span> Illuminance
-Z <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.68202</span><span class="token punctuation">)</span><span class="token punctuation">(</span>R<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">0.77073</span><span class="token punctuation">)</span><span class="token punctuation">(</span>G<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">0.56332</span><span class="token punctuation">)</span><span class="token punctuation">(</span>B<span class="token punctuation">)</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">/* RGB to XYZ transformation */
+X = (-0.14282)(R) + (1.54924)(G) + (-0.95641)(B)
+Y = (-0.32466)(R) + (1.57837)(G) + (-0.73191)(B) = Illuminance
+Z = (-0.68202)(R) + (0.77073)(G) + (0.56332)(B)
 
-<span class="token comment">/* Calculate Chromaticity coordinates */</span>
-x <span class="token operator">=</span> X<span class="token operator">/</span><span class="token punctuation">(</span>X<span class="token operator">+</span>Y<span class="token operator">+</span>Z<span class="token punctuation">)</span> 
-y <span class="token operator">=</span> Y<span class="token operator">/</span><span class="token punctuation">(</span>X<span class="token operator">+</span>Y<span class="token operator">+</span>Z<span class="token punctuation">)</span> 
+/* Calculate Chromaticity coordinates */
+x = X/(X+Y+Z) 
+y = Y/(X+Y+Z) 
 
-<span class="token comment">/* McCamy’s formula */</span>
-<span class="token comment">// provide a maximum absolute error of less than 2 degrees Kelvin</span>
-<span class="token keyword">for</span> color temperatures ranging from <span class="token number">2</span><span class="token punctuation">,</span><span class="token number">856</span> to <span class="token number">6</span><span class="token punctuation">,</span><span class="token number">500</span> K 
-CCT <span class="token operator">=</span> <span class="token number">449</span><span class="token operator">*</span>n<span class="token operator">^</span><span class="token number">3</span> <span class="token operator">+</span> <span class="token number">3525</span><span class="token operator">*</span>n<span class="token operator">^</span><span class="token number">2</span> <span class="token operator">+</span> <span class="token number">6823.3</span><span class="token operator">*</span>n <span class="token operator">+</span> <span class="token number">5520.33</span>
-<span class="token comment">/* where n = (x − 0.3320) / (0.1858 − y) */</span></code></pre>
+/* McCamy’s formula */
+// provide a maximum absolute error of less than 2 degrees Kelvin
+for color temperatures ranging from 2,856 to 6,500 K 
+CCT = 449*n^3 + 3525*n^2 + 6823.3*n + 5520.33
+/* where n = (x − 0.3320) / (0.1858 − y) */</code></pre>
 
 <p>这部分对应TCS34725库中的这一段代码:  </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/* 1. Map RGB values to their XYZ counterparts.    */</span>
-<span class="token comment">/* Based on 6500K fluorescent, 3000K fluorescent   */</span>
-<span class="token comment">/* and 60W incandescent values for a wide range.   */</span>
-<span class="token comment">/* Note: Y = Illuminance or lux                    */</span>
-X <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.14282F</span> <span class="token operator">*</span> r<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1.54924F</span> <span class="token operator">*</span> g<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.95641F</span> <span class="token operator">*</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
-Y <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.32466F</span> <span class="token operator">*</span> r<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1.57837F</span> <span class="token operator">*</span> g<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.73191F</span> <span class="token operator">*</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
-Z <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.68202F</span> <span class="token operator">*</span> r<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">0.77073F</span> <span class="token operator">*</span> g<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">0.56332F</span> <span class="token operator">*</span> b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">/* 1. Map RGB values to their XYZ counterparts.    */
+/* Based on 6500K fluorescent, 3000K fluorescent   */
+/* and 60W incandescent values for a wide range.   */
+/* Note: Y = Illuminance or lux                    */
+X = (-0.14282F * r) + (1.54924F * g) + (-0.95641F * b);
+Y = (-0.32466F * r) + (1.57837F * g) + (-0.73191F * b);
+Z = (-0.68202F * r) + (0.77073F * g) + (0.56332F * b);
 
-<span class="token comment">/* 2. Calculate the chromaticity co-ordinates      */</span>
-xc <span class="token operator">=</span> <span class="token punctuation">(</span>X<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>X <span class="token operator">+</span> Y <span class="token operator">+</span> Z<span class="token punctuation">)</span><span class="token punctuation">;</span>
-yc <span class="token operator">=</span> <span class="token punctuation">(</span>Y<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>X <span class="token operator">+</span> Y <span class="token operator">+</span> Z<span class="token punctuation">)</span><span class="token punctuation">;</span>
+/* 2. Calculate the chromaticity co-ordinates      */
+xc = (X) / (X + Y + Z);
+yc = (Y) / (X + Y + Z);
 
-<span class="token comment">/* 3. Use McCamy's formula to determine the CCT    */</span>
-n <span class="token operator">=</span> <span class="token punctuation">(</span>xc <span class="token operator">-</span> <span class="token number">0.3320F</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">0.1858F</span> <span class="token operator">-</span> yc<span class="token punctuation">)</span><span class="token punctuation">;</span>
+/* 3. Use McCamy's formula to determine the CCT    */
+n = (xc - 0.3320F) / (0.1858F - yc);
 
-<span class="token comment">/* Calculate the final CCT */</span>
-cct <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">449.0F</span> <span class="token operator">*</span> <span class="token function">powf</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">3525.0F</span> <span class="token operator">*</span> <span class="token function">powf</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">6823.3F</span> <span class="token operator">*</span> n<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">5520.33F</span><span class="token punctuation">;</span>
+/* Calculate the final CCT */
+cct = (449.0F * powf(n, 3)) + (3525.0F * powf(n, 2))
+        + (6823.3F * n) + 5520.33F;
 
-<span class="token comment">/* Return the results in degrees Kelvin */</span></code></pre>
+/* Return the results in degrees Kelvin */</code></pre>
 
 <h3 id="Lux-and-CCT-Calculations-DN40"><a href="#Lux-and-CCT-Calculations-DN40" class="headerlink" title="Lux and CCT Calculations(DN40)"></a>Lux and CCT Calculations(DN40)</h3><p>emmmm?不是和上面一样吗…别急, <strong><a target="_blank" rel="noopener" href="https://ams.com/documents/20143/36005/ColorSensors_AN000166_1-00.pdf/d1290c78-4ef1-5b88-bff0-8e80c2f92b6b">DN40</a></strong> 提供了额外的解决方案,它主要回答了如下几个问题:  </p>
 <ul>
@@ -619,65 +614,65 @@ cct <span class="token operator">=</span> <span class="token punctuation">(</spa
 <h4 id="IR-Rejection"><a href="#IR-Rejection" class="headerlink" title="IR Rejection"></a>IR Rejection</h4><p>在某些应用场景,红外成分是微不足道、可忽略的,比如测量一个LED的色温。<br>但在某些场景,如测量周边光环境,白炽灯,阳光等含有大量红外成分的光源时,传感器上自带的IR Filter显得有些无力。。。<br>所以我们需要使用改进的算法来补偿IR Filter的不足。  </p>
 <p>在传感器上,如TCS34725-一个拥有12个光电二极管阵列的传感器,其中分成4组,分别附有Red、Green、Blue滤镜和无滤镜(Clear),可见这种传感器本身是没有IR通道输出的,所以我们需要根据RGBC的值间接计算IR。  </p>
 <p>一个简单的算法如下:</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Calc IR content</span>
-IR <span class="token operator">=</span> <span class="token punctuation">(</span>R <span class="token operator">+</span> G <span class="token operator">+</span> B <span class="token operator">-</span> C<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">// Calc IR content
+IR = (R + G + B - C) / 2
 
-<span class="token comment">// Remove IR from source</span>
-R<span class="token number">'</span> <span class="token operator">=</span> R <span class="token operator">-</span> IR
-G<span class="token number">'</span> <span class="token operator">=</span> G <span class="token operator">-</span> IR
-B<span class="token number">'</span> <span class="token operator">=</span> B <span class="token operator">-</span> IR
-C<span class="token number">'</span> <span class="token operator">=</span> C <span class="token operator">=</span> IR</code></pre>
+// Remove IR from source
+R' = R - IR
+G' = G - IR
+B' = B - IR
+C' = C = IR</code></pre>
 
 <p>IR滤除前/后对比  </p>
 <img src="https://s1.ax1x.com/2020/04/04/Gw3hE8.png" alt="Gw3hE8.png" border="0">  
 
 <h4 id="Lux-Calculations"><a href="#Lux-Calculations" class="headerlink" title="Lux Calculations"></a>Lux Calculations</h4><p>再来创建一个G2方程:<br>(说到G2,就不得不提……)</p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">G2 <span class="token operator">=</span> R_Coef <span class="token operator">*</span> R<span class="token string">' + G_Coef * G'</span> <span class="token operator">+</span> B_Coef <span class="token operator">*</span> B<span class="token number">'</span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">G2 = R_Coef * R' + G_Coef * G' + B_Coef * B'</code></pre>
 <p>在这个方程里,G’通道的系数常为1,这样才能让CPL(Counts per Lux)来控制整体系统的增益…<br>G2是通过一个系数方程直接与Lux相关的,这个方程有如下几个参数:  </p>
 <ul>
 <li>GA(Glass Attenuation)  </li>
 <li>DF(Device Factor)  </li>
 <li>结合上面2个,得到DGF(Device and Glass Factor)<br>可以简单的把它们理解为在不同应用场景下的校正系数,CPL计算如下:  </li>
 </ul>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">CPL <span class="token operator">=</span> <span class="token punctuation">(</span>ATIME_ms <span class="token operator">*</span> AGAINx<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token punctuation">(</span>GA <span class="token operator">*</span> DF<span class="token punctuation">)</span>
-alse means<span class="token operator">:</span> CPL <span class="token operator">=</span> <span class="token punctuation">(</span>ATIME_ms <span class="token operator">*</span> AGAINx<span class="token punctuation">)</span> <span class="token operator">/</span> DGF
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">CPL = (ATIME_ms * AGAINx) / (GA * DF)
+alse means: CPL = (ATIME_ms * AGAINx) / DGF
 
-Lux <span class="token operator">=</span> G2 <span class="token operator">/</span> CPL</code></pre>
+Lux = G2 / CPL</code></pre>
 <p>具体的GA、DF如何取值,DN40里有详细的介绍。  </p>
 <h4 id="ColorTemperature-Calculations"><a href="#ColorTemperature-Calculations" class="headerlink" title="ColorTemperature Calculations"></a>ColorTemperature Calculations</h4><p>IR成分的滤除对色温计算至关重要。用上面提到的IR Filter算法,得到R’和B’,再用如下的公式来计算ColorTemp: </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp">CT <span class="token operator">=</span> CT_Coef <span class="token operator">*</span> B<span class="token string">' / R'</span> <span class="token operator">+</span> CT_Offset</code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">CT = CT_Coef * B' / R' + CT_Offset</code></pre>
 
 <p>对应代码是这样的:  </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/* AMS RGB sensors have no IR channel, so the IR content must be */</span>
-<span class="token comment">/* calculated indirectly. */</span>
-ir <span class="token operator">=</span> <span class="token punctuation">(</span>r <span class="token operator">+</span> g <span class="token operator">+</span> b <span class="token operator">&gt;</span> c<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token punctuation">(</span>r <span class="token operator">+</span> g <span class="token operator">+</span> b <span class="token operator">-</span> c<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">/* AMS RGB sensors have no IR channel, so the IR content must be */
+/* calculated indirectly. */
+ir = (r + g + b &gt; c) ? (r + g + b - c) / 2 : 0;
 
-<span class="token comment">/* Remove the IR component from the raw RGB values */</span>
-r2 <span class="token operator">=</span> r <span class="token operator">-</span> ir<span class="token punctuation">;</span>
-b2 <span class="token operator">=</span> b <span class="token operator">-</span> ir<span class="token punctuation">;</span>
+/* Remove the IR component from the raw RGB values */
+r2 = r - ir;
+b2 = b - ir;
 
-<span class="token keyword">if</span> <span class="token punctuation">(</span>r2 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+if (r2 == 0) {
+    return 0;
+}
 
-<span class="token comment">/* A simple method of measuring color temp is to use the ratio of blue */</span>
-<span class="token comment">/* to red light, taking IR cancellation into account. */</span>
-<span class="token keyword">uint16_t</span> cct <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">3810</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token keyword">uint32_t</span><span class="token punctuation">)</span>b2<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token comment">/** Color temp coefficient. */</span>
-               <span class="token punctuation">(</span><span class="token keyword">uint32_t</span><span class="token punctuation">)</span>r2 <span class="token operator">+</span>
-               <span class="token number">1391</span><span class="token punctuation">;</span> <span class="token comment">/** Color temp offset. */</span></code></pre>
+/* A simple method of measuring color temp is to use the ratio of blue */
+/* to red light, taking IR cancellation into account. */
+uint16_t cct = (3810 * (uint32_t)b2) / /** Color temp coefficient. */
+               (uint32_t)r2 +
+               1391; /** Color temp offset. */</code></pre>
 
 <h4 id="Device-Count-Saturation"><a href="#Device-Count-Saturation" class="headerlink" title="Device Count Saturation"></a>Device Count Saturation</h4><p>当光线逐渐变强,Clear通道一般会率先饱和(R+G+B 接近C),如果Clear通道饱和,那么我们上面提到的IR Rejection算法就失效了…<br>在这时我们要么不用,要么用更复杂的算法去Reject IR content。<br>Analog Saturation的满量程值取决于我们设定的传感器曝光时间,多数设备累积1024 counts per 2.4ms,最大counts是65535 counts(16bit),达到满量程需要154ms,所以在配置曝光时间154ms以上时才能达到16bit的满量程。 </p>
 <p>如果ALS的积分时间大于154ms,那么Digital Saturation就会在Analog Saturation之前出现,也就是count到了65535,具体在代码中体现如下:  </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">256</span> <span class="token operator">-</span> TCS34725_IntergrationTime<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">63</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">/* Track digital saturation */</span>
-    sat <span class="token operator">=</span> <span class="token number">65535</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-    <span class="token comment">/* Track analog saturation */</span>
-    sat <span class="token operator">=</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">256</span> <span class="token operator">-</span> TCS34725_IntergrationTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">if ((256 - TCS34725_IntergrationTime) &gt; 63) {
+    /* Track digital saturation */
+    sat = 65535;
+} else {
+    /* Track analog saturation */
+    sat = 1024 * (256 - TCS34725_IntergrationTime);
+}</code></pre>
 
 <h4 id="Ripple-Rejection-amp-Saturation"><a href="#Ripple-Rejection-amp-Saturation" class="headerlink" title="Ripple Rejection &amp; Saturation"></a>Ripple Rejection &amp; Saturation</h4><p>50/60HZ纹波对我们的光积分过程也有很大的影响。当传感器的积分时间很短时,我们需要注意滤除这些工频光源干扰,代码如下:  </p>
-<pre class="language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">/* Ripple rejection:
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">/* Ripple rejection:
  *
  * (a) An integration time of 50ms or multiples of 50ms are required to
  *     reject both 50Hz and 60Hz ripple.
@@ -693,11 +688,11 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
  *     still be saturating. At integration times &gt;150ms this can be
  *     ignored, but &lt;= 150ms you should calculate the 75% saturation
  *     level to avoid this problem.
- */</span>
-<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">256</span> <span class="token operator">-</span> TCS34725_IntergrationTime<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> <span class="token number">63</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">/* Adjust sat to 75% to avoid analog saturation if atime &lt; 153.6ms */</span>
-    sat <span class="token operator">-=</span> sat <span class="token operator">/</span> <span class="token number">4</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span></code></pre>
+ */
+if ((256 - TCS34725_IntergrationTime) &lt;= 63) {
+    /* Adjust sat to 75% to avoid analog saturation if atime &lt; 153.6ms */
+    sat -= sat / 4;
+}</code></pre>
 
 <h2 id="暂时摸鱼d-￣▽￣-b"><a href="#暂时摸鱼d-￣▽￣-b" class="headerlink" title="暂时摸鱼d=====(￣▽￣*)b"></a><del>暂时摸鱼d=====(￣▽￣*)b</del></h2><h1 id="5-20日更新"><a href="#5-20日更新" class="headerlink" title="5.20日更新"></a>5.20日更新</h1><p>俺画的板子老早就打样ok并到手了，前几天才花钱买了一批元器件，开始了我们的硬件方案验证~  </p>
 <blockquote>
@@ -815,12 +810,12 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
                                     <span class="chip bg-color">diy</span>
                                 </a>
                             
-                                <a href="/tags/KiCad/">
-                                    <span class="chip bg-color">KiCad</span>
-                                </a>
-                            
                                 <a href="/tags/STM32/">
                                     <span class="chip bg-color">STM32</span>
+                                </a>
+                            
+                                <a href="/tags/KiCad/">
+                                    <span class="chip bg-color">KiCad</span>
                                 </a>
                             
                         </div>
@@ -1345,12 +1340,12 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
                         <span class="chip bg-color">diy</span>
                     </a>
                     
-                    <a href="/tags/KiCad/">
-                        <span class="chip bg-color">KiCad</span>
-                    </a>
-                    
                     <a href="/tags/STM32/">
                         <span class="chip bg-color">STM32</span>
+                    </a>
+                    
+                    <a href="/tags/KiCad/">
+                        <span class="chip bg-color">KiCad</span>
                     </a>
                     
                 </div>
@@ -1407,8 +1402,6 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
 
 <!-- 代码语言 -->
 
-<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
-
 
 <!-- 代码块复制 -->
 
@@ -1416,8 +1409,6 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
 
 
 <!-- 代码块收缩 -->
-
-<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
 
     </div>
@@ -1523,6 +1514,51 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
 
     <footer class="page-footer bg-color">
     
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="song"
+                   id="448065"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
     <div class="container row center-align" style="margin-bottom: 0px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
@@ -1536,7 +1572,7 @@ b2 <span class="token operator">=</span> b <span class="token operator">-</span>
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">14.9k</span>&nbsp;字
+                class="white-color">14.8k</span>&nbsp;字
             
             
             
