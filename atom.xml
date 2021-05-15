@@ -212,9 +212,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
-    
     <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
     
   </entry>
   
@@ -238,9 +238,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
-    
     <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
     
   </entry>
   
