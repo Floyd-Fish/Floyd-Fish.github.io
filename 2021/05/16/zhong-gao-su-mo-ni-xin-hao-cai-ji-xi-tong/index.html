@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="End-world Kit, Floydfish&#39;s Garden">
+    <meta name="keywords" content="中高速模拟信号采集系统, Floydfish&#39;s Garden">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>End-world Kit | Floydfish&#39;s Garden</title>
+    <title>中高速模拟信号采集系统 | Floydfish&#39;s Garden</title>
     <link rel="icon" type="image/jpeg" href="/logo.jpg">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -314,12 +314,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">End-world Kit</h1>
+                    <h1 class="description center-align post-title">中高速模拟信号采集系统</h1>
                 </div>
             </div>
         </div>
@@ -439,8 +439,12 @@
                                 <span class="chip bg-color">diy</span>
                             </a>
                         
-                            <a href="/tags/Arduino/">
-                                <span class="chip bg-color">Arduino</span>
+                            <a href="/tags/STM32/">
+                                <span class="chip bg-color">STM32</span>
+                            </a>
+                        
+                            <a href="/tags/Analog-Circuits/">
+                                <span class="chip bg-color">Analog Circuits</span>
                             </a>
                         
                     </div>
@@ -464,21 +468,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-03-02
+                    2021-05-16
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2020-03-23
+                    2021-05-16
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.1k
+                    1.6k
                 </div>
                 
 
@@ -500,289 +504,185 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="想象一下有一天…"><a href="#想象一下有一天…" class="headerlink" title="想象一下有一天…"></a>想象一下有一天…</h1><blockquote>
-<p>地球上爆发了核战争，毁灭性的攻击使得地表生灵涂炭，辐射超标，大量浮尘与有毒有害气体漂浮在大气中，强烈的紫外线照射……<br>这样的世界在许多科幻电影和游戏中都曾出现过，比如Fallout 4:  </p>
+                <h2 id="创作说明"><a href="#创作说明" class="headerlink" title="创作说明"></a>创作说明</h2><p>本文首发于<a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1457">EmoeStudio</a><br>感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi)  </p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>米娜桑好久不见!<br>废话就不多说啦。来点正经的技术文~</p>
+<p>这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~  </p>
+<h2 id="资料汇总"><a href="#资料汇总" class="headerlink" title="资料汇总"></a>资料汇总</h2><blockquote>
+<ul>
+<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>): <a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/ADS8860-STM32F4">https://github.com/Floyd-Fish/ADS8860-STM32F4</a>  </li>
+<li>本教程所有设计资源: <a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/ADS8860_SignalChain">https://github.com/Floyd-Fish/ADS8860_SignalChain</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860 Datasheet</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189 Datasheet</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G Datasheet</a>  </li>
+</ul>
 </blockquote>
-<center>
-<a target="_blank" rel="noopener" href="https://imgchr.com/i/1e3H2V"><img src="https://s2.ax1x.com/2020/01/25/1e3H2V.md.jpg" alt="1e3H2V.jpg" border="0"></a>
+<h2 id="电路性能参数"><a href="#电路性能参数" class="headerlink" title="电路性能参数"></a>电路性能参数</h2><ul>
+<li>使用ADS8860完成16-bit 1Msps(1M sample per second)的模拟信号采集  </li>
+<li>输入信号为跨在0V上的(无直流偏置的正负信号),幅值为16V(Vpp=32V)的模拟信号  </li>
+<li>模拟信号频率范围: DC~100KHz  </li>
+<li>通过数字串行接口(SPI)将采集到的数据传回MCU  </li>
+<li>整个模拟电路系统的供电为3.3V单电源  </li>
+</ul>
+<h2 id="ADC前端设计"><a href="#ADC前端设计" class="headerlink" title="ADC前端设计"></a>ADC前端设计</h2><p>参考 <strong>&lt;新概念模拟电路&gt;</strong> -Section-125:单电源标准运放ADC驱动电路  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gN81AO.png" alt="gN81AO.png" border="0">
 
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/1e3780"><img src="https://s2.ax1x.com/2020/01/25/1e3780.md.png" alt="1e3780.png" border="0"></a></p>
-</center>
-
-
+<p>参考电路性能设计需求:</p>
+<ul>
+<li>采用3.3V为运放和ADC供电(运放为轨到轨运放)</li>
+<li>16bit采样精度，采样率1Msps，VRef=2.5V(REF03G)  </li>
+<li>采集输入信号跨在0V上，幅度为16V(Vpp = 32V)，频率范围 DC~100KHz  </li>
+</ul>
+<p>那么ADC的单端输入最大范围是0-2.5V,考虑裕量,输入安全范围为0V-2V。  </p>
+<p>确定ADC驱动电路参数要求如下:  </p>
 <blockquote>
-<p>总之，这将是一个不太适合生存的世界，如果我们想要在这种环境生存下去，此时你需要的不仅仅是一部动力装甲，你更需要这个宝贝…(把头伸过来，我给你看个宝贝.jpg)</p>
+<ul>
+<li>电路输出静默电压 Uoz = 1V</li>
+<li>增益 G = 2/32 = 1/16 = 0.0625  </li>
+<li>Vdd = 3.3V</li>
+</ul>
 </blockquote>
-<span id="more"></span>
+<p>分析过程就简略了~如果需要了解的话请自行翻书哦  </p>
+<p>$$ R_2 = {G * V_{dd} \over U_{oz}} * R_1 $$</p>
+<p>$$R_5 = {G * V_{dd}} \over {V_{dd} - G * V_{dd} - U_{oz}} * R_1$$</p>
+<p>$$R_4 = R1 || R2 || R5$$<br>设R1 = 100k,根据上述参数代入公式计算R2,R4,R5  </p>
+<h2 id="抗混叠滤波器设计"><a href="#抗混叠滤波器设计" class="headerlink" title="抗混叠滤波器设计"></a>抗混叠滤波器设计</h2><h3 id="什么-amp-为什么"><a href="#什么-amp-为什么" class="headerlink" title="什么&amp;为什么?"></a>什么&amp;为什么?</h3><p>当输入被测信号频率为Fi,按照奈奎斯特采样定律,要想采集完整的信号,采样率Fs必须大于2倍被测信号频率Fi。当采样率小于2Fi时，<code>一定会出现混叠现象</code>,即采集的波形中出现很低的混叠频率。下图演示了混叠频率出现的原因——</p>
+<img src="https://z3.ax1x.com/2021/05/10/gN8MB6.png" alt="gN8MB6.png" border="0">
 
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e84sO.jpg" alt="1e84sO.jpg" border="0">
-</center>
-
-<p><strong>这就是我们本文要港的末世生存Kit_V1.0。</strong></p>
-<h1 id="这是啥"><a href="#这是啥" class="headerlink" title="这是啥???"></a>这是啥???</h1><blockquote>
-<p>这是一个“基于Arduino电子平台的环境检测装置”  </p>
-</blockquote>
-<p>啊呸…这个学术腔我已经要听吐了(基于…的…)<br>我们干脆叫他末世生存Kit呗~<br>为什么叫Kit呢？因为很多电子套件都叫Kit，而这个项目其实可以做成套件的形式，因为它非常简单且有趣又实用还不失逼格( <del>虽然好像平时也没什么卵用…</del> (小声bb)</p>
-<p>整个项目用到了一些传感器模块，还有Arduino Nano，以及一些额外的USB接插件，锂电池座+电池充放电一体管理模块+开关，还有洞洞板(黄黄的像黄油一样的黄油板)，M3铜柱，螺母，连接线！<br>主要元件如下:  </p>
+<p>输入信号为黑色的高频信号,当Fs小于2Fi时,我们获得的采样点形成了红色的波形,其频率不是信号频率,而是混叠频率,很低。<strong>混叠现象欺骗了我们的双眼</strong>,因此我们不希望出现这种现象。一旦采样数据中出现混叠频率,即使后期增加软件滤波,也是难以滤除的。</p>
+<p>唯一的方法就是让大于Fs/2的频率的信号不要出现在ADC的输入端,或者这种频率分量的信号在ADC输入端只有很小的幅度。因此增加一个抗混叠滤波器是非常有必要的。</p>
+<p>最简单、最常见的方法就是在ADC输入端前增加一级截止频率Fh的无源低通滤波电路,以实现抗混叠滤波。</p>
+<p>抗混叠滤波器的截止频率选择有如下要求:  </p>
+<p>$$ f_{signal} &lt;&lt; f_H &lt;&lt; {f_s} / 2  $$</p>
+<p>比如信号频率100KHz,采样频率1MHz,那么fH就在100KHz和500KHz之间取值。但是不能太过于靠近这2个极限值,太过接近100k,会损伤有用信号。太过接近500k,滤波效果会打折扣。</p>
+<p>杨老师的比喻是:  </p>
 <blockquote>
-<p>VEML6070 - I2C通讯协议 - 数字紫外线强度传感器<br>SHT31    - I2C通讯协议 - 数字温湿度一体传感器<br>TEMT6000 - 模拟电压输出 - 模拟光强传感器<br>PMS7003  - UART通讯协议 - 攀藤的一体化颗粒物浓度检测传感器模块，提供串口通讯接口<br>MQ-135   - 模拟电压输出 - 有毒有害气体传感器，输出模拟电压信号<br>1.3 inch 132*64 OLED(蓝色) - SPI通讯协议</p>
+<p>这样看起来,fH像个夹板丈夫,左边是媳妇,右边是母亲……</p>
 </blockquote>
-<p>关于代码，就是调库！调库！再调库！(白嫖的快乐hhhhh)<br>我写的一份ino格式代码已经在 <strong><a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/End_world_kit">我的github</a></strong> 上了  </p>
-<p>关于元件的库，我也帮你找好了，在Github上都有，下载zip包导入到Arduino IDE的库就好了~  </p>
-<blockquote>
-<p><strong><a target="_blank" rel="noopener" href="https://github.com/fu-hsi/PMS">PMS Library(PMS7003传感器)</a></strong><br><strong><a target="_blank" rel="noopener" href="https://github.com/adafruit/Adafruit_SHT31">SHT3x(数字温湿度)</a></strong><br><strong><a target="_blank" rel="noopener" href="https://github.com/adafruit/Adafruit_VEML6070">VEML6070(数字紫外线)</a></strong><br><strong><a target="_blank" rel="noopener" href="https://github.com/olikraus/u8g2">U8g2(OLED图形库)</a></strong>  </p>
-</blockquote>
-<p>如果你打算着手制作了，建议你先把各个传感器模块单独放在面包板上和Arduino联调进行一次测试哦~  </p>
-<h2 id="这是检验元件是否好坏的第一步"><a href="#这是检验元件是否好坏的第一步" class="headerlink" title="这是检验元件是否好坏的第一步!"></a>这是检验元件是否好坏的第一步!</h2><blockquote>
-<p>如果你不太会做这种测试，我建议你去 <strong><a target="_blank" rel="noopener" href="https://learn.adafruit.com/adafruit-veml6070-uv-light-sensor-breakout/arduino">Adafruit的官网教程</a></strong> 学习一下√<br>所谓的测试就像这样:  </p>
-</blockquote>
-<center>
-<img src="https://cdn-learn.adafruit.com/assets/assets/000/032/466/large1024/force___flex_wiring.jpg?1463167108" alt="VEML6070.jpg" border="0">
-</center>
+<p>所以还是需要斟酌一下.jpg</p>
+<h3 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h3><p>ADS8860最高采样率1MHz,输入信号频率不超过100KHz,根据前面的公式可得:  </p>
+<p>$$ 1kHz &lt; f_H &lt; {f_s \over 2} = 500kHz  $$</p>
+<p>在没有其他已知条件下,建议将Fh选为两者的乘法平均数:</p>
+<p>$$ f_H = {1 \over 2<em>pi</em>R_{ISO}<em>C_L} = {\sqrt{100k</em>500k}} = 223.607kHz  $$</p>
+<p>即</p>
+<p>$$ R_{ISO}*C_L = 0.7118us  $$</p>
+<p>同时兼顾采样误差对电阻的要求,查询 <strong><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860的Datasheet</a></strong> </p>
+<img src="https://z3.ax1x.com/2021/05/10/gN8J9H.png" alt="gN8J9H.png" border="0">
+
+<p>可知转换时间最少为500ns,也就是</p>
+<p>$$ T_{SAM} = 0.5us   $$</p>
+<p>再看ADS8860内部等效采样电路  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gN8Y3d.png" alt="gN8Y3d.png" border="0">
+
+<p>而ADS8860内部采样电容约为4pF,考虑到最为苛刻的要求:</p>
+<p>$$ R_s*(4pF+C_L) &lt;= {T_{SAM} \over {0.69314*(16+1)}} = 0.042433us  $$</p>
+<p>设CL = 100pF,解得:</p>
+<p>$$ R_s &lt;= 408Ω  $$</p>
+<p>即前级驱动电路的输出电阻加内部开关电阻不得超过408欧姆。OPA2189的开环输出电阻在f=100kHz时约为200Ω(见下图)。所以可以选择电阻为100欧姆。</p>
+<img src="https://z3.ax1x.com/2021/05/10/gN8tgA.png" alt="gN8tgA.png" border="0">
+
+<p>至此,抗混叠滤波器设计完毕。</p>
+<h2 id="仿真一下"><a href="#仿真一下" class="headerlink" title="仿真一下"></a>仿真一下</h2><p>使用LTSpice对ADC驱动电路进行仿真,选择了一个能够单电源供电且轨到轨输出的运算放大器作为OPA2189的替代:  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gNYbvj.png" alt="gNYbvj.png" border="0">
+
+<p>仿真结果表明,在输入信号频率为100kHz,幅度为32V时,输出能够满足设计要求。  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gNY78g.png" alt="gNY78g.png" border="0">
+
+<p>放大看一下,顶部和底部存在少量非线性失真,具体效果如何待我实际测试的时候再康康。<br>总之,输入幅度范围是满足了设计要求且十分安全的。  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gNYTPS.png" alt="gNYTPS.png" border="0">
 
 
-<p>等所有的模块都通过了测试(QC Pass!)，你就可以着手设计电路连线怎样合理了，其实也没什么需要注意的，IIC协议是固定的2根信号线，UART端口我直接用了默认的下载口(我偷了个懒，因为这样连的话，下载程序时必须断开PMS7003传感器的连接，不然串口会冲突导致下载失败)<br>至于OLED，我买的SPI的版本，主控是SH1106，对应U8g2的初始化是这样的: </p>
-<pre class="line-numbers language-C"><code class="language-C">/*
-  代码不够闲话来凑
-  代码不够闲话来凑
-  代码不够闲话来凑
-  代码不够闲话来凑
-  代码不够闲话来凑
-*/
-U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* reset=*/ 5);
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>看代码可以看出，<strong>CS(片选)</strong> 连D7，<strong>DC(指令/数据选择)</strong> 连D6，<strong>RST(复位)</strong> 连D5。  </p>
-<p>我的测试代码我也在这里贴一遍吧~ 看完你就知道调库(白嫖)是多么的快乐了！  </p>
-<pre class="line-numbers language-C"><code class="language-C">#include <Arduino.h>
-#include <Wire.h>
-#include <SPI.h>
 
-#include <U8g2lib.h>
-#include "Adafruit_SHT31.h"
-#include "Adafruit_VEML6070.h"
-#include "PMS.h"
+<h3 id="电路图与BOM"><a href="#电路图与BOM" class="headerlink" title="电路图与BOM"></a>电路图与BOM</h3><p>最后,用开源人喜闻乐见的KiCad设计了schematic。<br><img src="https://z3.ax1x.com/2021/05/10/gN8NjI.png" alt="gN8NjI.png" border="0"></p>
+<p>并且阻容取值如下:  </p>
+<table>
+<thead>
+<tr>
+<th>元件</th>
+<th>计算值</th>
+<th>实际取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R1</td>
+<td>100kΩ</td>
+<td>100kΩ</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>20.625kΩ</td>
+<td>20kΩ+620Ω</td>
+</tr>
+<tr>
+<td>R4</td>
+<td>6.2kΩ</td>
+<td>6.2kΩ</td>
+</tr>
+<tr>
+<td>R5</td>
+<td>9850Ω</td>
+<td>10kΩ</td>
+</tr>
+<tr>
+<td>Riso</td>
+<td>100Ω</td>
+<td>100Ω</td>
+</tr>
+<tr>
+<td>CL</td>
+<td>100pF</td>
+<td>100pF</td>
+</tr>
+</tbody></table>
+<h2 id="IC清单"><a href="#IC清单" class="headerlink" title="IC清单"></a>IC清单</h2><p>本次实验使用的器件如下:  </p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Quantity</th>
+<th>Description</th>
+<th>Usage</th>
+<th>厂牌</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ADS8860</td>
+<td>1</td>
+<td>16-bit 1MHz采样率 高精度单端ADC</td>
+<td>用途？当然是作主ADC呀</td>
+<td>Texas Instruments</td>
+</tr>
+<tr>
+<td>OPA2189</td>
+<td>1</td>
+<td>极低偏置　高精度运算放大器,同时具有高GBW</td>
+<td>一个单元作为基准电压BUFFER,一个单元用作ADC驱动电路</td>
+<td>Texas Instruments</td>
+</tr>
+<tr>
+<td>REF03G</td>
+<td>1</td>
+<td>2.5V 精密基准电压源</td>
+<td>用作ADC的基准电压</td>
+<td>Analog Devices</td>
+</tr>
+<tr>
+<td>TLV70033</td>
+<td>1</td>
+<td>3.3V LDO</td>
+<td>整个模拟电路系统的电源</td>
+<td>Texas Instruments</td>
+</tr>
+</tbody></table>
+<h2 id="PCB-Layout"><a href="#PCB-Layout" class="headerlink" title="PCB Layout"></a>PCB Layout</h2><p>同样的,用KiCad进行PCB Layout,最后交由某5块钱PCB代工厂(懂得都懂)进行加工。  </p>
+<img src="https://z3.ax1x.com/2021/05/10/gN884e.png" alt="gN884e.png" border="0">
 
-PMS pms(Serial);
-PMS::DATA data;
+<img src="https://z3.ax1x.com/2021/05/10/gN83ND.jpg" alt="gN83ND.jpg" border="0">
 
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
-Adafruit_VEML6070 uv = Adafruit_VEML6070();
+<img src="https://z3.ax1x.com/2021/05/10/gN8QHK.jpg" alt="gN8QHK.jpg" border="0">
 
-U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* reset=*/ 5);
+<h2 id="测试——"><a href="#测试——" class="headerlink" title="测试——"></a>测试——</h2><p>测试单片机平台 <code>STM32F303CCT6</code><br>代码我之前写过一份最简单的3-wire模式操作,放在文章开头的资料链接里了~  </p>
+<p>啊,板子还没到,暂时先鸽着.jpg  </p>
 
-char i = 0;
-
-const char s1[] PROGMEM = "End World Kit";
-const char s2[] PROGMEM = ">-Temp: ";
-const char s3[] PROGMEM = "*C";
-const char s4[] PROGMEM = ">-Humidity: ";
-const char s5[] PROGMEM = "%";
-const char s6[] PROGMEM = ">-UV level: ";
-const char s7[] PROGMEM = ">-Light LX: ";
-const char s8[] PROGMEM = ">-PM2.5(ug/m^3):  ";
-const char s9[] PROGMEM = ">-PM10(ug/m^3):   ";
-const char s10[] PROGMEM = ">-PM1.0(ug/m^3): ";
-const char s11[] PROGMEM = "No data response.";
-const char *index[] = { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11};
-
-void _firstPage(void);
-void _secondPage(void);
-void _homePage(void);
-
-void setup()
-{
-  Serial.begin(9600);     //init baudrate at 9600 to communicate with laser-gas sensor
-  uv.begin(VEML6070_HALF_T );   //Integration time sets to 62.5ms.
-  sht31.begin(0x45);  // 0X45 OR 0X44
-  pms.passiveMode();    //set laser-gas sensor to passivemode
-  pms.wakeUp();   //wake up the laser-gas sensor
-  //u8g2.begin();
-  
-  u8g2.begin();
-  u8g2.setPowerSave(0);
-  _homePage();
-  /*
-  u8g2.begin();
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_helvB08_tf);   //title Font.
-  u8g2.drawStr(30,8,"End World Kit");
-  u8g2.setFont(u8g2_font_t0_11_mf);  // choose Internal font.
-  u8g2.sendBuffer();
-  */
-  
-}
-
-void loop()
-{
-  _firstPage();
-  delay(2500);
-  _secondPage();
-  delay(2500);
-}
-
-void _firstPage(void)
-{ 
-  u8g2.clearDisplay();
-  u8g2.setFont(u8g2_font_helvB08_tf);
-  float temp = sht31.readTemperature();
-  float humidity = sht31.readHumidity();
-  do {
-    u8g2.setCursor(30, 8);
-    u8g2.print((class __FlashStringHelper *) index[0]);
-    
-  if (! isnan(temp)) 
-  {  // check if 'is not a number'
-    u8g2.setCursor(0, 24);
-    u8g2.print((class __FlashStringHelper *) index[1]);
-    u8g2.print(temp);
-    u8g2.print((class __FlashStringHelper *) index[2]);
-  }
-  if (! isnan(humidity)) 
-  {  // check if 'is not a number'
-    u8g2.setCursor(0, 40);
-    u8g2.print((class __FlashStringHelper *) index[3]);
-    u8g2.print(humidity);
-    u8g2.print((class __FlashStringHelper *) index[4]);
-  } 
-  u8g2.setCursor(0, 56);
-  u8g2.print((class __FlashStringHelper *) index[5]);
-  u8g2.print(uv.readUV());
-  } while (u8g2.nextPage());
-}
-
-void _secondPage(void)
-{
-  u8g2.setFont(u8g2_font_helvB08_tf  );
-  unsigned int lx = 0, anr = 0;
-  for (i = 0; i < 16; i++)
-  {
-    anr = analogRead(A6);
-    lx = lx + anr; 
-    anr = 0;
-    delay(5);
-  }
-  lx = lx / 16;
-
-  
-  do {
-    u8g2.clearDisplay();
-    u8g2.setCursor(0, 10);
-    u8g2.print((class __FlashStringHelper *) index[6]);
-    u8g2.print(lx);
-    lx = 0;
-    pms.requestRead();
-    if (pms.readUntil(data))
-    {
-      u8g2.setCursor(0, 24);
-      u8g2.print((class __FlashStringHelper *) index[7]);
-      u8g2.print(data.PM_AE_UG_2_5);
-      u8g2.setCursor(0, 38);
-      u8g2.print((class __FlashStringHelper *) index[8]);
-      u8g2.print(data.PM_AE_UG_10_0);
-      u8g2.setCursor(0, 52);
-      u8g2.print((class __FlashStringHelper *) index[9]);
-      u8g2.print(data.PM_AE_UG_1_0);
-    }
-    else 
-    {
-      u8g2.setCursor(0, 40);
-      u8g2.print((class __FlashStringHelper *) index[10]);
-    }
-  } while ( u8g2.nextPage() );
-  
-}
-
-void _homePage(void)
-{
-  u8g2.clearDisplay();
-  u8g2.setFont(u8g2_font_helvB08_tf);
-  do
-  {
-    //u8g2.setFont(u8g2_font_helvB08_tf);  // choose Internal font.
-      u8g2.setCursor(30, 8);
-    u8g2.print(F("End world Kit"));
-      u8g2.setCursor(0, 20);
-    u8g2.print(F("Test & developed by "));
-      u8g2.setCursor(0, 32);
-    u8g2.print(F("Floydfish.In case of "));
-      u8g2.setCursor(0, 44);
-    u8g2.print(F("extreme conditions."));
-      u8g2.setCursor(0, 56);
-    u8g2.print(F("detect everything around."));
-  } while ( u8g2.nextPage() );
-  
-  delay(3000);
-
-}
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>我唯一的代码量就是写GUI，因为数据项太多，小小的13264屏幕放不下，所以我分了2页显示，对应的刷新函数为_firstPage()和_secondPage(),以及上电初始化页面_homePage()。  </p>
-<blockquote>
-<p>其实U8g2库对于Arduino Nano来说过于臃肿了…我这个程序占用了80%多的代码存储空间，几乎塞满，在我优化前它一度占到了90%多…于是我刚开始还写了一遍U8X8的版本，但是我发现u8x8没有我中意的字体，所以又换了回来233  </p>
-</blockquote>
-<h1 id="Assemble"><a href="#Assemble" class="headerlink" title="Assemble"></a>Assemble</h1><p>首先把几个小传感器和OLED和接口都焊好，走好线，像这样:</p>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e8hQK.jpg" alt="1e8hQK.jpg" border="0">
-</center>
-
-<p>接着，把PMS7003和MQ-135固定在另一块板子上，焊好线引好接口:  </p>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e82J1.jpg" alt="1e82J1.jpg" border="0">
-</center>
-
-<p>我把这第二块板子叫做”颗粒物DLC”23333<br>因为它就像拓展组件一样，可以堆很多额外的传感器来增强功能。<br>(这就是它叫V1.0的原因之一~)    </p>
-<p>然后，全部连接好，烧录程序，开始调试。  </p>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e8RRx.jpg" alt="1e8RRx.jpg" border="0">
-</center>
-
-<p>这是最初的调试代码，只用了一个页面来显示数据。  </p>
-<blockquote>
-<p>侧面  </p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e8Wz6.jpg" alt="1e8Wz6.jpg" border="0">
-</center>
-
-<blockquote>
-<p>屁股翻过来看看</p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e8giR.jpg" alt="1e8giR.jpg" border="0">
-</center>
-
-<blockquote>
-<p>Final!  </p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e84sO.jpg" alt="1e84sO.jpg" border="0">
-</center>
-
-
-<h1 id="Enjoy-装逼"><a href="#Enjoy-装逼" class="headerlink" title="Enjoy!(装逼)"></a>Enjoy!(<del>装逼</del>)</h1><p><del>什么？我费尽千辛万苦做出来个炫酷玩意儿还不许我装装逼了？</del>  </p>
-<p>这个项目本来就是 好 van ♂ 的<br>想怎样使用都看你自己啦。<br>在这里放一些我自己玩的图片  </p>
-<blockquote>
-<p>在电梯里，我开启了开关，电池充放电管理模块上的电压指示红色LED在电梯上形成一道猩红色的光带 <strong>(<del>异闻带</del>)</strong>   </p>
-</blockquote>
-<blockquote>
-<p>某CNPP同学说这是”鲨红了眼”</p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e85LD.jpg" alt="1e85LD.jpg" border="0">
-</center>
-
-<blockquote>
-<p>在某个 Lab Stay Night，我饿了…<br>于是我出门买烤冷面，路上我用它测量了一下晚上10点长安区的气温(好冷鸭.jpg)<br>可以看到，-3度，湿度58.22%….  </p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/01/25/1e8oee.jpg" alt="1e8oee.jpg" border="0">
-</center>
-
-<h2 id="END！"><a href="#END！" class="headerlink" title="END！"></a>END！</h2><h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>其实我最后放弃了使用MQ-135。。。<br>因为我发现这东西耗电太大了，因为它的工作原理依赖电热丝，不仅耗电，发热还会干扰到上面的温湿度传感器正常采集数据(怪我的机械设计布局没考虑周全)，所以你在代码中是看不到这个传感器的采集的~  </p>
-<p>然后。。V2.0版本，我预计会加入简单的盖革计数管，测量环境本底辐射，有条件再加入联网功能，可以查询气象站API并跟自己的数据比对。  </p>
-<p>我还想加入一些奇怪的传感器，比如氧气浓度和二氧化碳，气压，海拔，电子罗盘，陀螺仪等。(好像有点太多了)(主要还是传感器太贵了，咱买不起啊orz)  </p>
-<p>还想换一个大一些的显示器，做一个更好看的GUI~！(我希望实现曲线记录显示)  </p>
-<h2 id="这个坑先挖在这，什么时候填呢…有空再说！"><a href="#这个坑先挖在这，什么时候填呢…有空再说！" class="headerlink" title="这个坑先挖在这，什么时候填呢…有空再说！"></a>这个坑先挖在这，什么时候填呢…有空再说！</h2>
                 
             </div>
             <hr/>
@@ -808,7 +708,7 @@ void _homePage(void)
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://floydfish.xyz/2020/03/02/mo-shi-sheng-cun-instrument/">https://floydfish.xyz/2020/03/02/mo-shi-sheng-cun-instrument/</a>
+                    <a href="https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/">https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -850,8 +750,12 @@ void _homePage(void)
                                     <span class="chip bg-color">diy</span>
                                 </a>
                             
-                                <a href="/tags/Arduino/">
-                                    <span class="chip bg-color">Arduino</span>
+                                <a href="/tags/STM32/">
+                                    <span class="chip bg-color">STM32</span>
+                                </a>
+                            
+                                <a href="/tags/Analog-Circuits/">
+                                    <span class="chip bg-color">Analog Circuits</span>
                                 </a>
                             
                         </div>
@@ -1284,29 +1188,30 @@ void _homePage(void)
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/03/06/esp32-sensorkit-tian-keng-ji-lu/">
+                <a href="/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="ESP32-sensorKit 填坑记录">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="中高速模拟信号采集系统">
                         
-                        <span class="card-title">ESP32-sensorKit 填坑记录</span>
+                        <span class="card-title">中高速模拟信号采集系统</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            ESP32-sensorKit 填坑记录ESP32是一系列强大的集成WiFi和BLE的Soc，用它来开发各种与物联网相关的小项目当然是最好不过啦~继上一次的EndWorld_Kit，我想添加数据上传到远端服务器这一选项，顺便做个漂亮的GUI
+                            
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-03-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-16
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1319,6 +1224,7 @@ void _homePage(void)
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1326,12 +1232,12 @@ void _homePage(void)
                         <span class="chip bg-color">diy</span>
                     </a>
                     
-                    <a href="/tags/KiCad/">
-                        <span class="chip bg-color">KiCad</span>
+                    <a href="/tags/STM32/">
+                        <span class="chip bg-color">STM32</span>
                     </a>
                     
-                    <a href="/tags/ESP32/">
-                        <span class="chip bg-color">ESP32</span>
+                    <a href="/tags/Analog-Circuits/">
+                        <span class="chip bg-color">Analog Circuits</span>
                     </a>
                     
                 </div>
@@ -1345,32 +1251,46 @@ void _homePage(void)
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/03/02/first-blog/">
+                <a href="/2021/01/06/wei-lai-gui-hua/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="First blog">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="未来规划">
                         
-                        <span class="card-title">First blog</span>
+                        <span class="card-title">未来规划</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            迷茫是人生的常态吗？对此我心存疑问。不管怎么说，过去的4年我肯定是迷茫的(2016-2020)。  
+接触到了太多未知的技术，反而一时失去了方向，随后更失去了学习的动力——也跟我低下的自制力有关，总是管不住自己摸鱼的念头)  
+总之是想借新
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-03-02
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-01-06
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Floyd-Fish
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Life/" class="post-category">
+                                    Life
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Life/">
+                        <span class="chip bg-color">Life</span>
+                    </a>
+                    
                 </div>
                 
             </div>

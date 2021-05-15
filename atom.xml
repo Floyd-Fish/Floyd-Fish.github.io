@@ -6,7 +6,7 @@
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-01-06T17:03:16.553Z</updated>
+  <updated>2021-05-15T20:48:02.643Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>中高速模拟信号采集系统</title>
+    <link href="https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/"/>
+    <id>https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/</id>
+    <published>2021-05-15T20:44:34.000Z</published>
+    <updated>2021-05-15T20:48:02.643Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;创作说明&quot;&gt;&lt;a href=&quot;#创作说明&quot; class=&quot;headerlink&quot; title=&quot;创作说明&quot;&gt;&lt;/a&gt;创作说明&lt;/h2&gt;&lt;p&gt;本文首发于&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="Analog Circuits" scheme="https://floydfish.xyz/tags/Analog-Circuits/"/>
+    
+  </entry>
   
   <entry>
     <title>未来规划</title>
