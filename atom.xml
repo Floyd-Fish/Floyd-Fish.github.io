@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Floydfish&#39;s Garden</title>
+  <title>伽蓝之堂</title>
   
   <subtitle>In the garden of sinners</subtitle>
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-05-16T19:35:06.753Z</updated>
+  <updated>2021-05-16T19:52:45.394Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://floydfish.xyz/2021/05/17/zhuan-ji-shou-cang-1/"/>
     <id>https://floydfish.xyz/2021/05/17/zhuan-ji-shou-cang-1/</id>
     <published>2021-05-16T17:00:43.000Z</published>
-    <updated>2021-05-16T19:35:06.753Z</updated>
+    <updated>2021-05-16T19:52:45.394Z</updated>
     
     
       
@@ -34,6 +34,12 @@
     
     
     
+    <category term="Life" scheme="https://floydfish.xyz/categories/Life/"/>
+    
+    
+    <category term="Life" scheme="https://floydfish.xyz/tags/Life/"/>
+    
+    <category term="Music" scheme="https://floydfish.xyz/tags/Music/"/>
     
   </entry>
   
@@ -219,17 +225,19 @@
     <link href="https://floydfish.xyz/2020/04/22/guang-ying-ji-yi-1/"/>
     <id>https://floydfish.xyz/2020/04/22/guang-ying-ji-yi-1/</id>
     <published>2020-04-22T13:51:30.000Z</published>
-    <updated>2020-04-22T14:21:11.049Z</updated>
+    <updated>2021-05-16T19:53:41.274Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;光与影的故事&quot;&gt;&lt;a href=&quot;#光与影的故事&quot; class=&quot;headerlink&quot; title=&quot;光与影的故事&quot;&gt;&lt;/a&gt;光与影的故事&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://imgchr.com/i/JUMdfS&quot;&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/04/22/JUMdfS.md.png&quot; alt=&quot;JUMdfS.md.png&quot;&gt;&lt;/a&gt;&lt;/p&gt;</summary>
     
     
     
-    <category term="life" scheme="https://floydfish.xyz/categories/life/"/>
+    <category term="Life" scheme="https://floydfish.xyz/categories/Life/"/>
     
     
     <category term="Photography" scheme="https://floydfish.xyz/tags/Photography/"/>
+    
+    <category term="Life" scheme="https://floydfish.xyz/tags/Life/"/>
     
   </entry>
   
@@ -262,9 +270,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
-    
     <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
     
   </entry>
   
@@ -288,9 +296,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
-    
     <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
     
   </entry>
   
