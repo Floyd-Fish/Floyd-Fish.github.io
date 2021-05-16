@@ -482,7 +482,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    2.1k
                 </div>
                 
 
@@ -681,7 +681,128 @@
 <img src="https://z3.ax1x.com/2021/05/10/gN8QHK.jpg" alt="gN8QHK.jpg" border="0">
 
 <h2 id="测试——"><a href="#测试——" class="headerlink" title="测试——"></a>测试——</h2><p>测试单片机平台 <code>STM32F303CCT6</code><br>代码我之前写过一份最简单的3-wire模式操作,放在文章开头的资料链接里了~  </p>
-<p>啊,板子还没到,暂时先鸽着.jpg  </p>
+<p><del>啊,板子还没到,暂时先鸽着.jpg</del>  </p>
+<p>到了到了,但是基准电压IC-REF03G我还没买 (<del>好贵的说</del>) ,于是先用LDO的3.3V输出当reference用用~  </p>
+<p>正面  </p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gc7EPf.jpg" alt="gc7EPf.jpg"></p>
+<p>反面  </p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gc7Fat.jpg" alt="gc7Fat.jpg"></p>
+<p>连上杜邦线的样子:  </p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gc7VG8.jpg" alt="gc7VG8.jpg"></p>
+<h3 id="ADC驱动电路测试"><a href="#ADC驱动电路测试" class="headerlink" title="ADC驱动电路测试"></a>ADC驱动电路测试</h3><p>使用的测试仪器有:  </p>
+<ul>
+<li>500MHz带宽,4Gsa采样率示波器  </li>
+<li>200MHz信号源  </li>
+</ul>
+<p>首先,用信号源产生一个 <strong>16Vpp,无直流偏置 /(±8V) ,频率100kHz的正弦信号</strong> ,输入模拟前端,在ADC输入侧,即模拟前端输出的测试点,用示波器测试如下: </p>
+<center>
+
+<p><strong>100kHz正弦信号</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5Acd.jpg" alt="gc5Acd.jpg"></p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5uAf.jpg" alt="gc5uAf.jpg"></p>
+<p>依据我们ADC驱动电路的设计传输函数:  </p>
+<p>$$ y = G * x + b $$  </p>
+<p>$$<br> G = 0.0625, b = 1<br>$$</p>
+<p>$$<br> y为输出,x为输入<br>$$</p>
+<p>计算得出的结果符合实际测试结果~ 真不戳  </p>
+<p>再来测试一些别的信号:</p>
+<center>
+
+<p><strong>1kHz,±8V正弦信号</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5mHP.jpg" alt="gc5mHP.jpg"></p>
+<center>
+
+<p><strong>10Hz,±8V正弦信号</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5ZnI.jpg" alt="gc5ZnI.jpg"></p>
+<center>
+
+<p><strong>100kHz,±8V三角波信号</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5eBt.jpg" alt="gc5eBt.jpg"></p>
+<center>
+
+<p><strong>100kHz,±1V三角波信号</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5EjA.jpg" alt="gc5EjA.jpg"></p>
+<center>
+
+<p><strong>100kHz,奇怪的信号增加了~</strong></p>
+</center>
+
+<p><img src="https://z3.ax1x.com/2021/05/16/gc5k1H.jpg" alt="gc5k1H.jpg"></p>
+<h3 id="单片机收集数据"><a href="#单片机收集数据" class="headerlink" title="单片机收集数据"></a>单片机收集数据</h3><p>我用了STM32F303CCT6来控制ADS8860采集信号并接受其发送的转换数据,配置ADS8860工作模式为  </p>
+<center>
+
+<p><strong>3-wire CS mode without BUSY Indicator</strong></p>
+</center>
+
+<p>我使用TIM6定时产生的事件来控制ADS8860的采样率,在定时器中断中完成采样和数据传输。  </p>
+<p>最核心的代码是这一小段,非常简单。  </p>
+<pre class="line-numbers language-c"><code class="language-c">
+uint16_t <span class="token function">ads8860_readADCRawValue</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    uint8_t data<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    
+    <span class="token comment" spellcheck="true">//    Set CONVST to high to start a conversion</span>
+    GPIOB <span class="token operator">-></span> BSRR <span class="token operator">=</span> ADS8860_CVST_Pin<span class="token punctuation">;</span>
+    
+    <span class="token comment" spellcheck="true">//    At least 700ns delay</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>uint16_t i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">42</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token function">__nop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    GPIOB <span class="token operator">-></span> BRR <span class="token operator">=</span> ADS8860_CVST_Pin<span class="token punctuation">;</span>
+    
+    <span class="token function">HAL_SPI_Receive</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ADS8860_SPI_Port<span class="token punctuation">,</span> data<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">0xFF</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token comment" spellcheck="true">//    Return converted data</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;&lt;</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">|</span> data<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>定时器回调函数    </p>
+<pre class="line-numbers language-c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">HAL_TIM_PeriodElapsedCallback</span><span class="token punctuation">(</span>TIM_HandleTypeDef <span class="token operator">*</span> htim<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>htim <span class="token operator">-></span> Instance <span class="token operator">==</span> TIM6<span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>adc_conv_flag <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>adc_printf_flag <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+                adc_conv_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                adc_printf_flag <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">else</span> 
+                <span class="token function">__nop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        
+        <span class="token keyword">else</span> 
+        <span class="token punctuation">{</span>
+            adcRawData<span class="token punctuation">[</span>adc_counter<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">ads8860_readADCRawValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            adc_counter<span class="token operator">++</span><span class="token punctuation">;</span>
+            
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>adc_counter <span class="token operator">==</span> ADC_SAMPLE_SIZE<span class="token punctuation">)</span>
+            <span class="token punctuation">{</span>
+                adc_counter <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                adc_conv_flag <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>驱动代码和其他资料一起打包放在开头的github仓库里了~  </p>
+<p>采集一个1kHz 峰峰值16V,无直流偏置的正弦信号,并将波形数据通过串口打印到上位机绘图,得到如下结果:  </p>
+<p><img src="https://z3.ax1x.com/2021/05/16/gcbk38.png" alt="gcbk38.png"></p>
+<p>真不戳。  </p>
+<p>在调试的时候遇到了一些问题,比如采样率和定时器计算值不符,后来发现可能是F3的主频太低,spi速率不太够…  </p>
+<p>现在测试出来最高采样率差不多只能跑到20kHz (<strong><del>啊喂,这也差太多了吧!</del></strong>) 如果以后有条件我会尝试使用更高速的单片机进行测试的~  </p>
+<p>这期就是这样,感谢你耐心地看完~  </p>
 
                 
             </div>
@@ -1465,6 +1586,13 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
 </main>
 
 
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
+
 
 
     <footer class="page-footer bg-color">
@@ -1527,7 +1655,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">16.3k</span>&nbsp;字
+                class="white-color">16.9k</span>&nbsp;字
             
             
             

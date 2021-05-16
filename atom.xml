@@ -6,7 +6,7 @@
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-05-15T20:48:02.643Z</updated>
+  <updated>2021-05-16T07:40:49.711Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/"/>
     <id>https://floydfish.xyz/2021/05/16/zhong-gao-su-mo-ni-xin-hao-cai-ji-xi-tong/</id>
     <published>2021-05-15T20:44:34.000Z</published>
-    <updated>2021-05-15T20:48:02.643Z</updated>
+    <updated>2021-05-16T07:40:49.711Z</updated>
     
     
       
@@ -71,7 +71,7 @@
     <link href="https://floydfish.xyz/2020/12/11/sheng-huo-sui-bi/"/>
     <id>https://floydfish.xyz/2020/12/11/sheng-huo-sui-bi/</id>
     <published>2020-12-11T12:21:30.000Z</published>
-    <updated>2020-12-11T19:04:24.409Z</updated>
+    <updated>2021-05-16T07:59:15.958Z</updated>
     
     
     <summary type="html">&lt;p&gt;赶在2020过去之前,记录一下这一年的动荡——&lt;/p&gt;
@@ -241,9 +241,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
-    
     <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
     
   </entry>
   
@@ -267,9 +267,9 @@
     
     <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
     
-    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
-    
     <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
     
   </entry>
   
