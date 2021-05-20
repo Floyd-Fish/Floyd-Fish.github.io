@@ -29,9 +29,9 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
-
+<meta name="generator" content="Hexo 5.4.0">
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
 </head>
 
 
@@ -559,7 +559,7 @@
 <p>我们来看一个专用DDS芯片的内部框图。<br><a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/ad9833.html">AD9833</a>是一款28位分辨率,25MHz完整DDS芯片。  </p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png" alt="ad9833"></p>
 <p>DDS核心由相位累加器<code>PA</code>、<code>相位幅度表(波表)</code>和<code>数模转换器(DAC)</code>组成。</p>
-<p>对应上面的框图是这样的(好啦知道某些读者嘤语不好了orz):  </p>
+<p>对应上面的框图是这样的（好啦知道某些读者嘤语不好了orz）:  </p>
 <ul>
 <li>Phase accumulator（28-BIT）是28位相位累加器  </li>
 <li>SIN ROM是只读存储器（Read-Only Memory）,存储了正弦波表  </li>
@@ -604,7 +604,7 @@
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png" alt="explain"></p>
 <p>简单来说,在输出Buffer关闭的情况下,如果输出有容性负载（事实上绝大多数情况下不可避免）,如果要得到1LSB精度的输出值（也就是DAC输出稳定下来）,通过RC充电电路的计算公式可以得出 DAC的 <strong>Settling time</strong>。</p>
 <p>算出来约为1.8us,也就是DAC的输出速率最高只能到 <strong>555kHz</strong> 左右!<br>而且这个计算还没考虑到DAC在高速运行时的其他寄生参数带来的影响,也就是说实际上这个最大速率会更低。  </p>
-<h3 id="外部运放-提升性能"><a href="#外部运放-提升性能" class="headerlink" title="外部运放-提升性能"></a>外部运放-提升性能</h3><p>诶..我这么好的性能,怎么就速度上不去呢?(<del>我没有开某人</del>(bushi))</p>
+<h3 id="外部运放-提升性能"><a href="#外部运放-提升性能" class="headerlink" title="外部运放-提升性能"></a>外部运放-提升性能</h3><p>诶..我这么好的性能,怎么就速度上不去呢?（<del>我没有开某人</del>（bushi））</p>
 <p>既然内部的Buffer太弟弟了,我们就外接一个牛逼点的。  </p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png" alt="Ex op"></p>
 <p>在这个模型中，限制DAC输出速度的主要有3个因素:</p>
@@ -653,7 +653,7 @@
 <ul>
 <li>Clock source选择Internal,查看时钟树可以看到TIM8的clock是72MHz  </li>
 <li>然后Prescaler（预分频）设置为0,不分频  </li>
-<li>Counter Period（计数周期）设置为18-1那么定时器的触发频率就是 72MHz / 18 = 4MHz</li>
+<li>Counter Period（计数周期）设置为18-1，那么定时器的触发频率就是 72MHz / 18 = 4MHz</li>
 <li><strong>Trigger Event Selection TRGO</strong>选择Update Event,即更新事件,这个事件用于触发DAC的DMA去搬数据  </li>
 </ul>
 <p>别忘了,我们开了Double data Mode,定时器更新事件频率为4MHz,实际的DAC 输出 sampling rate应该是8MHz哦  </p>
