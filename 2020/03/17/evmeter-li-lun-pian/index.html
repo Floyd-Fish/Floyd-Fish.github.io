@@ -29,11 +29,10 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
 
 
@@ -499,6 +498,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -509,13 +511,10 @@
 <h1 id="EV-Exposure-Value"><a href="#EV-Exposure-Value" class="headerlink" title="EV-Exposure Value"></a>EV-Exposure Value</h1><p>曝光值代表能够给出同样曝光的所有相机光圈和快门的组合。这一概念是在一九五零年代在德国发展起来的，被试图用以简化在等价的拍摄参数之间进行选择的过程。曝光值同样也可以表示曝光刻度上的一个级差，1EV对应于两倍的曝光比例并通常被称为“一挡”  </p>
 <p>曝光值最早是使用符号Ev来表示,ISO标准中(不是感光的那个ISO,是国际标准化组织)延续了这一标记法,但在其他地方EV这个缩写更常见~  </p>
 <span id="more"></span>
-
 <h2 id="Define"><a href="#Define" class="headerlink" title="Define"></a>Define</h2><p>曝光值是一个以2为底的对数刻度系统:  </p>
-<p>$$E_v = \log_2 {N^2 \over t} $$</p>
-<p>其中N是光圈(F value),t是曝光时间(快门),单位秒(s).  </p>
+<script type="math/tex; mode=display">E_v = \log_2 {N^2 \over t}</script><p>其中N是光圈(F value),t是曝光时间(快门),单位秒(s).  </p>
 <h2 id="EV-amp-Light-Lux"><a href="#EV-amp-Light-Lux" class="headerlink" title="EV &amp; Light(Lux)"></a>EV &amp; Light(Lux)</h2><p>在给定照明条件下所采用的F值与曝光时间由下式给出: </p>
-<p>$$ {N^2 \over t} = {LS \over K} $$  </p>
-<p>其中:  </p>
+<script type="math/tex; mode=display">{N^2 \over t} = {LS \over K}</script><p>其中:  </p>
 <ul>
 <li>N是相对光圈(F值)  </li>
 <li>t是曝光时间,单位秒(s)  </li>
@@ -524,26 +523,26 @@
 <li>K是反射式测光表校正常数  </li>
 </ul>
 <p>代入等式右边，得到曝光值:  </p>
-<p>$$ E_v = \log_2{LS \over K} $$<br>同样也可以由入射式测光结果计算拍摄参数:<br>$$ {N^2 \over t} = {ES \over C} $$<br>其中:</p>
+<script type="math/tex; mode=display">E_v = \log_2{LS \over K}</script><p>同样也可以由入射式测光结果计算拍摄参数:  </p>
+<script type="math/tex; mode=display">{N^2 \over t} = {ES \over C}</script><p>其中:</p>
 <ul>
 <li>E是照度  </li>
-<li>C是入射式测光表校正常数<br>当然也有:<br>$$ E_v = log_2{ES \over C} $$  </li>
+<li>C是入射式测光表校正常数<br>当然也有:  <script type="math/tex; mode=display">E_v = log_2{ES \over C}</script></li>
 </ul>
 <h1 id="用EV作为照度与亮度的量度"><a href="#用EV作为照度与亮度的量度" class="headerlink" title="用EV作为照度与亮度的量度"></a>用EV作为照度与亮度的量度</h1><p>好绕口的标题.jpg<br>在给定ISO和测光表校正常数(K或C)之后,EV与亮度(或照度)之间就建立了直接的关联。  </p>
 <blockquote>
 <p>严格地说，曝光值并不是亮度或照度的量度：事实上，一个对应于某一亮度（或照度）的曝光值是用以指示照相机（已知其感光度）来获取所谓的正确曝光用的。然而，摄影器材生产商在实践中常常用感光度100时的曝光值来表达亮度，如在说明测光范围或对焦灵敏度时。这一做法由来已久。标准的做法是同时声明所用测光表校正常数和对应的感光度，但很少有厂商会这么做。  </p>
 </blockquote>
 <p>不同厂商所选用的反射式测光表校正常数之间有微小的差别。一个普遍的选择是12.5（佳能，尼康和世光）。在感光度100时，曝光值与亮度的关系为： </p>
-<p>$$ L = 2^{EV-3} $$  </p>
-<p>该式的推导如下:<br>已知<br>$$ EV = log_2{N^2 \over t}  $$<br>$$ {N^2 \over t} = {LS \over K} $$<br>$$ \Longrightarrow L = 2^{EV}*{K \over S} $$<br>$$ while K=12.5,S=100, \Longrightarrow L = 2^{EV}*0.125=2^{EV-3} $$  </p>
-<p>入射式测光表的情况比反射式测光表要复杂得多，因为校正常数C与传感器类型有关。有两种传感器很常见：平面型（余弦响应）和半球型（心形响应）。用平面型传感器测量照度时，C 的典型值是250，而照度的单位是勒克斯（lux）。在 C = 250时，照度与感光度100下的曝光值的关系为:<br>$$ E = 2.5*2^{EV} $$  </p>
-<p>推导如下:<br>已知  </p>
-<p>$$ EV = log_2{N^2 \over t} $$<br>$$ {N^2 \over t} = {ES \over C} $$<br>$$ \Longrightarrow E = 2^{EV}<em>{C \over S} $$<br>$$ while C=250,S=100, \Longrightarrow L = 2.5</em>2^{EV} $$  </p>
-<blockquote>
+<script type="math/tex; mode=display">L = 2^{EV-3}</script><p>该式的推导如下:<br>已知   </p>
+<script type="math/tex; mode=display">EV = log_2{N^2 \over t}</script><script type="math/tex; mode=display">{N^2 \over t} = {LS \over K}</script><script type="math/tex; mode=display">\Longrightarrow L = 2^{EV}*{K \over S}</script><script type="math/tex; mode=display">while K=12.5,S=100, \Longrightarrow L = 2^{EV}*0.125=2^{EV-3}</script><p>入射式测光表的情况比反射式测光表要复杂得多，因为校正常数C与传感器类型有关。有两种传感器很常见：平面型（余弦响应）和半球型（心形响应）。用平面型传感器测量照度时，C 的典型值是250，而照度的单位是勒克斯（lux）。在 C = 250时，照度与感光度100下的曝光值的关系为:  </p>
+<script type="math/tex; mode=display">E = 2.5*2^{EV}</script><p>推导如下:<br>已知  </p>
+<script type="math/tex; mode=display">EV = log_2{N^2 \over t}</script><script type="math/tex; mode=display">{N^2 \over t} = {ES \over C}</script><script type="math/tex; mode=display">\Longrightarrow E = 2^{EV}*{C \over S}</script><script type="math/tex; mode=display">while C=250,S=100, \Longrightarrow L = 2.5*2^{EV}</script><blockquote>
 <p>尽管（用平面型传感器）测量得到的照度可以用以指示对于一个平面物体的曝光，这一办法对于通常的场景却不是那么有用，因为这些场景中的许多元素都不是平的，其相对于相机的朝向也各不相同。半球型传感器在测量影像曝光时更为实用。对于半球型传感器，C值通常在320（美能达）和340（世光）之间。如果对“照度”的定义不那么严格的话，半球型传感器所测得的结果可以说是指示了“场景照度”。  </p>
 </blockquote>
 <p>下表显示了该关系式下不同曝光值所对应的亮度值.用这个式子，一个以曝光值为示数的反射式测光表可以用来测量亮度  </p>
 <h3 id="Table"><a href="#Table" class="headerlink" title="Table"></a>Table</h3><p><strong>曝光值与亮度(感光度=100,K=12.5)和照度(感光度=100,C=250)</strong>  </p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -556,7 +555,8 @@
 <th>照度(lx)</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>-4</td>
 <td>0.008</td>
 <td>0.156</td>
@@ -655,14 +655,14 @@
 <td>of!</td>
 <td>overflow!</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h1 id="对于不同的ISO-这次是感光度了-的修正"><a href="#对于不同的ISO-这次是感光度了-的修正" class="headerlink" title="对于不同的ISO(这次是感光度了)的修正"></a>对于不同的ISO(这次是感光度了)的修正</h1><p>以上给出的所有数据都是在ISO=100的条件下测得的。<br>如果你了解过ISO和曝光补偿,那么你应该知道该怎么做了~  </p>
 <p>对于某一感光度S，应当以这一感光度高出（低于）ISO100的曝光挡数进行增减，用公式表示为： </p>
-<p>$$ EV_S = EV_{100} + log_2{S \over 100}.$$  </p>
-<p>比如,ISO400比ISO100高出2档:<br>$$ EV_{400} = EV_{100} + log_2{400 \over 100} = EV_{100} + 2. $$  </p>
-<p>对于更低的感光度，以这一感光度低于ISO100的曝光挡数降低曝光值（增加曝光）。比如ISO50比ISO100低了一挡。  </p>
-<p>$$ EV_{50} = EV_{100} + log_2{50 \over 100} = EV_{100} - 1. $$  </p>
-<h1 id="使用EV表示的曝光补偿"><a href="#使用EV表示的曝光补偿" class="headerlink" title="使用EV表示的曝光补偿"></a>使用EV表示的曝光补偿</h1><p>许多现代照相机都允许设置曝光补偿，并通常用EV这个词来表示。在这种情况下， <strong>EV指的是相机测光数据减去实际曝光值的差。</strong> 比如+1EV的曝光补偿意味着增加一档曝光，不管是通过延长曝光时间还是更小的f值。  </p>
+<script type="math/tex; mode=display">EV_S = EV_{100} + log_2{S \over 100}.</script><p>比如,ISO400比ISO100高出2档:  </p>
+<script type="math/tex; mode=display">EV_{400} = EV_{100} + log_2{400 \over 100} = EV_{100} + 2.</script><p>对于更低的感光度，以这一感光度低于ISO100的曝光挡数降低曝光值（增加曝光）。比如ISO50比ISO100低了一挡。  </p>
+<script type="math/tex; mode=display">EV_{50} = EV_{100} + log_2{50 \over 100} = EV_{100} - 1.</script><h1 id="使用EV表示的曝光补偿"><a href="#使用EV表示的曝光补偿" class="headerlink" title="使用EV表示的曝光补偿"></a>使用EV表示的曝光补偿</h1><p>许多现代照相机都允许设置曝光补偿，并通常用EV这个词来表示。在这种情况下， <strong>EV指的是相机测光数据减去实际曝光值的差。</strong> 比如+1EV的曝光补偿意味着增加一档曝光，不管是通过延长曝光时间还是更小的f值。  </p>
 <p>在这里，EV的含义和先前刻度系统中的EV（曝光值）恰好是相反的。增加曝光对应于减少曝光值（-EV），因此+1EV的曝光补偿意味着更小的EV（曝光值）；反过来，-1EV的曝光补偿的结果是更大的EV。例如，测得某一比中性灰更亮的物体的EV为16，并设定+1EV的曝光补偿以修正曝光，那么最终的拍摄参数对应于EV15（而不是17）。  </p>
 <h1 id="再进一步"><a href="#再进一步" class="headerlink" title="再进一步!"></a>再进一步!</h1><p>我们使用相机M档进行拍摄的操作一般是——   </p>
 <ol>
@@ -687,11 +687,9 @@
 <p>或者把这个流程任意调换顺序,反正是4个参数，知3求1.都没问题的~  </p>
 <p>由此,我们整理公式可以得到:  </p>
 <p>给定ISO、光圈值,计算快门时间:  </p>
-<p>$$ t = {N^2 \over S*E} * C  $$  </p>
-<p>给定光圈值、快门时间,计算ISO:  </p>
-<p>$$ S = { { N^2 * E } \over t} * {1 \over C} $$  </p>
-<p>给定快门时间、ISO,计算光圈F值:<br>$$ N = \sqrt {S<em>E</em>t \over C} $$  </p>
-<p>式中,各参数含义如下:  </p>
+<script type="math/tex; mode=display">t = {N^2 \over S*E} * C</script><p>给定光圈值、快门时间,计算ISO:  </p>
+<script type="math/tex; mode=display">S = { { N^2 * E } \over t} * {1 \over C}</script><p>给定快门时间、ISO,计算光圈F值:  </p>
+<script type="math/tex; mode=display">N = \sqrt {S*E*t \over C}</script><p>式中,各参数含义如下:  </p>
 <ul>
 <li>t-快门时间,单位秒(s)  </li>
 <li>N-光圈F值,典型的如f2.8、f4、f5.6……  </li>
@@ -703,7 +701,7 @@
 <h1 id="Codeworks"><a href="#Codeworks" class="headerlink" title="Codeworks"></a>Codeworks</h1><p>今天我调了半天,写出了初代曝光参数计算算法,数据结构和C没学好(我太菜了),所以并不会做优化。。。在x86平台上使用vscode编写,g++编译调试,测试初步通过。  </p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/8DRkEd"><img src="https://s1.ax1x.com/2020/03/18/8DRkEd.md.png" alt="8DRkEd.png" border="0"></a></p>
 <h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>第一步我们需要获取标准的ISO/曝光时间/光圈数据表,很简单，打开相机装上AF镜头,开始一个一个调参数…  </p>
-<pre class="line-numbers language-c"><code class="language-c">uint16_t ISO<span class="token punctuation">[</span><span class="token number">24</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token class-name">uint16_t</span> ISO<span class="token punctuation">[</span><span class="token number">24</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
         <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">125</span><span class="token punctuation">,</span> <span class="token number">160</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">320</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span>
         <span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">640</span><span class="token punctuation">,</span> <span class="token number">800</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">,</span> <span class="token number">1250</span><span class="token punctuation">,</span> <span class="token number">1600</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">2500</span><span class="token punctuation">,</span>
         <span class="token number">3200</span><span class="token punctuation">,</span> <span class="token number">4000</span><span class="token punctuation">,</span> <span class="token number">5000</span><span class="token punctuation">,</span> <span class="token number">6400</span><span class="token punctuation">,</span> <span class="token number">8000</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">,</span> <span class="token number">12800</span><span class="token punctuation">,</span><span class="token number">25600</span>
@@ -715,12 +713,12 @@
         <span class="token number">14.0</span><span class="token punctuation">,</span> <span class="token number">16.0</span><span class="token punctuation">,</span> <span class="token number">18.0</span><span class="token punctuation">,</span> <span class="token number">20.0</span><span class="token punctuation">,</span> <span class="token number">22.0</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-uint16_t SHUTTER<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">/* values at the beginning should be used as 1/x */</span>
+<span class="token class-name">uint16_t</span> SHUTTER<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token comment">/* values at the beginning should be used as 1/x */</span>
         <span class="token number">4000</span><span class="token punctuation">,</span> <span class="token number">3200</span><span class="token punctuation">,</span> <span class="token number">2500</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">,</span> <span class="token number">1600</span><span class="token punctuation">,</span> <span class="token number">1250</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">,</span>
         <span class="token number">800</span><span class="token punctuation">,</span> <span class="token number">640</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token number">320</span><span class="token punctuation">,</span> <span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">160</span><span class="token punctuation">,</span> <span class="token number">125</span><span class="token punctuation">,</span>
         <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">80</span><span class="token punctuation">,</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span>
-        <span class="token comment" spellcheck="true">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span>
+        <span class="token comment">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span>
         <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">1</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
@@ -728,42 +726,40 @@ uint16_t SHUTTER<span class="token punctuation">[</span><span class="token punct
         <span class="token number">0.00025</span><span class="token punctuation">,</span> <span class="token number">0.0003125</span><span class="token punctuation">,</span> <span class="token number">0.0004</span><span class="token punctuation">,</span> <span class="token number">0.0005</span><span class="token punctuation">,</span> <span class="token number">0.000625</span><span class="token punctuation">,</span> <span class="token number">0.0008</span><span class="token punctuation">,</span> <span class="token number">0.001</span><span class="token punctuation">,</span>
         <span class="token number">0.00125</span><span class="token punctuation">,</span> <span class="token number">0.0015625</span><span class="token punctuation">,</span> <span class="token number">0.002</span><span class="token punctuation">,</span> <span class="token number">0.0025</span><span class="token punctuation">,</span> <span class="token number">0.003125</span><span class="token punctuation">,</span> <span class="token number">0.004</span><span class="token punctuation">,</span> <span class="token number">0.005</span><span class="token punctuation">,</span> <span class="token number">0.00625</span><span class="token punctuation">,</span> <span class="token number">0.008</span><span class="token punctuation">,</span>
         <span class="token number">0.01</span><span class="token punctuation">,</span> <span class="token number">0.0125</span><span class="token punctuation">,</span> <span class="token number">0.0166667</span><span class="token punctuation">,</span> <span class="token number">0.02</span><span class="token punctuation">,</span> <span class="token number">0.025</span><span class="token punctuation">,</span> <span class="token number">0.0333333</span><span class="token punctuation">,</span> <span class="token number">0.04</span><span class="token punctuation">,</span> <span class="token number">0.05</span><span class="token punctuation">,</span> <span class="token number">0.0666667</span><span class="token punctuation">,</span> <span class="token number">0.0769231</span><span class="token punctuation">,</span> <span class="token number">0.1</span><span class="token punctuation">,</span> <span class="token number">0.125</span><span class="token punctuation">,</span> <span class="token number">0.1666667</span><span class="token punctuation">,</span> <span class="token number">0.2</span><span class="token punctuation">,</span> <span class="token number">0.25</span><span class="token punctuation">,</span>
-        <span class="token comment" spellcheck="true">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span>
+        <span class="token comment">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span>
         <span class="token number">0.3</span><span class="token punctuation">,</span> <span class="token number">0.4</span><span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token number">0.6</span> <span class="token punctuation">,</span><span class="token number">0.8</span><span class="token punctuation">,</span> <span class="token number">1.0</span>
 
 <span class="token keyword">double</span> lx_test<span class="token punctuation">[</span><span class="token number">11</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">0.156</span><span class="token punctuation">,</span> <span class="token number">0.625</span><span class="token punctuation">,</span> <span class="token number">2.5</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">,</span> <span class="token number">160</span><span class="token punctuation">,</span> <span class="token number">640</span><span class="token punctuation">,</span> <span class="token number">2560</span><span class="token punctuation">,</span> <span class="token number">5120</span><span class="token punctuation">,</span> <span class="token number">20480</span><span class="token punctuation">,</span> <span class="token number">81920</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-<span class="token macro property">#<span class="token directive keyword">define</span> SHUTTER_F_SIZE sizeof(SHUTTER_F)/sizeof(SHUTTER_F[0])</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> APERTURE_SIZE sizeof(APERTURE)/sizeof(APERTURE[0])</span>
-<span class="token macro property">#<span class="token directive keyword">define</span> ISO_SIZE sizeof(ISO)/sizeof(ISO[0])</span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">SHUTTER_F_SIZE</span> <span class="token expression"><span class="token keyword">sizeof</span><span class="token punctuation">(</span>SHUTTER_F<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>SHUTTER_F<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">APERTURE_SIZE</span> <span class="token expression"><span class="token keyword">sizeof</span><span class="token punctuation">(</span>APERTURE<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>APERTURE<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">ISO_SIZE</span> <span class="token expression"><span class="token keyword">sizeof</span><span class="token punctuation">(</span>ISO<span class="token punctuation">)</span><span class="token operator">/</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span>ISO<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span></span></span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>为了简化计算过程，我直接根据分数时间计算出了小数，单独列了一个表。<br>最后的lx_test是我们后面测试代码的时候要用的。 </p>
 <h2 id="根据ISO-Aperture-Lux计算时间"><a href="#根据ISO-Aperture-Lux计算时间" class="headerlink" title="根据ISO/Aperture/Lux计算时间"></a>根据ISO/Aperture/Lux计算时间</h2><p>我们从这个功能入手,来分析一下这个简单的算法。。<br>整个算法的核心是我们上一章里推出的公式:  </p>
-<p>$$ t = {N^2 \over S*E} * C  $$  </p>
-<p>接下来构造一个函数，留好数据接口就ok啦~  </p>
-<pre class="line-numbers language-c"><code class="language-c">uint16_t <span class="token function">calcTime</span><span class="token punctuation">(</span>uint16_t iso<span class="token punctuation">,</span> <span class="token keyword">double</span> aperture<span class="token punctuation">,</span> <span class="token keyword">float</span> lux<span class="token punctuation">)</span>
+<script type="math/tex; mode=display">t = {N^2 \over S*E} * C</script><p>接下来构造一个函数，留好数据接口就ok啦~  </p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token class-name">uint16_t</span> <span class="token function">calcTime</span><span class="token punctuation">(</span><span class="token class-name">uint16_t</span> iso<span class="token punctuation">,</span> <span class="token keyword">double</span> aperture<span class="token punctuation">,</span> <span class="token keyword">float</span> lux<span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
     <span class="token keyword">double</span> time<span class="token punctuation">;</span>
-    uint8_t i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">double</span> previous_t<span class="token punctuation">,</span> next_t<span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/* Calculation */</span>
+    <span class="token class-name">uint8_t</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">double</span> <span class="token class-name">previous_t</span><span class="token punctuation">,</span> <span class="token class-name">next_t</span><span class="token punctuation">;</span>
+    <span class="token comment">/* Calculation */</span>
     time <span class="token operator">=</span> <span class="token punctuation">(</span>aperture <span class="token operator">*</span> aperture<span class="token punctuation">)</span> <span class="token operator">*</span> C_CONSTANT <span class="token operator">/</span> <span class="token punctuation">(</span>lux <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token keyword">double</span><span class="token punctuation">)</span>iso<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/* Skip the value below, and prevent from overflow */</span>
-    <span class="token keyword">while</span> <span class="token punctuation">(</span>time <span class="token operator">></span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">>=</span> SHUTTER_F_SIZE<span class="token number">-1</span><span class="token punctuation">)</span>
-            <span class="token keyword">return</span> SHUTTER<span class="token punctuation">[</span>SHUTTER_F_SIZE<span class="token number">-1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">/* Skip the value below, and prevent from overflow */</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>time <span class="token operator">&gt;</span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token operator">++</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">&gt;=</span> SHUTTER_F_SIZE<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> SHUTTER<span class="token punctuation">[</span>SHUTTER_F_SIZE<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-    i <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/* avoid overflow */</span>
+    i <span class="token operator">-=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token comment">/* avoid overflow */</span>
     <span class="token keyword">if</span> <span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
         <span class="token keyword">return</span> SHUTTER<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    previous_t <span class="token operator">=</span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token number">-1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    next_t <span class="token operator">=</span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token comment" spellcheck="true">/* Get the Closest Standard value */</span>
-    index <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">fabs</span><span class="token punctuation">(</span>time<span class="token operator">-</span>previous_t<span class="token punctuation">)</span> <span class="token operator">></span> <span class="token function">fabs</span><span class="token punctuation">(</span>time<span class="token operator">-</span>next_t<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">?</span> i <span class="token punctuation">:</span> i<span class="token number">-1</span><span class="token punctuation">;</span>
+    <span class="token class-name">previous_t</span> <span class="token operator">=</span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token class-name">next_t</span> <span class="token operator">=</span> SHUTTER_F<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token comment">/* Get the Closest Standard value */</span>
+    index <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">fabs</span><span class="token punctuation">(</span>time<span class="token operator">-</span><span class="token class-name">previous_t</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token function">fabs</span><span class="token punctuation">(</span>time<span class="token operator">-</span><span class="token class-name">next_t</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">?</span> i <span class="token operator">:</span> i<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
     <span class="token keyword">return</span> SHUTTER<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>注意这里返回的是16位长无符号整数,因为我们最后要显示的是1/x秒，而不是长达5、6位的小数。。。  </p>
 <p>分析完这个,那么其他的算法对我们来说应该都是小case了。。。除后面有一个需要开根号取对数的操作有点绕,别的都ok  </p>
 <p>要注意的是,在计算光圈的最近标准值时,index那里的逻辑需要反过来,因为iso和shutter都是从小到大排序建表的, <strong>而光圈数值是这样建的,可物理意义是反过来的</strong>  </p>
@@ -771,24 +767,19 @@ uint16_t SHUTTER<span class="token punctuation">[</span><span class="token punct
 <blockquote>
 <p>算ISO  </p>
 </blockquote>
-<img src="https://s1.ax1x.com/2020/03/18/8DRiHH.png" alt="8DRiHH.png" border="0">
-
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRiHH.png" alt="8DRiHH.png" border="0"></p>
 <blockquote>
 <p>算快门时间  </p>
 </blockquote>
-<img src="https://s1.ax1x.com/2020/03/18/8DRPDe.png" alt="8DRPDe.png" border="0">
-
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRPDe.png" alt="8DRPDe.png" border="0"></p>
 <blockquote>
 <p>算光圈  </p>
 </blockquote>
-<img src="https://s1.ax1x.com/2020/03/18/8DRCuD.png" alt="8DRCuD.png" border="0">
-
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRCuD.png" alt="8DRCuD.png" border="0"></p>
 <blockquote>
 <p>算曝光补偿  </p>
 </blockquote>
-<img src="https://s1.ax1x.com/2020/03/18/8DRpjO.png" alt="8DRpjO.png" border="0">
-
-
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRpjO.png" alt="8DRpjO.png" border="0"></p>
 <h1 id="下一站！"><a href="#下一站！" class="headerlink" title="下一站！"></a>下一站！</h1><p>当然是激动人心的实践环节~<br>请看下集~  </p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9B%9D%E5%85%89%E5%80%BC">Wikipedia-EV</a><br><a target="_blank" rel="noopener" href="https://photo.stackexchange.com/questions/10093/how-to-calculate-lux-from-ev">StackExchange</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5401738/how-to-convert-between-lux-and-exposure-value">StackOverflow</a>  </p>
 
@@ -1648,7 +1639,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">19.3k</span>&nbsp;字
+                class="white-color">21.6k</span>&nbsp;字
             
             
             
@@ -1867,8 +1858,6 @@ $(function () {
     
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
-
-    <script src="/js/snow.js"></script>
     
 </body>
 

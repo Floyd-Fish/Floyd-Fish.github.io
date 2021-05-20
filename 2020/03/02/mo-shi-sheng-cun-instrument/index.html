@@ -29,11 +29,10 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
 
 
@@ -495,6 +494,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -506,7 +508,7 @@
 <center>
 <a target="_blank" rel="noopener" href="https://imgchr.com/i/1e3H2V"><img src="https://s2.ax1x.com/2020/01/25/1e3H2V.md.jpg" alt="1e3H2V.jpg" border="0"></a>
 
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/1e3780"><img src="https://s2.ax1x.com/2020/01/25/1e3780.md.png" alt="1e3780.png" border="0"></a></p>
+<a target="_blank" rel="noopener" href="https://imgchr.com/i/1e3780"><img src="https://s2.ax1x.com/2020/01/25/1e3780.md.png" alt="1e3780.png" border="0"></a>
 </center>
 
 
@@ -514,7 +516,6 @@
 <p>总之，这将是一个不太适合生存的世界，如果我们想要在这种环境生存下去，此时你需要的不仅仅是一部动力装甲，你更需要这个宝贝…(把头伸过来，我给你看个宝贝.jpg)</p>
 </blockquote>
 <span id="more"></span>
-
 <center>
 <img src="https://s2.ax1x.com/2020/01/25/1e84sO.jpg" alt="1e84sO.jpg" border="0">
 </center>
@@ -543,22 +544,21 @@
 
 
 <p>等所有的模块都通过了测试(QC Pass!)，你就可以着手设计电路连线怎样合理了，其实也没什么需要注意的，IIC协议是固定的2根信号线，UART端口我直接用了默认的下载口(我偷了个懒，因为这样连的话，下载程序时必须断开PMS7003传感器的连接，不然串口会冲突导致下载失败)<br>至于OLED，我买的SPI的版本，主控是SH1106，对应U8g2的初始化是这样的: </p>
-<pre class="line-numbers language-C"><code class="language-C">/*
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">/*
   代码不够闲话来凑
   代码不够闲话来凑
   代码不够闲话来凑
   代码不够闲话来凑
   代码不够闲话来凑
 */
-U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* reset=*/ 5);
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* reset=*/ 5);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>看代码可以看出，<strong>CS(片选)</strong> 连D7，<strong>DC(指令/数据选择)</strong> 连D6，<strong>RST(复位)</strong> 连D5。  </p>
 <p>我的测试代码我也在这里贴一遍吧~ 看完你就知道调库(白嫖)是多么的快乐了！  </p>
-<pre class="line-numbers language-C"><code class="language-C">#include <Arduino.h>
-#include <Wire.h>
-#include <SPI.h>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">#include &lt;Arduino.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;SPI.h&gt;
 
-#include <U8g2lib.h>
+#include &lt;U8g2lib.h&gt;
 #include "Adafruit_SHT31.h"
 #include "Adafruit_VEML6070.h"
 #include "PMS.h"
@@ -574,15 +574,15 @@ U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, /* cs=*/ 7, /* dc=*/ 6, /* r
 char i = 0;
 
 const char s1[] PROGMEM = "End World Kit";
-const char s2[] PROGMEM = ">-Temp: ";
+const char s2[] PROGMEM = "&gt;-Temp: ";
 const char s3[] PROGMEM = "*C";
-const char s4[] PROGMEM = ">-Humidity: ";
+const char s4[] PROGMEM = "&gt;-Humidity: ";
 const char s5[] PROGMEM = "%";
-const char s6[] PROGMEM = ">-UV level: ";
-const char s7[] PROGMEM = ">-Light LX: ";
-const char s8[] PROGMEM = ">-PM2.5(ug/m^3):  ";
-const char s9[] PROGMEM = ">-PM10(ug/m^3):   ";
-const char s10[] PROGMEM = ">-PM1.0(ug/m^3): ";
+const char s6[] PROGMEM = "&gt;-UV level: ";
+const char s7[] PROGMEM = "&gt;-Light LX: ";
+const char s8[] PROGMEM = "&gt;-PM2.5(ug/m^3):  ";
+const char s9[] PROGMEM = "&gt;-PM10(ug/m^3):   ";
+const char s10[] PROGMEM = "&gt;-PM1.0(ug/m^3): ";
 const char s11[] PROGMEM = "No data response.";
 const char *index[] = { s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11};
 
@@ -655,7 +655,7 @@ void _secondPage(void)
 {
   u8g2.setFont(u8g2_font_helvB08_tf  );
   unsigned int lx = 0, anr = 0;
-  for (i = 0; i < 16; i++)
+  for (i = 0; i &lt; 16; i++)
   {
     anr = analogRead(A6);
     lx = lx + anr; 
@@ -703,7 +703,7 @@ void _homePage(void)
       u8g2.setCursor(30, 8);
     u8g2.print(F("End world Kit"));
       u8g2.setCursor(0, 20);
-    u8g2.print(F("Test & developed by "));
+    u8g2.print(F("Test &amp; developed by "));
       u8g2.setCursor(0, 32);
     u8g2.print(F("Floydfish.In case of "));
       u8g2.setCursor(0, 44);
@@ -714,8 +714,7 @@ void _homePage(void)
   
   delay(3000);
 
-}
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>我唯一的代码量就是写GUI，因为数据项太多，小小的13264屏幕放不下，所以我分了2页显示，对应的刷新函数为_firstPage()和_secondPage(),以及上电初始化页面_homePage()。  </p>
 <blockquote>
 <p>其实U8g2库对于Arduino Nano来说过于臃肿了…我这个程序占用了80%多的代码存储空间，几乎塞满，在我优化前它一度占到了90%多…于是我刚开始还写了一遍U8X8的版本，但是我发现u8x8没有我中意的字体，所以又换了回来233  </p>
@@ -763,8 +762,6 @@ void _homePage(void)
 <p>这个项目本来就是 好 van ♂ 的<br>想怎样使用都看你自己啦。<br>在这里放一些我自己玩的图片  </p>
 <blockquote>
 <p>在电梯里，我开启了开关，电池充放电管理模块上的电压指示红色LED在电梯上形成一道猩红色的光带 <strong>(<del>异闻带</del>)</strong>   </p>
-</blockquote>
-<blockquote>
 <p>某CNPP同学说这是”鲨红了眼”</p>
 </blockquote>
 <center>
@@ -1607,7 +1604,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">19.3k</span>&nbsp;字
+                class="white-color">21.6k</span>&nbsp;字
             
             
             
@@ -1826,8 +1823,6 @@ $(function () {
     
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
-
-    <script src="/js/snow.js"></script>
     
 </body>
 

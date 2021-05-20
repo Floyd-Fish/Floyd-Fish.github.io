@@ -6,7 +6,7 @@
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-05-16T19:52:45.394Z</updated>
+  <updated>2021-05-20T06:05:23.766Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>利用STM32的片上DAC实现DDS</title>
+    <link href="https://floydfish.xyz/2021/05/20/li-yong-stm32-de-pian-shang-dac-shi-xian-dds/"/>
+    <id>https://floydfish.xyz/2021/05/20/li-yong-stm32-de-pian-shang-dac-shi-xian-dds/</id>
+    <published>2021-05-20T04:20:14.000Z</published>
+    <updated>2021-05-20T06:05:23.766Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;利用STM32的片上DAC实现DDS（数字频率合成）&quot;&gt;&lt;a href=&quot;#利用STM32的片上DAC实现DDS（数字频率合成）&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/categories/electronics/STM32/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="STM32" scheme="https://floydfish.xyz/tags/STM32/"/>
+    
+  </entry>
   
   <entry>
     <title>《Fate Stay Night》相关专辑收藏</title>
@@ -102,7 +131,7 @@
     
     
     <summary type="html">&lt;p&gt;赶在2020过去之前,记录一下这一年的动荡——&lt;/p&gt;
-&lt;h1 id=&quot;1月-6月—Blocking&quot;&gt;&lt;a href=&quot;#1月-6月—Blocking&quot; class=&quot;headerlink&quot; title=&quot;1月-6月—Blocking&quot;&gt;&lt;/a&gt;1月-6月—Blocking&lt;/h1&gt;&lt;p&gt;因为新冠疫情,家住湖北的我在1月至4月差不多都在家里蹲。5月时情况好转,疫情得到了有效的控制,我又能重获自由了——  &lt;/p&gt;
+&lt;h1 id=&quot;1月-6月—-Blocking&quot;&gt;&lt;a href=&quot;#1月-6月—-Blocking&quot; class=&quot;headerlink&quot; title=&quot;1月-6月—-Blocking&quot;&gt;&lt;/a&gt;1月-6月—-Blocking&lt;/h1&gt;&lt;p&gt;因为新冠疫情,家住湖北的我在1月至4月差不多都在家里蹲。5月时情况好转,疫情得到了有效的控制,我又能重获自由了——  &lt;/p&gt;
 &lt;p&gt;虽然在家上网课很枯燥,但是摸鱼还是很愉快的~ (鸭类鸭类)  &lt;/p&gt;
 &lt;p&gt;在封锁稍微放宽的时候,我出门拍照——记录了我家楼下这条平常喧闹的街道安静的样子。  &lt;/p&gt;</summary>
     
@@ -157,6 +186,7 @@
 &lt;p&gt;提到瑞士军刀，我们脑海里可能想到的是什么呢？&lt;code&gt;功能强大、齐全，野外生存必备用品？&lt;/code&gt;&lt;br&gt;也许有点夸张,可你看贝爷拿着一把小刀也能在野外生存,何况瑞士军刀上可不止有小刀片)  &lt;/p&gt;
 &lt;p&gt;话说回来,电子瑞士军刀是要做什么呢？&lt;br&gt;其实这个理念很简单解读,可以理解为一个功能全面且强大的手持式仪器,具有多种检测环境、辅助的功能,因为它是基于电子元器件和MEMS传感器等实现的,所以我们叫它&lt;code&gt;电子瑞士军刀&lt;/code&gt;。&lt;/p&gt;
 &lt;h1 id=&quot;脑洞大开&quot;&gt;&lt;a href=&quot;#脑洞大开&quot; class=&quot;headerlink&quot; title=&quot;脑洞大开&quot;&gt;&lt;/a&gt;脑洞大开&lt;/h1&gt;&lt;p&gt;那么我们先来列举一下一个电子瑞士军刀应具有的功能吧。虽说可能大多数我们日常是用不到的，但是理念先行，我倒是很好奇它能做的多全面——&lt;br&gt;下面来列个表吧:  &lt;/p&gt;
+&lt;div class=&quot;table-container&quot;&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -165,7 +195,8 @@
 &lt;th&gt;接口&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
-&lt;tbody&gt;&lt;tr&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
 &lt;td&gt;温度湿度测量&lt;/td&gt;
 &lt;td&gt;SHT30&lt;/td&gt;
 &lt;td&gt;I2C&lt;/td&gt;
@@ -205,7 +236,9 @@
 &lt;td&gt;未定&lt;/td&gt;
 &lt;td&gt;未定&lt;/td&gt;
 &lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;</summary>
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;</summary>
     
     
     
@@ -235,9 +268,9 @@
     <category term="Life" scheme="https://floydfish.xyz/categories/Life/"/>
     
     
-    <category term="Photography" scheme="https://floydfish.xyz/tags/Photography/"/>
-    
     <category term="Life" scheme="https://floydfish.xyz/tags/Life/"/>
+    
+    <category term="Photography" scheme="https://floydfish.xyz/tags/Photography/"/>
     
   </entry>
   
@@ -343,7 +376,7 @@
 &lt;center&gt;
 &lt;a href=&quot;https://imgchr.com/i/1e3H2V&quot;&gt;&lt;img src=&quot;https://s2.ax1x.com/2020/01/25/1e3H2V.md.jpg&quot; alt=&quot;1e3H2V.jpg&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://imgchr.com/i/1e3780&quot;&gt;&lt;img src=&quot;https://s2.ax1x.com/2020/01/25/1e3780.md.png&quot; alt=&quot;1e3780.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&quot;https://imgchr.com/i/1e3780&quot;&gt;&lt;img src=&quot;https://s2.ax1x.com/2020/01/25/1e3780.md.png&quot; alt=&quot;1e3780.png&quot; border=&quot;0&quot;&gt;&lt;/a&gt;
 &lt;/center&gt;
 
 

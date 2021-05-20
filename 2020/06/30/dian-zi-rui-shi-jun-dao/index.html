@@ -29,11 +29,10 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
 
 
@@ -499,6 +498,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -508,6 +510,7 @@
 <p>提到瑞士军刀，我们脑海里可能想到的是什么呢？<code>功能强大、齐全，野外生存必备用品？</code><br>也许有点夸张,可你看贝爷拿着一把小刀也能在野外生存,何况瑞士军刀上可不止有小刀片)  </p>
 <p>话说回来,电子瑞士军刀是要做什么呢？<br>其实这个理念很简单解读,可以理解为一个功能全面且强大的手持式仪器,具有多种检测环境、辅助的功能,因为它是基于电子元器件和MEMS传感器等实现的,所以我们叫它<code>电子瑞士军刀</code>。</p>
 <h1 id="脑洞大开"><a href="#脑洞大开" class="headerlink" title="脑洞大开"></a>脑洞大开</h1><p>那么我们先来列举一下一个电子瑞士军刀应具有的功能吧。虽说可能大多数我们日常是用不到的，但是理念先行，我倒是很好奇它能做的多全面——<br>下面来列个表吧:  </p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -516,7 +519,8 @@
 <th>接口</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>温度湿度测量</td>
 <td>SHT30</td>
 <td>I2C</td>
@@ -556,9 +560,10 @@
 <td>未定</td>
 <td>未定</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <span id="more"></span>
-
 <p>然后是一些用户交互/电气/机械特性方面的参数:  </p>
 <ul>
 <li>2.0英寸 320*240高分IPS屏,FSMC/SPI接口(如果可以的话加上触控)  </li>
@@ -1170,12 +1175,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Photography/">
-                        <span class="chip bg-color">Photography</span>
-                    </a>
-                    
                     <a href="/tags/Life/">
                         <span class="chip bg-color">Life</span>
+                    </a>
+                    
+                    <a href="/tags/Photography/">
+                        <span class="chip bg-color">Photography</span>
                     </a>
                     
                 </div>
@@ -1414,7 +1419,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">19.3k</span>&nbsp;字
+                class="white-color">21.6k</span>&nbsp;字
             
             
             
@@ -1633,8 +1638,6 @@ $(function () {
     
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
-
-    <script src="/js/snow.js"></script>
     
 </body>
 

@@ -29,11 +29,10 @@
 
     <script src="/libs/jquery/jquery.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
+
 <style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
-<link rel="alternate" href="/atom.xml" title="伽蓝之堂" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+</head>
 
 
 
@@ -495,6 +494,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -511,7 +513,6 @@
 </ul>
 <h1 id="Bootloader"><a href="#Bootloader" class="headerlink" title="Bootloader"></a>Bootloader</h1><p>提到bootloader,你可能会想到计算机中的引导程序,它是计算机开机完成自检后装载操作系统或者其他系统软件的计算机程序。<br>引导在英文中为<code>Boot</code>,是<code>Bootstrap</code>的缩写,源自于短语<code>Pull oneself up by one's Bootstraps.</code>,即<code>靠自己振作起来</code>。如果大部分软件需要通过其他已经运行的程序加载到计算机中,则必须存在一个将初始软件加载到计算机中的机制——也就是 <strong>Bootloader</strong>。</p>
 <span id="more"></span>
-
 <p>是不是有点抽象？那么我们来举个栗子:  </p>
 <blockquote>
 <p>你的电脑,装了windows系统,而我们运行的所有软件比如QQ,Steam,浏览器,Photoshop等,必须通过Windows这个<code>大软件</code>来加载到计算机中,那么Windows如何加载到计算机中呢？——答案当然是<code>Bootloader</code>咯  </p>
@@ -628,7 +629,9 @@
 <p>点击download旁边的小箭头,可以看到还有别的选项,我们这里只需要<code>点击下崽</code>,然后就可以把程序烧录进单片机,和ST-LINK和J-LINK彻底说掰掰~  </p>
 <center>
 
-<p>&lt;-**下崽成功！**-&gt;<br><img src="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png" alt="NqXIrn.png" border="0"></p>
+&lt;-**下崽成功！**-&gt;
+<img src="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png" alt="NqXIrn.png" border="0">
+
 </center>
 
 <p>此时，把USB线缆拔下来,将BOOT0和BOOT1拨回接地的状态,这样单片机下次上电的时候就会读取内部FLASH中的程序,而不是启动Bootloader啦~  </p>
@@ -1166,8 +1169,8 @@
                     <div class="summary block-with-text">
                         
                             赶在2020过去之前,记录一下这一年的动荡——
-1月-6月—Blocking因为新冠疫情,家住湖北的我在1月至4月差不多都在家里蹲。5月时情况好转,疫情得到了有效的控制,我又能重获自由了——  
-虽然在家上网课很枯燥,但是摸鱼还是很愉快的~
+1月-6月—-Blocking因为新冠疫情,家住湖北的我在1月至4月差不多都在家里蹲。5月时情况好转,疫情得到了有效的控制,我又能重获自由了——  
+虽然在家上网课很枯燥,但是摸鱼还是很愉快的
                         
                     </div>
                     <div class="publish-info">
@@ -1488,7 +1491,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">19.3k</span>&nbsp;字
+                class="white-color">21.6k</span>&nbsp;字
             
             
             
@@ -1707,8 +1710,6 @@ $(function () {
     
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
-
-    <script src="/js/snow.js"></script>
     
 </body>
 
