@@ -6,7 +6,7 @@
   <link href="https://floydfish.xyz/atom.xml" rel="self"/>
   
   <link href="https://floydfish.xyz/"/>
-  <updated>2021-05-20T06:18:53.060Z</updated>
+  <updated>2021-06-30T02:21:18.116Z</updated>
   <id>https://floydfish.xyz/</id>
   
   <author>
@@ -17,11 +17,42 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>把闲置的树莓派变成一个监视器</title>
+    <link href="https://floydfish.xyz/2021/06/30/ba-xian-zhi-de-shu-mei-pai-bian-cheng-yi-ge-jian-shi-qi/"/>
+    <id>https://floydfish.xyz/2021/06/30/ba-xian-zhi-de-shu-mei-pai-bian-cheng-yi-ge-jian-shi-qi/</id>
+    <published>2021-06-30T02:17:51.000Z</published>
+    <updated>2021-06-30T02:21:18.116Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;本文首发于 &lt;strong&gt;&lt;a href=&quot;https://www.emoe.xyz/archives/1501&quot;&gt;Emoe工作室&lt;/a&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~  &lt;/p&gt;
+&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="electronics" scheme="https://floydfish.xyz/categories/electronics/"/>
+    
+    
+    <category term="diy" scheme="https://floydfish.xyz/tags/diy/"/>
+    
+    <category term="KiCad" scheme="https://floydfish.xyz/tags/KiCad/"/>
+    
+    <category term="树莓派" scheme="https://floydfish.xyz/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+    
+  </entry>
+  
+  <entry>
     <title>利用STM32的片上DAC实现DDS</title>
     <link href="https://floydfish.xyz/2021/05/20/li-yong-stm32-de-pian-shang-dac-shi-xian-dds/"/>
     <id>https://floydfish.xyz/2021/05/20/li-yong-stm32-de-pian-shang-dac-shi-xian-dds/</id>
     <published>2021-05-20T04:20:14.000Z</published>
-    <updated>2021-05-20T06:18:53.060Z</updated>
+    <updated>2021-06-13T08:05:28.991Z</updated>
     
     
       
