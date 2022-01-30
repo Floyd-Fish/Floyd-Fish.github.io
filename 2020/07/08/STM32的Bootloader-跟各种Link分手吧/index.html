@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="声明  本文首发于我参与运营的网站E萌工作室 作者也是我，所以不存在什么侵权问题~  正文 我们给STM32单片机下载程序通常会使用ST-LINK或者J-LINK等使用SWD接口的下载&#x2F;调试器,可是我们现在要跟他们说再见辣—— 事前准备  下载STM32CubeProgrammer  下载这个PDF  下载DFUSE软件,因为它包含了DFU驱动  Bootloader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STM32的Bootloader-跟各种Link分手吧~">
+<meta property="og:url" content="https://floydfish.xyz/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="声明  本文首发于我参与运营的网站E萌工作室 作者也是我，所以不存在什么侵权问题~  正文 我们给STM32单片机下载程序通常会使用ST-LINK或者J-LINK等使用SWD接口的下载&#x2F;调试器,可是我们现在要跟他们说再见辣—— 事前准备  下载STM32CubeProgrammer  下载这个PDF  下载DFUSE软件,因为它包含了DFU驱动  Bootloader">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/Nq3Goq.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqGlan.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqwUED.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqD8vn.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqD3gs.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqBMlR.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqLUZ6.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqOu6A.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqXf2Q.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqX5Ks.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqXW8g.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqXhvj.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqXRPS.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqvRXj.md.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/07/02/NqxcUx.md.png">
+<meta property="article:published_time" content="2020-07-08T13:52:26.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:16:19.094Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/07/02/Nq3Goq.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>STM32的Bootloader-跟各种Link分手吧~ | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          STM32的Bootloader-跟各种Link分手吧~
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-08 21:52:26" itemprop="dateCreated datePublished" datetime="2020-07-08T21:52:26+08:00">2020-07-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:16:19" itemprop="dateModified" datetime="2022-01-30T20:16:19+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/" class="post-meta-item leancloud_visitors" data-flag-title="STM32的Bootloader-跟各种Link分手吧~" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/07/08/STM32%E7%9A%84Bootloader-%E8%B7%9F%E5%90%84%E7%A7%8DLink%E5%88%86%E6%89%8B%E5%90%A7/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="声明">声明</h2>
+<blockquote>
+<p>本文首发于我参与运营的网站<a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1308">E萌工作室</a><br />
+作者也是我，所以不存在什么侵权问题~</p>
+</blockquote>
+<h1 id="正文">正文</h1>
+<p>我们给STM32单片机下载程序通常会使用ST-LINK或者J-LINK等使用SWD接口的下载/调试器,可是我们现在要跟他们说再见辣——</p>
+<h2 id="事前准备">事前准备</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubeprog.html">下载STM32CubeProgrammer</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">下载这个PDF</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stsw-stm32080.html">下载DFUSE软件,因为它包含了DFU驱动</a></li>
+</ul>
+<h1 id="bootloader">Bootloader</h1>
+<p>提到bootloader,你可能会想到计算机中的引导程序,它是计算机开机完成自检后装载操作系统或者其他系统软件的计算机程序。<br />
+引导在英文中为<code>Boot</code>,是<code>Bootstrap</code>的缩写,源自于短语<code>Pull oneself up by one's Bootstraps.</code>,即<code>靠自己振作起来</code>。如果大部分软件需要通过其他已经运行的程序加载到计算机中,则必须存在一个将初始软件加载到计算机中的机制——也就是 <strong>Bootloader</strong>。</p>
+<span id="more"></span>
+<p>是不是有点抽象？那么我们来举个栗子:</p>
+<blockquote>
+<p>你的电脑,装了windows系统,而我们运行的所有软件比如QQ,Steam,浏览器,Photoshop等,必须通过Windows这个<code>大软件</code>来加载到计算机中,那么Windows如何加载到计算机中呢？——答案当然是<code>Bootloader</code>咯</p>
+</blockquote>
+<h2 id="stm32的bootloader">STM32的Bootloader</h2>
+<p>我们不多说PC和手机的Bootloader啦,我们主要讲STM32,如果你想了解更多,请上Wiki: <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%95%9F%E5%8B%95%E7%A8%8B%E5%BC%8F">引导程序</a></p>
+<p>我们说单片机也是一种微型计算机。我们为他编写代码,并且烧录进他的非易失性存储介质(如Flash),然后就可以让他运行我们期望的任务,实现相应的功能。</p>
+<p>我们可以这样定义一下，方便后续讲解:</p>
+<ul>
+<li>我们编写的代码——&gt; App (应用)<br />
+</li>
+<li>IAP——&gt; In application Programming (在应用编程,就是在单片机运行的过程中对代码存储介质进行重新编程)</li>
+</ul>
+<p>我们注意到,刚刚买回来的STM32像个脑袋进水的傻子一样——什么都不会做,这是因为我们没有给他烧录程序...等等,你不是说有bootloader吗？这个引导程序至少能做点什么吧？</p>
+<p>他确实能<code>"做点什么"</code>,它不能让你的单片机变得聪明(帮你写代码)起来,但是它可以帮你让单片机变得聪明~(帮你把你写好的代码编译出来的二进制文件烧录进去)</p>
+<h1 id="an2606">AN2606</h1>
+<p>看到这个奇怪的字符串序列，你是不是以为是什么神秘车牌?<br />
+是的是的,它是ST的应用手册(Application Note即缩写为AN)的编号, <strong><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">请在这里查看</a></strong></p>
+<p>众所周知,读官方手册是开发者必备的技能——那么我们找到<code>General Bootloader description</code>章节,开始慢慢啃天书...</p>
+<p>在开头的Intro中:</p>
+<blockquote>
+<p>The bootloader is stored in the internal boot ROM memory (system memory) of STM32 devices. It is programmed by ST during production.</p>
+</blockquote>
+<p>我们得知Bootloader是位于STM32单片机的内部只读存储器内的,也就是System Memory,而且这个Bootloader程序是单片机生产时就烧录好的。咱们接着读</p>
+<blockquote>
+<p>It's main task is to download the application program to the internal Flash memory through one of the available serial peripherals (USART, CAN, USB,I2C, SPI, etc.).</p>
+</blockquote>
+<p>这个bootloader的主要任务是通过可用的串行接口(如I2C,SPI,USART,USB等)对单片机实行IAP(在应用编程)</p>
+<p>然后再往后看看,能找到支持使用Bootloader进行IAP的产品型号表:</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/Nq3Goq.png" alt="Nq3Goq.png" border="0" /></p>
+</center>
+<p>可以看到,支持的还是非常全面的~</p>
+<p>那么我们就可以开始骚操作了。我们在这里使用<code>STM32F103C8T6</code>和<code>STM32F072CBT6</code>两款单片机对Bootloader的功能进行验证。</p>
+<p>首先对应型号找到Menu:</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqGlan.png" alt="NqGlan.png" border="0" /></p>
+</center>
+<p>在这段开头有一句话:</p>
+<blockquote>
+<p>The STM32F071xx/072xx bootloader is activated by applying pattern2 (described in Table 2: Bootloader activation patterns).</p>
+</blockquote>
+<p>如果想要进入Bootloader模式,我们需要使用 <code>Pattern 2</code> (启动序列2),根据他的链接跳转到Pattern表格,如下:</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqwUED.png" alt="NqwUED.png" border="0" /></p>
+</center>
+<p>意思就是我们需要在单片机上电的时候把BOOT0和BOOT1引脚接到对应的电平,这样单片机启动时就会进入ROM中Bootloader。</p>
+<p>然后回到072的Bootloader描述,下面有一个<code>大 表 哥(格)</code>：</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqD8vn.md.png" alt="NqD8vn.png" border="0" /></p>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqD3gs.md.png" alt="NqD3gs.png" border="0" /></p>
+</center>
+<p>这个表格列举了所有支持的烧录方式,可以看到F072的支持是比较全面的...包含了USART1/2,I2C,USB_DFU,表格中还详细列举了如果使用这些接口进行编程时,对单片机片上外设的具体需求</p>
+<p>我们在这里使用USB-DFU(USB-Device Firmware Update)啦,因为它只需要一个USB接口就可以跟ST-LINK分手,属于最简单的方式了!接下来实践一下试试~</p>
+<p>STM32的BOOT0引脚只有一个,而BOOT1引脚一般默认为<code>PB2</code>引脚</p>
+<p>在这里<code>Pattern 2</code>是2个引脚都接高电平,不过请注意给2个引脚串接一个100k电阻,以防止过流/倒灌电流,给单片机造成损坏。我的测试板是这样接的,通过一个2位拨码开关切换启动模式,实测是没问题的...(不要问我为什么接地不串接100k电阻orz)</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqBMlR.png" alt="NqBMlR.png" border="0" style="zoom: 67%;"/></p>
+</center>
+<p>拨动开关,将2个引脚接高电平(3.3V),然后接上我们的USB-C,(注意设计电路时需要在USB的2根数据线上串联22欧姆的电阻，以防止过高的通信速率在信号线上产生振铃和串扰,破坏数据传输的稳定性):</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqLUZ6.png" alt="NqLUZ6.png" border="0" /></p>
+</center>
+<p>插上电脑后,打开电脑的设备管理器,出现了<code>STM32 BOOTLOADER</code>设备,说明我们的电脑已经识别到了单片机的BOOTLOADER~(如果没有识别到,试试安装DFU驱动?)</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqOu6A.png" alt="NqOu6A.png" border="0" /></p>
+</center>
+<p>然后打开我们之前安装好的 <code>STM32CubeProgrammer</code></p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqXf2Q.md.png" alt="NqXf2Q.png" border="0" /></p>
+</center>
+<p>是这个界面的鸭子,然后我们在右侧选择USB,如果识别成功就会显示有一个USBx,这时候点<code>Connect</code>,就可以连接上单片机了~</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqX5Ks.md.png" alt="NqX5Ks.png" border="0" /></p>
+</center>
+<p>连接上了之后,可以在右下角看到单片机的详情~<br />
+这时候我们就可以点击Open File,打开我们已经编译输出好的二进制文件(hex/axf/bin等)<img src="https://s1.ax1x.com/2020/07/02/NqXW8g.png" alt="NqXW8g.png" border="0" /></p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqXhvj.md.png" alt="NqXhvj.png" border="0" /></p>
+</center>
+<p>打开之后可以看到一大串0x080$%^&amp;*什么的,不用管啦反正也看不懂(<br />
+下一步,当然是下崽啦</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqXRPS.png" alt="NqXRPS.png" border="0" /></p>
+</center>
+<p>点击download旁边的小箭头,可以看到还有别的选项,我们这里只需要<code>点击下崽</code>,然后就可以把程序烧录进单片机,和ST-LINK和J-LINK彻底说掰掰~</p>
+<center>
+<p>&lt;-<strong>下崽成功！</strong>-&gt; <img src="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png" alt="NqXIrn.png" border="0" /></p>
+</center>
+<p>此时，把USB线缆拔下来,将BOOT0和BOOT1拨回接地的状态,这样单片机下次上电的时候就会读取内部FLASH中的程序,而不是启动Bootloader啦~</p>
+<p>完成操作后接上电,发现单片机正常运行~</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqvRXj.md.jpg" alt="NqvRXj.jpg" border="0" /></p>
+</center>
+<h1 id="关于103c8t6...">关于103C8T6...</h1>
+<p>好吧,其实我有点懒得写了,学会了这一个应该别的也很简单啦！</p>
+<p>103c8t6呢,他的Bootloader只支持USART1,所以我们用不了USB-DFU啦...</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/07/02/NqxcUx.md.png" alt="NqxcUx.png" border="0" /></p>
+</center>
+<p>我们可以用USB-TTL模块或者IC,比如CH340来实现C8T6的IAP~<br />
+具体的过程就不多阐述啦,需要注意的是C8T6进入Bootloader的启动模式和前文的F072不一样,C8T6是<code>Pattern 1</code>,也就是<code>BOOT0-1,BOOT1=0</code>,在STM32CubeProgrammer中选择UART,除此之外没啥区别~</p>
+<h2 id="后记">后记</h2>
+<p>好久没写文了...疫情原因在家里呆了快半年,也没干成什么事情(</p>
+<p>唔,想说什么也没啥好说的,就这样8——</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+              <a href="/tags/STM32/" rel="tag"># STM32</a>
+              <a href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag"># 软件</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/06/30/%E7%94%B5%E5%AD%90%E7%91%9E%E5%A3%AB%E5%86%9B%E5%88%80/" rel="prev" title="电子瑞士军刀">
+      <i class="fa fa-chevron-left"></i> 电子瑞士军刀
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/11/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2020/" rel="next" title="生活随笔-2020">
+      生活随笔-2020 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">声明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number"></span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%89%8D%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">事前准备</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bootloader"><span class="nav-number"></span> <span class="nav-text">Bootloader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#stm32%E7%9A%84bootloader"><span class="nav-number">1.</span> <span class="nav-text">STM32的Bootloader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#an2606"><span class="nav-number"></span> <span class="nav-text">AN2606</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E103c8t6..."><span class="nav-number"></span> <span class="nav-text">关于103C8T6...</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">后记</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

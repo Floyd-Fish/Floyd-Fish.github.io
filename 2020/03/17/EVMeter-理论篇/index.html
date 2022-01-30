@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="EVMeter-理论篇 一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。 直到我看到了一个 老外做的测光表 其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好) 难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333 EV-Exposure Value 曝光值代表能够">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EVMeter-理论篇">
+<meta property="og:url" content="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="EVMeter-理论篇 一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。 直到我看到了一个 老外做的测光表 其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好) 难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333 EV-Exposure Value 曝光值代表能够">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRkEd.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRiHH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRPDe.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRCuD.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRpjO.png">
+<meta property="article:published_time" content="2020-03-17T11:17:53.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:14:12.079Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="坑">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/18/8DRkEd.md.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>EVMeter-理论篇 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EVMeter-理论篇
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-17 19:17:53" itemprop="dateCreated datePublished" datetime="2020-03-17T19:17:53+08:00">2020-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:14:12" itemprop="dateModified" datetime="2022-01-30T20:14:12+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" class="post-meta-item leancloud_visitors" data-flag-title="EVMeter-理论篇" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="evmeter-理论篇">EVMeter-理论篇</h1>
+<p>一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。<br />
+直到我看到了一个 <strong><a target="_blank" rel="noopener" href="http://www.kevinkadooka.com/other-cameras">老外做的测光表</a></strong></p>
+<p>其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好)<br />
+难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333</p>
+<h1 id="ev-exposure-value">EV-Exposure Value</h1>
+<p>曝光值代表能够给出同样曝光的所有相机光圈和快门的组合。这一概念是在一九五零年代在德国发展起来的，被试图用以简化在等价的拍摄参数之间进行选择的过程。曝光值同样也可以表示曝光刻度上的一个级差，1EV对应于两倍的曝光比例并通常被称为“一挡”</p>
+<p>曝光值最早是使用符号Ev来表示,ISO标准中(不是感光的那个ISO,是国际标准化组织)延续了这一标记法,但在其他地方EV这个缩写更常见~</p>
+<span id="more"></span>
+<h2 id="define">Define</h2>
+<p>曝光值是一个以2为底的对数刻度系统:</p>
+<p><span class="math display">\[E_v = \log_2 {N^2 \over t} \]</span></p>
+<p>其中N是光圈(F value),t是曝光时间(快门),单位秒(s).</p>
+<h2 id="ev-lightlux">EV &amp; Light(Lux)</h2>
+<p>在给定照明条件下所采用的F值与曝光时间由下式给出:</p>
+<p><span class="math display">\[ {N^2 \over t} = {LS \over K} \]</span></p>
+<p>其中:<br />
+- N是相对光圈(F值)<br />
+- t是曝光时间,单位秒(s)<br />
+- L是场景平均辉度(就是平均亮度)<br />
+- S是ISO指数<br />
+- K是反射式测光表校正常数</p>
+<p>代入等式右边，得到曝光值:</p>
+<p><span class="math display">\[ E_v = \log_2{LS \over K} \]</span><br />
+同样也可以由入射式测光结果计算拍摄参数:<br />
+<span class="math display">\[ {N^2 \over t} = {ES \over C} \]</span><br />
+其中: - E是照度<br />
+- C是入射式测光表校正常数<br />
+当然也有:<br />
+<span class="math display">\[ E_v = log_2{ES \over C} \]</span></p>
+<h1 id="用ev作为照度与亮度的量度">用EV作为照度与亮度的量度</h1>
+<p>好绕口的标题.jpg<br />
+在给定ISO和测光表校正常数(K或C)之后,EV与亮度(或照度)之间就建立了直接的关联。</p>
+<blockquote>
+<p>严格地说，曝光值并不是亮度或照度的量度：事实上，一个对应于某一亮度（或照度）的曝光值是用以指示照相机（已知其感光度）来获取所谓的正确曝光用的。然而，摄影器材生产商在实践中常常用感光度100时的曝光值来表达亮度，如在说明测光范围或对焦灵敏度时。这一做法由来已久。标准的做法是同时声明所用测光表校正常数和对应的感光度，但很少有厂商会这么做。</p>
+</blockquote>
+<p>不同厂商所选用的反射式测光表校正常数之间有微小的差别。一个普遍的选择是12.5（佳能，尼康和世光）。在感光度100时，曝光值与亮度的关系为：</p>
+<p><span class="math display">\[ L = 2^{EV-3} \]</span></p>
+<p>该式的推导如下:<br />
+已知<br />
+<span class="math display">\[ EV = log_2{N^2 \over t}  \]</span><br />
+<span class="math display">\[ {N^2 \over t} = {LS \over K} \]</span><br />
+<span class="math display">\[ \Longrightarrow L = 2^{EV}*{K \over S} \]</span><br />
+<span class="math display">\[ while K=12.5,S=100, \Longrightarrow L = 2^{EV}*0.125=2^{EV-3} \]</span></p>
+<p>入射式测光表的情况比反射式测光表要复杂得多，因为校正常数C与传感器类型有关。有两种传感器很常见：平面型（余弦响应）和半球型（心形响应）。用平面型传感器测量照度时，C 的典型值是250，而照度的单位是勒克斯（lux）。在 C = 250时，照度与感光度100下的曝光值的关系为:<br />
+<span class="math display">\[ E = 2.5*2^{EV} \]</span></p>
+<p>推导如下:<br />
+已知</p>
+<p><span class="math display">\[ EV = log_2{N^2 \over t} \]</span><br />
+<span class="math display">\[ {N^2 \over t} = {ES \over C} \]</span><br />
+<span class="math display">\[ \Longrightarrow E = 2^{EV}*{C \over S} \]</span><br />
+<span class="math display">\[ while C=250,S=100, \Longrightarrow L = 2.5*2^{EV} \]</span></p>
+<blockquote>
+<p>尽管（用平面型传感器）测量得到的照度可以用以指示对于一个平面物体的曝光，这一办法对于通常的场景却不是那么有用，因为这些场景中的许多元素都不是平的，其相对于相机的朝向也各不相同。半球型传感器在测量影像曝光时更为实用。对于半球型传感器，C值通常在320（美能达）和340（世光）之间。如果对“照度”的定义不那么严格的话，半球型传感器所测得的结果可以说是指示了“场景照度”。</p>
+</blockquote>
+<p>下表显示了该关系式下不同曝光值所对应的亮度值.用这个式子，一个以曝光值为示数的反射式测光表可以用来测量亮度</p>
+<h3 id="table">Table</h3>
+<p><strong>曝光值与亮度(感光度=100,K=12.5)和照度(感光度=100,C=250)</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>EV</th>
+<th>亮度(cd/m^2)</th>
+<th>照度(lx)</th>
+<th>w分割行w</th>
+<th>EV</th>
+<th>亮度(cd/m^2)</th>
+<th>照度(lx)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-4</td>
+<td>0.008</td>
+<td>0.156</td>
+<td>www</td>
+<td>7</td>
+<td>16</td>
+<td>320</td>
+</tr>
+<tr class="even">
+<td>-3</td>
+<td>0.016</td>
+<td>0.313</td>
+<td>www</td>
+<td>8</td>
+<td>32</td>
+<td>640</td>
+</tr>
+<tr class="odd">
+<td>-2</td>
+<td>0.031</td>
+<td>0.625</td>
+<td>www</td>
+<td>9</td>
+<td>64</td>
+<td>1280</td>
+</tr>
+<tr class="even">
+<td>-1</td>
+<td>0.063</td>
+<td>1.25</td>
+<td>www</td>
+<td>10</td>
+<td>128</td>
+<td>2560</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>0.125</td>
+<td>2.5</td>
+<td>www</td>
+<td>11</td>
+<td>256</td>
+<td>5120</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>0.250</td>
+<td>5</td>
+<td>www</td>
+<td>12</td>
+<td>512</td>
+<td>10240</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>0.5</td>
+<td>10</td>
+<td>www</td>
+<td>13</td>
+<td>1024</td>
+<td>20480</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>1</td>
+<td>20</td>
+<td>www</td>
+<td>14</td>
+<td>2048</td>
+<td>40960</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>2</td>
+<td>40</td>
+<td>www</td>
+<td>15</td>
+<td>4096</td>
+<td>81920</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>4</td>
+<td>80</td>
+<td>www</td>
+<td>16</td>
+<td>8192</td>
+<td>163840</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>8</td>
+<td>160</td>
+<td>www</td>
+<td>of!</td>
+<td>of!</td>
+<td>overflow!</td>
+</tr>
+</tbody>
+</table>
+<h1 id="对于不同的iso这次是感光度了的修正">对于不同的ISO(这次是感光度了)的修正</h1>
+<p>以上给出的所有数据都是在ISO=100的条件下测得的。<br />
+如果你了解过ISO和曝光补偿,那么你应该知道该怎么做了~</p>
+<p>对于某一感光度S，应当以这一感光度高出（低于）ISO100的曝光挡数进行增减，用公式表示为：</p>
+<p><span class="math display">\[ EV_S = EV_{100} + log_2{S \over 100}.\]</span></p>
+<p>比如,ISO400比ISO100高出2档:<br />
+<span class="math display">\[ EV_{400} = EV_{100} + log_2{400 \over 100} = EV_{100} + 2. \]</span></p>
+<p>对于更低的感光度，以这一感光度低于ISO100的曝光挡数降低曝光值（增加曝光）。比如ISO50比ISO100低了一挡。</p>
+<p><span class="math display">\[ EV_{50} = EV_{100} + log_2{50 \over 100} = EV_{100} - 1. \]</span></p>
+<h1 id="使用ev表示的曝光补偿">使用EV表示的曝光补偿</h1>
+<p>许多现代照相机都允许设置曝光补偿，并通常用EV这个词来表示。在这种情况下， <strong>EV指的是相机测光数据减去实际曝光值的差。</strong> 比如+1EV的曝光补偿意味着增加一档曝光，不管是通过延长曝光时间还是更小的f值。</p>
+<p>在这里，EV的含义和先前刻度系统中的EV（曝光值）恰好是相反的。增加曝光对应于减少曝光值（-EV），因此+1EV的曝光补偿意味着更小的EV（曝光值）；反过来，-1EV的曝光补偿的结果是更大的EV。例如，测得某一比中性灰更亮的物体的EV为16，并设定+1EV的曝光补偿以修正曝光，那么最终的拍摄参数对应于EV15（而不是17）。</p>
+<h1 id="再进一步">再进一步!</h1>
+<p>我们使用相机M档进行拍摄的操作一般是——</p>
+<ol type="1">
+<li>指定ISO、光圈、快门<br />
+</li>
+<li>看一下曝光补偿的提示，是欠曝了还是过曝了,适当调整拍摄参数<br />
+</li>
+<li>Shoot!</li>
+</ol>
+<p>这个流程应该适用于现在主流的数码相机。。</p>
+<p>那么我们也可以根据这个流程来设计测光表的算法:<br />
+- 输入3个参数<br />
+- 根据传感器获取的光照度和指定的ISO来计算被拍摄场景的EV值，记作EVr(Real)<br />
+- 根据3个参数算出EV值，记作EVt(theoretical)<br />
+- 两者做差，得到曝光补偿</p>
+<p>当然,也可以更直接一些:<br />
+- 输入2个参数<br />
+- 根据公式直接定出第三个参数,此时的EVr与EVt理论上来说完全相等<br />
+- 但是由于参数刻度非线性,不可能完全相等。</p>
+<p>或者把这个流程任意调换顺序,反正是4个参数，知3求1.都没问题的~</p>
+<p>由此,我们整理公式可以得到:</p>
+<p>给定ISO、光圈值,计算快门时间:</p>
+<p><span class="math display">\[ t = {N^2 \over S*E} * C  \]</span></p>
+<p>给定光圈值、快门时间,计算ISO:</p>
+<p><span class="math display">\[ S = { { N^2 * E } \over t} * {1 \over C} \]</span></p>
+<p>给定快门时间、ISO,计算光圈F值:<br />
+<span class="math display">\[ N = \sqrt {S*E*t \over C} \]</span></p>
+<p>式中,各参数含义如下:<br />
+- t-快门时间,单位秒(s)<br />
+- N-光圈F值,典型的如f2.8、f4、f5.6......<br />
+- S-ISO值,典型的如100、200、320、400、800、1600......<br />
+- E-入射式测光传感器得到的照度值,单位lux(勒克斯),由传感器给出<br />
+- C-平面型传感器测量照度时的校正常数,默认250,需要根据硬件结构等不定因素适当调整</p>
+<p>至此，我们的理论部分就算作结束了~接下来就是激动人心的画板子写代码time了！(orz)</p>
+<h1 id="codeworks">Codeworks</h1>
+<p>今天我调了半天,写出了初代曝光参数计算算法,数据结构和C没学好(我太菜了),所以并不会做优化。。。在x86平台上使用vscode编写,g++编译调试,测试初步通过。</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/8DRkEd"><img src="https://s1.ax1x.com/2020/03/18/8DRkEd.md.png" alt="8DRkEd.png" border="0" /></a></p>
+<h2 id="测试数据">测试数据</h2>
+<p>第一步我们需要获取标准的ISO/曝光时间/光圈数据表,很简单，打开相机装上AF镜头,开始一个一个调参数...</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="dt">uint16_t</span> ISO[<span class="dv">24</span>] = &#123;</span>
+<span id="cb1-2"><a href="#cb1-2"></a>        <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">125</span>, <span class="dv">160</span>, <span class="dv">200</span>, <span class="dv">250</span>, <span class="dv">320</span>, <span class="dv">400</span>,</span>
+<span id="cb1-3"><a href="#cb1-3"></a>        <span class="dv">500</span>, <span class="dv">640</span>, <span class="dv">800</span>, <span class="dv">1000</span>, <span class="dv">1250</span>, <span class="dv">1600</span>, <span class="dv">2000</span>, <span class="dv">2500</span>,</span>
+<span id="cb1-4"><a href="#cb1-4"></a>        <span class="dv">3200</span>, <span class="dv">4000</span>, <span class="dv">5000</span>, <span class="dv">6400</span>, <span class="dv">8000</span>, <span class="dv">10000</span>, <span class="dv">12800</span>,<span class="dv">25600</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>&#125;;</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="dt">double</span> APERTURE[<span class="dv">21</span>] = &#123;</span>
+<span id="cb1-8"><a href="#cb1-8"></a>        <span class="fl">1.4</span>, <span class="fl">1.8</span>, <span class="fl">2.0</span>, <span class="fl">2.8</span>, <span class="fl">3.5</span>, <span class="fl">4.0</span>, <span class="fl">4.5</span>, <span class="fl">5.0</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>        <span class="fl">5.6</span>, <span class="fl">6.3</span>, <span class="fl">7.1</span>, <span class="fl">8.0</span>, <span class="fl">9.0</span>, <span class="fl">10.0</span>, <span class="fl">11.0</span>, <span class="fl">13.0</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>        <span class="fl">14.0</span>, <span class="fl">16.0</span>, <span class="fl">18.0</span>, <span class="fl">20.0</span>, <span class="fl">22.0</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>&#125;;</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="dt">uint16_t</span> SHUTTER[] = &#123;</span>
+<span id="cb1-14"><a href="#cb1-14"></a>        <span class="co">/* values at the beginning should be used as 1/x */</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>        <span class="dv">4000</span>, <span class="dv">3200</span>, <span class="dv">2500</span>, <span class="dv">2000</span>, <span class="dv">1600</span>, <span class="dv">1250</span>, <span class="dv">1000</span>,</span>
+<span id="cb1-16"><a href="#cb1-16"></a>        <span class="dv">800</span>, <span class="dv">640</span>, <span class="dv">500</span>, <span class="dv">400</span>, <span class="dv">320</span>, <span class="dv">250</span>, <span class="dv">200</span>, <span class="dv">160</span>, <span class="dv">125</span>,</span>
+<span id="cb1-17"><a href="#cb1-17"></a>        <span class="dv">100</span>, <span class="dv">80</span>, <span class="dv">60</span>, <span class="dv">50</span>, <span class="dv">40</span>, <span class="dv">30</span>, <span class="dv">25</span>, <span class="dv">20</span>, <span class="dv">15</span>, <span class="dv">13</span>, <span class="dv">10</span>, <span class="dv">8</span>, <span class="dv">6</span>, <span class="dv">5</span>, <span class="dv">4</span>,</span>
+<span id="cb1-18"><a href="#cb1-18"></a>        <span class="co">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>        <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">1</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>&#125;;</span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="dt">double</span> SHUTTER_F[] = &#123;</span>
+<span id="cb1-23"><a href="#cb1-23"></a>        <span class="fl">0.00025</span>, <span class="fl">0.0003125</span>, <span class="fl">0.0004</span>, <span class="fl">0.0005</span>, <span class="fl">0.000625</span>, <span class="fl">0.0008</span>, <span class="fl">0.001</span>,</span>
+<span id="cb1-24"><a href="#cb1-24"></a>        <span class="fl">0.00125</span>, <span class="fl">0.0015625</span>, <span class="fl">0.002</span>, <span class="fl">0.0025</span>, <span class="fl">0.003125</span>, <span class="fl">0.004</span>, <span class="fl">0.005</span>, <span class="fl">0.00625</span>, <span class="fl">0.008</span>,</span>
+<span id="cb1-25"><a href="#cb1-25"></a>        <span class="fl">0.01</span>, <span class="fl">0.0125</span>, <span class="fl">0.0166667</span>, <span class="fl">0.02</span>, <span class="fl">0.025</span>, <span class="fl">0.0333333</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>, <span class="fl">0.0666667</span>, <span class="fl">0.0769231</span>, <span class="fl">0.1</span>, <span class="fl">0.125</span>, <span class="fl">0.1666667</span>, <span class="fl">0.2</span>, <span class="fl">0.25</span>,</span>
+<span id="cb1-26"><a href="#cb1-26"></a>        <span class="co">/* values below represents : 0.3s, 0.4s, 0.5s, 0.6s, 0.8s, 1s */</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>        <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.6</span> ,<span class="fl">0.8</span>, <span class="fl">1.0</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="dt">double</span> lx_test[<span class="dv">11</span>] = &#123;<span class="fl">0.156</span>, <span class="fl">0.625</span>, <span class="fl">2.5</span>, <span class="dv">10</span>, <span class="dv">40</span>, <span class="dv">160</span>, <span class="dv">640</span>, <span class="dv">2560</span>, <span class="dv">5120</span>, <span class="dv">20480</span>, <span class="dv">81920</span>&#125;;</span>
+<span id="cb1-30"><a href="#cb1-30"></a></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="pp">#define SHUTTER_F_SIZE sizeof(SHUTTER_F)/sizeof(SHUTTER_F[0])</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="pp">#define APERTURE_SIZE sizeof(APERTURE)/sizeof(APERTURE[0])</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="pp">#define ISO_SIZE sizeof(ISO)/sizeof(ISO[0])</span></span></code></pre></div>
+<p>为了简化计算过程，我直接根据分数时间计算出了小数，单独列了一个表。<br />
+最后的lx_test是我们后面测试代码的时候要用的。</p>
+<h2 id="根据isoaperturelux计算时间">根据ISO/Aperture/Lux计算时间</h2>
+<p>我们从这个功能入手,来分析一下这个简单的算法。。<br />
+整个算法的核心是我们上一章里推出的公式:</p>
+<p><span class="math display">\[ t = {N^2 \over S*E} * C  \]</span></p>
+<p>接下来构造一个函数，留好数据接口就ok啦~</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1"></a><span class="dt">uint16_t</span> calcTime(<span class="dt">uint16_t</span> iso, <span class="dt">double</span> aperture, <span class="dt">float</span> lux)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>&#123;</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">double</span> time;</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="dt">uint8_t</span> i = <span class="dv">0</span>, index = <span class="dv">0</span>;</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="dt">double</span> previous_t, next_t;</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="co">/* Calculation */</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    time = (aperture * aperture) * C_CONSTANT / (lux * (<span class="dt">double</span>)iso);</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    <span class="co">/* Skip the value below, and prevent from overflow */</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="cf">while</span> (time &gt; SHUTTER_F[i++])</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        <span class="cf">if</span> (i &gt;= SHUTTER_F_SIZE-<span class="dv">1</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>            <span class="cf">return</span> SHUTTER[SHUTTER_F_SIZE-<span class="dv">1</span>];</span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a>    i -= <span class="dv">1</span>;</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="co">/* avoid overflow */</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>    <span class="cf">if</span> (i == <span class="dv">0</span>)</span>
+<span id="cb2-16"><a href="#cb2-16"></a>        <span class="cf">return</span> SHUTTER[<span class="dv">0</span>];</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    previous_t = SHUTTER_F[i-<span class="dv">1</span>];</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    next_t = SHUTTER_F[i];</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="co">/* Get the Closest Standard value */</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>    index = (fabs(time-previous_t) &gt; fabs(time-next_t)) ? i : i-<span class="dv">1</span>;</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    <span class="cf">return</span> SHUTTER[index];</span>
+<span id="cb2-22"><a href="#cb2-22"></a>&#125;</span></code></pre></div>
+<p>注意这里返回的是16位长无符号整数,因为我们最后要显示的是1/x秒，而不是长达5、6位的小数。。。</p>
+<p>分析完这个,那么其他的算法对我们来说应该都是小case了。。。除后面有一个需要开根号取对数的操作有点绕,别的都ok</p>
+<p>要注意的是,在计算光圈的最近标准值时,index那里的逻辑需要反过来,因为iso和shutter都是从小到大排序建表的, <strong>而光圈数值是这样建的,可物理意义是反过来的</strong></p>
+<h2 id="test">Test!</h2>
+<p>以下是几个测试结果，从结果初步来看，效果不错~</p>
+<blockquote>
+<p>算ISO</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRiHH.png" alt="8DRiHH.png" border="0" /></p>
+<blockquote>
+<p>算快门时间</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRPDe.png" alt="8DRPDe.png" border="0" /></p>
+<blockquote>
+<p>算光圈</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRCuD.png" alt="8DRCuD.png" border="0" /></p>
+<blockquote>
+<p>算曝光补偿</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRpjO.png" alt="8DRpjO.png" border="0" /></p>
+<h1 id="下一站">下一站！</h1>
+<p>当然是激动人心的实践环节~<br />
+请看下集~</p>
+<h2 id="reference">Reference</h2>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9B%9D%E5%85%89%E5%80%BC">Wikipedia-EV</a><br />
+<a target="_blank" rel="noopener" href="https://photo.stackexchange.com/questions/10093/how-to-calculate-lux-from-ev">StackExchange</a><br />
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5401738/how-to-convert-between-lux-and-exposure-value">StackOverflow</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E5%9D%91/" rel="tag"># 坑</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/" rel="prev" title="ESP32-sensorKit 填坑记录">
+      <i class="fa fa-chevron-left"></i> ESP32-sensorKit 填坑记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" rel="next" title="EVMeter-石剑篇">
+      EVMeter-石剑篇 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#evmeter-%E7%90%86%E8%AE%BA%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">EVMeter-理论篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ev-exposure-value"><span class="nav-number">2.</span> <span class="nav-text">EV-Exposure Value</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#define"><span class="nav-number">2.1.</span> <span class="nav-text">Define</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ev-lightlux"><span class="nav-number">2.2.</span> <span class="nav-text">EV &amp; Light(Lux)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8ev%E4%BD%9C%E4%B8%BA%E7%85%A7%E5%BA%A6%E4%B8%8E%E4%BA%AE%E5%BA%A6%E7%9A%84%E9%87%8F%E5%BA%A6"><span class="nav-number">3.</span> <span class="nav-text">用EV作为照度与亮度的量度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#table"><span class="nav-number">3.0.1.</span> <span class="nav-text">Table</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8E%E4%B8%8D%E5%90%8C%E7%9A%84iso%E8%BF%99%E6%AC%A1%E6%98%AF%E6%84%9F%E5%85%89%E5%BA%A6%E4%BA%86%E7%9A%84%E4%BF%AE%E6%AD%A3"><span class="nav-number">4.</span> <span class="nav-text">对于不同的ISO(这次是感光度了)的修正</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ev%E8%A1%A8%E7%A4%BA%E7%9A%84%E6%9B%9D%E5%85%89%E8%A1%A5%E5%81%BF"><span class="nav-number">5.</span> <span class="nav-text">使用EV表示的曝光补偿</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%8D%E8%BF%9B%E4%B8%80%E6%AD%A5"><span class="nav-number">6.</span> <span class="nav-text">再进一步!</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#codeworks"><span class="nav-number">7.</span> <span class="nav-text">Codeworks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE"><span class="nav-number">7.1.</span> <span class="nav-text">测试数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B9%E6%8D%AEisoaperturelux%E8%AE%A1%E7%AE%97%E6%97%B6%E9%97%B4"><span class="nav-number">7.2.</span> <span class="nav-text">根据ISO&#x2F;Aperture&#x2F;Lux计算时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#test"><span class="nav-number">7.3.</span> <span class="nav-text">Test!</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E4%B8%80%E7%AB%99"><span class="nav-number">8.</span> <span class="nav-text">下一站！</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">8.1.</span> <span class="nav-text">Reference</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="我又来了&#x3D; &#x3D; 在精密仪表电路中，一个稳定且干净的电源是非常重要的。不稳定意味着它会在工作中发生波动，导致仪表电路工作不正常;不干净意味着其含有高频纹波与噪声，这些纹波与噪声将通过物理方式耦合到信号链中，破坏仪表电路的精确性与鲁棒性。 这次我们从纹波入手，讲解在电源电路中消除开关电源的纹波的手段和经验。 纹波（Ripple）与噪声（Noise） 噪声在我 之前的文章 中讲过了，就不啰嗦啦。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精密低噪声电源设计">
+<meta property="og:url" content="https://floydfish.xyz/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="我又来了&#x3D; &#x3D; 在精密仪表电路中，一个稳定且干净的电源是非常重要的。不稳定意味着它会在工作中发生波动，导致仪表电路工作不正常;不干净意味着其含有高频纹波与噪声，这些纹波与噪声将通过物理方式耦合到信号链中，破坏仪表电路的精确性与鲁棒性。 这次我们从纹波入手，讲解在电源电路中消除开关电源的纹波的手段和经验。 纹波（Ripple）与噪声（Noise） 噪声在我 之前的文章 中讲过了，就不啰嗦啦。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/Smoothed_ripple.svg.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/3.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/4.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/5.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/6.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/7.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/8.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/9.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/11.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/10.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/12.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/13.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/14.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/15.svg">
+<meta property="article:published_time" content="2021-11-15T18:18:16.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:08:31.483Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/Smoothed_ripple.svg.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>精密低噪声电源设计 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          精密低噪声电源设计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-16 02:18:16" itemprop="dateCreated datePublished" datetime="2021-11-16T02:18:16+08:00">2021-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:08:31" itemprop="dateModified" datetime="2022-01-30T20:08:31+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/" class="post-meta-item leancloud_visitors" data-flag-title="精密低噪声电源设计" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/16/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>我又来了= =</p>
+<p>在精密仪表电路中，一个稳定且干净的电源是非常重要的。不稳定意味着它会在工作中发生波动，导致仪表电路工作不正常;不干净意味着其含有高频纹波与噪声，这些纹波与噪声将通过物理方式耦合到信号链中，破坏仪表电路的精确性与鲁棒性。</p>
+<p>这次我们从纹波入手，讲解在电源电路中消除开关电源的纹波的手段和经验。</p>
+<h2 id="纹波ripple与噪声noise">纹波（Ripple）与噪声（Noise）</h2>
+<p>噪声在我 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1682">之前的文章</a></strong> 中讲过了，就不啰嗦啦。</p>
+<p><strong>纹波（ripple）</strong> 通常指直流电源上不希望出现的交流电压变动量，一般是因为直流电经过DCDC转换器之后，输出电压的交流成分无法完全消除，残留下来的交流分量被称为Ripple。</p>
+<center>
+<p>全波整流电路，在加入滤波电容之前（虚线）及之后（红色实线）的电压波形对比，交流成分未被完全消除，跨在直流之上的波纹很形象地被称为纹波（红色）。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/Smoothed_ripple.svg.png" alt="Ripple in DC-DC Converter Output" border="0"/></p>
+</center>
+<p>请注意，<strong>纹波与噪声应该区分开来</strong>，将纹波直接归入噪声没啥问题，但总归是不严谨的。</p>
+<p>关于纹波与噪声的进一步讨论，可以看这篇 <strong><a target="_blank" rel="noopener" href="https://e2echina.ti.com/blogs_/b/power_house/posts/53234">e2e论坛讨论</a></strong> <span id="more"></span></p>
+<h2 id="电源抑制比">电源抑制比</h2>
+<p>电源抑制比（Power Supply Rejection Ratio，PSRR）指某一设备对电源噪声的抑制能力。其定义是电源电压变化导致设备输出电压相应变化的比例，因为这个值挺大的，一般用对数表示，单位是dB（分贝）:</p>
+<p><span class="math display">\[
+PSRR(dB) = 20 \log_{10}({\Delta V_{supply} \over {\Delta V_{out}}}) dB \\
+如果在放大器电路中，由于整个电路有闭环增益A_V，电源噪声会被放大，从而得出放大器本身的PSRR为:  \\
+PSRR(dB) = 20 \log_{10}({\Delta V_{supply} \over {\Delta V_{out}}} ·A_V) dB \\
+也就是说，噪声会被放大，计算总PSRR时应该将电路增益考虑进去。
+\]</span></p>
+<p>理想器件的PSRR为无穷大，即输出不随电源电压变化而变化，但这种器件当然是不存在的:(<br />
+PSRR随频率而改变，一般器件的数据手册中会有一个图表用于展示该器件的PSRR在不同频率下的特性。比如下图为ADI公司的LDO-<a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/lt3094.html?doc=LT3094.pdf">LT3094</a>的 <strong>PSRR-f</strong> 图表，可以看出在10kHz频率以下，其PSRR大于90dB，也就是说接近或超过10万倍。在2MHz以上的频率段，其PSRR将大幅下降。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/1.jpg" alt="LT3094 PSRR Plot" border="0"/></p>
+</center>
+<h2 id="可恶的纹波">可恶的纹波！</h2>
+<p>一般地，我们的电子系统中希望有稳定的电源供应，但往往一个稳定且符合我们要求的电源不那么易得。</p>
+<p>比如说我一个数模混合系统，使用单一5V为整个系统供电，这当然没问题，但如果模拟电路部分需要处理双极性信号（信号有负电压），我们通常有2种方法:</p>
+<ul>
+<li>1.信号链中使用交流耦合，并为交流信号提供合适的直流偏置<br />
+</li>
+<li>2.使用正负电源（双电源）供电</li>
+</ul>
+<p>但方法1并不是万能的，他在某些场合下有局限性。比如我们希望保留原始信号的直流成分并对其进行测量时，我们就不能使用交流耦合了。亦或者信号的参数变幻莫测，我们不能预知它的峰峰幅度等信息，不便使用单电源电路。</p>
+<p>这时候，我们需要负电源！！！那么how？我们又有2种方法了——</p>
+<ul>
+<li>1.供电使用变压器，输出双绕组的中间抽头作为公共地，整流可得到双电源<br />
+</li>
+<li>2.使用Inverting（反相）DC-DC变换器，将正电源变换得到负电源</li>
+</ul>
+<p>第一种办法不是所有电路都适用的，因为变压器的体积是个大问题。而且在直流电源作为能源时，无法使用变压器。除非你再做一级DC-AC。</p>
+<p>那么我们就开始考虑第二种方法。使用DC-DC固然是个简便的解决方案，一般也很高效，体积也很小，但是有一个致命的缺点就是 : <strong>DC-DC开关过程中会产生与开关频率相关的高频纹波</strong>，如果直接将DC-DC输出作为精密模拟电路的供电，极有可能该纹波会耦合进精密信号链中（取决于各个器件），轻则干扰有用信号，重则淹没有用信号。</p>
+<center>
+<p>工作在不同开关模式下的TPS63700的输出电压波形</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/2.jpg" alt="TPS63700 output voltage ripple" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/3.jpg" alt="TPS63700 output voltage ripple" border="0"/></p>
+</center>
+<p>可以看到，这颗反相DC-DC将会在输出的直流电压上产生约50mV峰峰值的高频纹波。</p>
+<h2 id="如何干掉纹波-线性稳压器">如何干掉纹波-线性稳压器</h2>
+<p>最省心的方法是使用一颗线性稳压器或LDO去对DC-DC输出进行稳压。比如文章开头提到的 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/lt3094.html?doc=LT3094.pdf">LT3094</a></strong> ，它就是一颗超高PSRR（看了下感觉是业界顶尖了...）、超低噪声的低压差线性稳压器。但是要注意一点，当DC-DC的 <strong>开关频率（Switching Frequency）</strong> 落在LDO的PSRR不佳的区域时，LDO对纹波的抑制是 <strong>非常有限</strong> 的。</p>
+<p>如下图所示，是TI的LDO <a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/tps7a3001-ep.pdf?ts=1637156089429&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">TPS7A3001</a> 的PSRR曲线，在500K频率时，其PSRR约为50dB，然而在1MHz及以上时，其PSRR骤降至40dB以下。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/4.jpg" alt="TPS7A3001 PSRR" border="0"/></p>
+</center>
+<p>若该LDO输入的电源纹波频率在500KHz，该LDO还勉强能起到作用，但如果频率进一步升高，就有些不够用了。需要注意的一点是， <strong>开关电源纹波中通常含有丰富的谐波成分！</strong>，即比如我的DC-DC开关频率为500kHz，但其输出纹波中除了500kHz的基频外，还会包含二次、三次等高次谐波。虽然500k还落在我们所期望的频率段内，但高次谐波将落入LDO的低PSRR段内，导致高次谐波的抑制效果不佳。</p>
+<p>但如果我们选用开头那个超高PSRR的LDO，那么就不存在这个问题辣！当然，这样的代价就是money--。</p>
+<h2 id="如何干掉纹波-无源滤波器网络">如何干掉纹波-无源滤波器网络</h2>
+<p>在处理小信号时，使用RC滤波器是可选的选择。但是处理功率信号时，我们需要降低无源滤波器的输出阻抗，此时RC就不是好选择了，应考虑改用LC滤波器。（电感的直流阻抗为零）</p>
+<p>下图是ti的一篇文章，<strong><a target="_blank" rel="noopener" href="https://e2e.ti.com/blogs_/b/powerhouse/posts/design-a-second-stage-filter-for-sensitive-applications">Design a second-stage filter for sensitive applications</a></strong> ,里面讲述了使用Buck转换器时，添加第二级LC滤波器用以减小输出的纹波。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/5.jpg" alt="Second-Stage LC Filter for Buck converter" border="0"/></p>
+</center>
+<p>这样做可以一定程度上衰减输出的高频能量。但我们必须谨慎选择LC的值，<strong>否则可能会得到相反的效果。</strong> 把这个电路放到系统架构中来视察，可以简化成这样:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/6.png" alt="LC Filter Design for DC-DC Power Supply" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/7.png" alt="LC Filter Design for DC-DC Power Supply" border="0"/></p>
+</center>
+<p>在ADI的技术文章 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/cn/technical-articles/switching-regulator-noise-reduction-with-an-LC-Filter.html">Switching Regulator Noise Reduction with an LC Filter</a></strong> 中，ADI给出了一款Buck电路的降噪方案，分别是在电路输出后级添加LC滤波器、以及在电路前后都添加LC滤波器。不过需要注意的一点是，在Buck前添加LC滤波器是很有必要的，但对于别的拓扑结构则不一定有用。<strong>因为Buck的输入端也将产生高频噪声，这个噪声可能会波及到整个电源轨道上的所有设备。</strong></p>
+<p>那么如何为LC滤波器选择合适的参数呢？当然需要一点点Calculation~</p>
+<h3 id="lc-filter-calc">LC Filter Calc</h3>
+<p>来到ti的设计指南，<strong><a target="_blank" rel="noopener" href="https://www.ti.com.cn/cn/lit/an/slaa701a/slaa701a.pdf?ts=1637819863108&amp;ref_url=https%253A%252F%252Fe2echina.ti.com%252F">LC Filter Design</a></strong>，这篇设计指南中讲述了设计LC滤波器的过程，参考 <code>3.1节-Output Filter Frequency Response Properties.</code></p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/8.jpg" alt="Second-Stage LC Filter for Buck converter" border="0"/></p>
+</center>
+<p>通过上面的幅频特性曲线图我们可以看到，LC电路的Q值对其幅频特性曲线的影响非常巨大，如果电路参数选择不正确，甚至还会出现增强高频噪声的情况（也就是红色曲线，Under-damped，在高频段出现了尖峰）。理想的曲线应具有ButterWorth响应类型（巴特沃斯），也就是蓝色曲线。当然，在音频滤波应用中，如果你想增强高频，也可以使用高Q值...</p>
+<p>翻到计算的章节，可以看到单端LC滤波器计算如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/9.jpg" alt="Single-Ended Filter Calculations" border="0"/></p>
+</center>
+<p>可以看出，Q值由电容C、电感L和负载电阻RL共同决定。如果在未知负载电阻大小的情况下，其实挺难选的...</p>
+<p>我使用LTSpice仿真了一个Π型滤波器，CLC，选值如下，在10kHz至10MHz频程内进行交流扫描分析，得到波德图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/11.jpg" alt="CLC Filter Simulation" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/10.jpg" alt="CLC Filter Simulation" border="0"/></p>
+</center>
+<p>可以看出，在500kHz的频率点，该滤波器的衰减约为40dB，也就是100倍电压衰减。对于开关频率为500kHz以上的开关稳压器来说，该CLC滤波器的效果应该还是不错的。不过这个电路将在约50kHz的频点达到增益峰值，约30dB增益，不过在低频段问题应该不大（赌一手我的电路里没有低频噪声...）。</p>
+<h2 id="陷阱pitfalls">陷阱（Pitfalls）！</h2>
+<p>长久以来，我们总是习惯在LDO的输入前加上电容，以此来提供最低的电源阻抗。但是在降低电源纹波的场合下，这种接法是存在问题的——我们来看个例子。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/12.svg" alt="LT3042 DC-DC Post-Regulator" border="0"/></p>
+</center>
+<p>LT8614是一个Buck型开关稳压器，输出端的滤波电容为22uF（紧靠LT8614一侧）。它的开关频率为500kHz时输出的交流纹波约为20mVpp，经过十几mm的PCB铜导线连接到LT3042的输入上，这时LT3042的输出纹波仅为几uVpp。当我们在LT3042的输入端紧靠LT3042放置一个4.7uF的输入电容时（就像通常那样），输出的纹波骤增至75uVpp。（测量时开启了带宽限制20MHz，以此来去除高频尖峰）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/13.svg" alt="LT3042 DC-DC Post-Regulator Ripple" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/14.svg" alt="LT3042 DC-DC Post-Regulator Ripple" border="0"/></p>
+</center>
+<p>看起来...很诡异的情况，是吧——<br />
+这并不能怪LT3042...这得怪我们的 <strong>PCB Layout。</strong> LT3042的PSRR性能非常强劲，发生这种情况，是因为另一个物理因素的存在—— <strong>磁场</strong></p>
+<p>为了更好地理解磁场是如何降低LT3042的PSRR性能的，我们需要分析一下整个电路的交流通路。</p>
+<center>
+<p>Figure 21. Schematic Highlights AC Current Loop of DC-DC Converter Together with Paths Susceptible to Magnetic Coupling. <img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%B2%BE%E5%AF%86%E4%BD%8E%E5%99%AA%E5%A3%B0%E7%94%B5%E6%BA%90%E8%AE%BE%E8%AE%A1/15.svg" alt="LT3042 DC-DC Post-Regulator AC Path" border="0"/></p>
+</center>
+<p>交流电流回路由绿色环路线标识。如果在LDO端存在输入电容（也就是那个被画了叉叉的），交流电流也会通过虚线所示回路流经输入电容，LT3042的输入端对相关的交流电流呈现高阻，所以AC不会流入LT3042。</p>
+<p>这个流经输入电容的交变电流产生了一个 <strong>磁场</strong>，这个磁场又将在相邻的小环路中产生 <strong>感生电流</strong>——就像一个变压器的2个绕组之间的关系一样。其中2个关键的环路标识在图中，分别是蓝色和红色小环路。蓝色环路由Cset和Rset构成，这个环路连通内部的误差放大器，在这个环路中产生高频交流信号将会直接作用到误差放大器的输入端，从而直接馈通至LT3042的输出。红色环路由输出电容和LDO输出阻抗组成（还有附近的负载），这里产生的高频交流成分将会直接耦合至LDO的输出。</p>
+<p>这可能稍微有些反直觉——移除LT3042的输入电容难道不会降低LDO的性能，从而增大输出纹波吗？<br />
+考虑到这不是信号的电气馈通，而是磁耦合，在设计PCB时我们就必须谨慎地考虑器件之间的距离、屏蔽措施、以及环路方向。磁场场强和距离以及环路面积有关，所以最小化环路面积非常重要（即不在LDO前加输入电容），同时增大DC-DC与LDO的距离以减小在敏感环路中引入的高频耦合（且仅使用DC-DC的输出电容）。</p>
+<p>这个例子生动地阐明了一点：<strong>在设计PCB时可以留下元件的保留位置，以便在实际测试时可以随时调整电路结构来测试出最佳效果应为如何</strong>。如果一开始就在LDO IC前加上了输入电容，那么我们可能会得到错误的结果——即LDO的PSRR看起来并没有手册中标注的那么高。</p>
+<p>但是还有一点是我们难以消磨的。开关电源的输出除开纹波外，还有开关管动作时产生的 <strong>尖峰（spike）</strong>。尖峰通常是非常快速的动作过程，导致其带宽通常为上MHz级别，甚至更高。这意味着LDO的PSRR在如此高的频率下是无力的，仅用LDO是难以完全消灭这些高频尖峰的。</p>
+<p>一种可能的方法是 <strong>结合LDO与LC滤波器</strong> 来共同完成纹波抑制。我将在不久之后的项目中实验这种方法，敬请期待~</p>
+<h1 id="参考">参考</h1>
+<p><strong><a target="_blank" rel="noopener" href="https://e2echina.ti.com/blogs_/b/power_house/posts/53234">e2e论坛讨论-输出电压纹波来源和抑制</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/lt3094.html?doc=LT3094.pdf">LT3094-Datasheet</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/tps7a3001-ep.pdf?ts=1637156089429&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">TPS7A3001-Datasheet</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://e2e.ti.com/blogs_/b/powerhouse/posts/design-a-second-stage-filter-for-sensitive-applications">Design a second-stage filter for sensitive applications</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://www.analog.com/cn/technical-articles/switching-regulator-noise-reduction-with-an-LC-Filter.html">Switching Regulator Noise Reduction with an LC Filter</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://www.ti.com.cn/cn/lit/an/slaa701a/slaa701a.pdf?ts=1637819863108&amp;ref_url=https%253A%252F%252Fe2echina.ti.com%252F">LC Filter Design</a></strong><br />
+<strong><a target="_blank" rel="noopener" href="https://www.analog.com/en/app-notes/an-159.html">AN159 - Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</a></strong></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/" rel="prev" title="电路中的噪声">
+      <i class="fa fa-chevron-left"></i> 电路中的噪声
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/12/11/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-12-11/" rel="next" title="生活随笔-2021-12-11">
+      生活随笔-2021-12-11 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%B9%E6%B3%A2ripple%E4%B8%8E%E5%99%AA%E5%A3%B0noise"><span class="nav-number">1.</span> <span class="nav-text">纹波（Ripple）与噪声（Noise）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E6%BA%90%E6%8A%91%E5%88%B6%E6%AF%94"><span class="nav-number">2.</span> <span class="nav-text">电源抑制比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E6%81%B6%E7%9A%84%E7%BA%B9%E6%B3%A2"><span class="nav-number">3.</span> <span class="nav-text">可恶的纹波！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%B9%B2%E6%8E%89%E7%BA%B9%E6%B3%A2-%E7%BA%BF%E6%80%A7%E7%A8%B3%E5%8E%8B%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">如何干掉纹波-线性稳压器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%B9%B2%E6%8E%89%E7%BA%B9%E6%B3%A2-%E6%97%A0%E6%BA%90%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%BD%91%E7%BB%9C"><span class="nav-number">5.</span> <span class="nav-text">如何干掉纹波-无源滤波器网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lc-filter-calc"><span class="nav-number">5.1.</span> <span class="nav-text">LC Filter Calc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%B7%E9%98%B1pitfalls"><span class="nav-number">6.</span> <span class="nav-text">陷阱（Pitfalls）！</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number"></span> <span class="nav-text">参考</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

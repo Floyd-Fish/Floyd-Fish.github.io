@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="EVMeter-石剑篇 在阅读本文之前，你也许应该看看 EVMeter-理论篇 设计蓝图 继上次我们分析了测光表的原理，并do了一点math之后，我们得到了lux与曝光参数之间的直接关联，由此我们可以设计一个测光表，我想让它具有这样的特性:  使用高精度平面入射型光传感器,直接输出lux值  配备辅助RGB传感器，同时可以得到色温数据(其实就是一个光传感器+拜尔滤色镜)  使用0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EVMeter-石剑篇">
+<meta property="og:url" content="https://floydfish.xyz/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="EVMeter-石剑篇 在阅读本文之前，你也许应该看看 EVMeter-理论篇 设计蓝图 继上次我们分析了测光表的原理，并do了一点math之后，我们得到了lux与曝光参数之间的直接关联，由此我们可以设计一个测光表，我想让它具有这样的特性:  使用高精度平面入射型光传感器,直接输出lux值  配备辅助RGB传感器，同时可以得到色温数据(其实就是一个光传感器+拜尔滤色镜)  使用0">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DRMDg.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/18/8DR3Us.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRXqg.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRvZQ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/19/8DRxaj.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/04/GwZFxO.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/04/GwZVqH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/04/Gw3hE8.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/20/Y7qeC6.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/20/Y7qm8K.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/20/Y7qEU1.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/20/Y7qV4x.jpg">
+<meta property="article:published_time" content="2020-03-18T15:19:50.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:14:28.661Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="坑">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/18/8DRMDg.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>EVMeter-石剑篇 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          EVMeter-石剑篇
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-18 23:19:50" itemprop="dateCreated datePublished" datetime="2020-03-18T23:19:50+08:00">2020-03-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:14:28" itemprop="dateModified" datetime="2022-01-30T20:14:28+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" class="post-meta-item leancloud_visitors" data-flag-title="EVMeter-石剑篇" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="evmeter-石剑篇">EVMeter-石剑篇</h1>
+<p>在阅读本文之前，你也许应该看看 <strong><a href="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/">EVMeter-理论篇</a></strong></p>
+<h1 id="设计蓝图">设计蓝图</h1>
+<p>继上次我们分析了测光表的原理，并do了一点math之后，我们得到了lux与曝光参数之间的直接关联，由此我们可以设计一个测光表，我想让它具有这样的特性:</p>
+<ul>
+<li>使用高精度平面入射型光传感器,直接输出lux值<br />
+</li>
+<li>配备辅助RGB传感器，同时可以得到色温数据(其实就是一个光传感器+拜尔滤色镜)<br />
+</li>
+<li>使用0.96英寸128x64的OLED屏幕实现数据可视化,并提供良好的UI互动界面<br />
+</li>
+<li>使用3个按键进行人机交互,其中一个切换功能键，另外2个调整数据<br />
+</li>
+<li>小型化，电路板大小3x5cm,配备3D打印外壳,可以直接安装到相机的热靴上<br />
+</li>
+<li>使用锂电池供电,尽量采用低功耗设计思路,使用600mAh的电池,同时提供micro-usb接口充电<br />
+</li>
+<li>具有升级接口(ST-LINK),方便后续调试、升级算法<br />
+</li>
+<li>具有掉电保存上次操作设置的功能。使用外接EEPROM实现(因为便宜(￣▽￣)")</li>
+</ul>
+<p>并且,这是初代鸡。我还想给他添加更多更酷的特性，比如用旋转编码器(类似单反上的拨轮)来代替3个笨拙的按键,使用镀漆的航空铝型材做外壳,将micro-usb升级成type-c,并且板载ST-LINK,只需一根usb type-c数据线即可轻松升级......等等等等(坑逐渐扩张.jpg)</p>
+<span id="more"></span>
+<h1 id="hardware-design">Hardware Design</h1>
+<p>硬件选型永远是最纠结的环节。。之一</p>
+<p>MCU的选择,考虑到PCB的空间问题,我将LQFP48封装的单片机(STM32F1等)都扔出了选择范围。最终我盯上了TSSOP20的STM32F070F6P6,48Mhz主频,6K RAM,32K Flash,而且足够便宜，只需要3元/pcs。(其实主要是优信能一站买齐hhhhh)</p>
+<p>传感器是最关键的部分了。我觉得在这种性能要求高的场合，还是氪金比较好)<br />
+于是我选择了TSL2591,具有近乎人眼动态范围的光强传感器,IIC数字接口直接输出Lux,非常方便且精准。就是有点贵,一片就要25RMB+</p>
+<p>辅助RGB传感器嘛,就选了个TCS34725,淘宝卖的多,资料也好找。(它不要求对光强有多高的精度，我们只要它的RGB数据)</p>
+<p>然后就是其他杂七杂八的小元件选择啦...<br />
+最后还是拿开源人都喜欢的KiCad画了板子~</p>
+<h3 id="layout">Layout</h3>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DRMDg.png" alt="8DRMDg.png" border="0" /></p>
+<p><img src="https://s1.ax1x.com/2020/03/18/8DR3Us.png" alt="8DR3Us.png" border="0" /></p>
+<p><img src="https://s1.ax1x.com/2020/03/19/8DRXqg.png" alt="8DRXqg.png" border="0" /></p>
+<p>然后想加断电保存功能，就塞了一片24c02上去。<br />
+<strong>(说着说着开启了光线追踪.jpg)</strong></p>
+<p><img src="https://s1.ax1x.com/2020/03/19/8DRvZQ.png" alt="8DRvZQ.png" border="0" /></p>
+<p><img src="https://s1.ax1x.com/2020/03/19/8DRxaj.png" alt="8DRxaj.png" border="0" /></p>
+<p>啊♂ 光追就是爽。</p>
+<h1 id="接下来就是传感器和mcu的联调啦">接下来就是传感器和mcu的联调啦</h1>
+<p>但是板子还在我电脑里,还没拿去打样呢。(打样了我在家里也没元件没工具55555),还是等俺回学校了再说吧。。。</p>
+<h1 id="日更新">2020.4.3日更新</h1>
+<p>前几天我在网上买的c8t6和一些小模块终于到了....<br />
+于是开始了快乐的填坑之路√</p>
+<p>就在昨天晚上,我写了一个验证模块来验证算法正确性,给定光圈和ISO，自动根据lux值计算曝光时间,没想到一次就成功了~</p>
+<h3 id="别高兴得太早...">别高兴得太早...</h3>
+<p>但是等我拿出单反一测,似乎偏差不小诶...<br />
+于是坑越挖越大...在AMS官网上找到了3篇Application Note,开始啃。。。</p>
+<h3 id="色温测量原理dn25">色温测量原理(DN25)</h3>
+<p>翻一翻<a target="_blank" rel="noopener" href="https://ams.com/documents/20143/36005/TCS34xx_AN000517_1-00.pdf/616f6ed0-8409-a21d-cd85-307a1e377102">应用手册</a>,记录几个专业名词:</p>
+<ul>
+<li>CCT(Correlated Color Temperature)-相关色温<br />
+</li>
+<li>Chromaticity-色度<br />
+</li>
+<li>Planckian Locus-普朗克轨迹(别问我怎么跟普朗克扯上关系的...其实是AN里讲色温从普朗克黑体辐射开始讲起...)</li>
+</ul>
+<p>并且还得到一张"色图"</p>
+<p><img src="https://s1.ax1x.com/2020/04/04/GwZFxO.png" alt="GwZFxO.png" border="0" /></p>
+<p>这里以TCS3414CS传感器为例子,AN说明了它的工作原理:<br />
+&gt; The TCS3414CS digital color sensor returns data from four channels: red(R), green(G), blue(B) and clear(C)(non-filtered). The response from the red, green and blue channels (RGB) can be used to determine a particular source’s CCT. The key to accomplishing this is to transfer the RGB responses to the chromaticity diagram in Figure 1 and find the point on the planckian locus closest to our source’s chromaticity point</p>
+<p>大致意思就是把3个通道的强度值传输到上面那张色图里,然后找到普朗克轨迹上最接近光源点的色度点,就能得到色温。<br />
+接下来就是算法了...</p>
+<blockquote>
+<p>Chromaticity coordinates (x, y) are based on standard tristimulus values (XYZ). These standards are set by the Commission Internationale de l’Eclairage (CIE). The CIE is the main international organization concerned with color and color measurement.</p>
+</blockquote>
+<p>ohhhhhh,这个标准3刺激值(Google机翻)是国际照明委员会设定的标准(CIE)。</p>
+<blockquote>
+<p>In order to acquire a CCT for a given light source using a TCS3414CS, we must first map the sensor response (RGB) to the CIE tristimulus values (XYZ). It is then necessary to calculate the chromaticity coordinates (x, y) and finally the correlated color temperature (CCT). Figure 2 displays an overview of this process as well as the methods used for each transformation.</p>
+</blockquote>
+<p>整个过程就是这张图:</p>
+<p><img src="https://s1.ax1x.com/2020/04/04/GwZVqH.png" alt="GwZVqH.png" border="0" /></p>
+<p>根据一些niubi的公式,得到伪代码如下:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">/* RGB to XYZ transformation */</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>X = (-<span class="fl">0.14282</span>)(R) + (<span class="fl">1.54924</span>)(G) + (-<span class="fl">0.95641</span>)(B)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>Y = (-<span class="fl">0.32466</span>)(R) + (<span class="fl">1.57837</span>)(G) + (-<span class="fl">0.73191</span>)(B) = Illuminance</span>
+<span id="cb1-4"><a href="#cb1-4"></a>Z = (-<span class="fl">0.68202</span>)(R) + (<span class="fl">0.77073</span>)(G) + (<span class="fl">0.56332</span>)(B)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">/* Calculate Chromaticity coordinates */</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>x = X/(X+Y+Z) </span>
+<span id="cb1-8"><a href="#cb1-8"></a>y = Y/(X+Y+Z) </span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co">/* McCamy’s formula */</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">// provide a maximum absolute error of less than 2 degrees Kelvin</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="cf">for</span> color temperatures ranging from <span class="dv">2</span>,<span class="dv">856</span> to <span class="dv">6</span>,<span class="dv">500</span> K </span>
+<span id="cb1-13"><a href="#cb1-13"></a>CCT = <span class="dv">449</span>*n^<span class="dv">3</span> + <span class="dv">3525</span>*n^<span class="dv">2</span> + <span class="fl">6823.3</span>*n + <span class="fl">5520.33</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">/* where n = (x − 0.3320) / (0.1858 − y) */</span></span></code></pre></div>
+<p>这部分对应TCS34725库中的这一段代码:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">/* 1. Map RGB values to their XYZ counterparts.    */</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">/* Based on 6500K fluorescent, 3000K fluorescent   */</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co">/* and 60W incandescent values for a wide range.   */</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">/* Note: Y = Illuminance or lux                    */</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>X = (-<span class="fl">0.14282</span><span class="bu">F</span> * r) + (<span class="fl">1.54924</span><span class="bu">F</span> * g) + (-<span class="fl">0.95641</span><span class="bu">F</span> * b);</span>
+<span id="cb2-6"><a href="#cb2-6"></a>Y = (-<span class="fl">0.32466</span><span class="bu">F</span> * r) + (<span class="fl">1.57837</span><span class="bu">F</span> * g) + (-<span class="fl">0.73191</span><span class="bu">F</span> * b);</span>
+<span id="cb2-7"><a href="#cb2-7"></a>Z = (-<span class="fl">0.68202</span><span class="bu">F</span> * r) + (<span class="fl">0.77073</span><span class="bu">F</span> * g) + (<span class="fl">0.56332</span><span class="bu">F</span> * b);</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co">/* 2. Calculate the chromaticity co-ordinates      */</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>xc = (X) / (X + Y + Z);</span>
+<span id="cb2-11"><a href="#cb2-11"></a>yc = (Y) / (X + Y + Z);</span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="co">/* 3. Use McCamy&#39;s formula to determine the CCT    */</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>n = (xc - <span class="fl">0.3320</span><span class="bu">F</span>) / (<span class="fl">0.1858</span><span class="bu">F</span> - yc);</span>
+<span id="cb2-15"><a href="#cb2-15"></a></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="co">/* Calculate the final CCT */</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>cct = (<span class="fl">449.0</span><span class="bu">F</span> * powf(n, <span class="dv">3</span>)) + (<span class="fl">3525.0</span><span class="bu">F</span> * powf(n, <span class="dv">2</span>))</span>
+<span id="cb2-18"><a href="#cb2-18"></a>        + (<span class="fl">6823.3</span><span class="bu">F</span> * n) + <span class="fl">5520.33</span><span class="bu">F</span>;</span>
+<span id="cb2-19"><a href="#cb2-19"></a></span>
+<span id="cb2-20"><a href="#cb2-20"></a><span class="co">/* Return the results in degrees Kelvin */</span></span></code></pre></div>
+<h3 id="lux-and-cct-calculationsdn40">Lux and CCT Calculations(DN40)</h3>
+<p>emmmm?不是和上面一样吗...别急, <strong><a target="_blank" rel="noopener" href="https://ams.com/documents/20143/36005/ColorSensors_AN000166_1-00.pdf/d1290c78-4ef1-5b88-bff0-8e80c2f92b6b">DN40</a></strong> 提供了额外的解决方案,它主要回答了如下几个问题:<br />
+- What is the maximum lux level that can be measured?<br />
+- What is the accuracy of the lux calculations due to the digital nature of the measurements?<br />
+- Is the light source too bright resulting in saturation of the device?<br />
+- What happenswhen the device is placed behind dark glass?</p>
+<h4 id="ir-rejection">IR Rejection</h4>
+<p>在某些应用场景,红外成分是微不足道、可忽略的,比如测量一个LED的色温。<br />
+但在某些场景,如测量周边光环境,白炽灯,阳光等含有大量红外成分的光源时,传感器上自带的IR Filter显得有些无力。。。<br />
+所以我们需要使用改进的算法来补偿IR Filter的不足。</p>
+<p>在传感器上,如TCS34725-一个拥有12个光电二极管阵列的传感器,其中分成4组,分别附有Red、Green、Blue滤镜和无滤镜(Clear),可见这种传感器本身是没有IR通道输出的,所以我们需要根据RGBC的值间接计算IR。</p>
+<p>一个简单的算法如下:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">// Calc IR content</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>IR = (R + G + B - C) / <span class="dv">2</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co">// Remove IR from source</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>R<span class="ch">&#39; </span><span class="er">= R - IR</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>G<span class="ch">&#39; </span><span class="er">= G - IR</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>B<span class="ch">&#39; </span><span class="er">= B - IR</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>C<span class="ch">&#39; </span><span class="er">= C = IR</span></span></code></pre></div>
+<p>IR滤除前/后对比</p>
+<p><img src="https://s1.ax1x.com/2020/04/04/Gw3hE8.png" alt="Gw3hE8.png" border="0" /></p>
+<h4 id="lux-calculations">Lux Calculations</h4>
+<p>再来创建一个G2方程:<br />
+(说到G2,就不得不提......)</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1"></a>G2 = R_Coef * R<span class="ch">&#39; </span><span class="er">+ G_Coef * G</span><span class="ch">&#39;</span> + B_Coef * B<span class="ch">&#39;</span></span></code></pre></div>
+<p>在这个方程里,G'通道的系数常为1,这样才能让CPL(Counts per Lux)来控制整体系统的增益...<br />
+G2是通过一个系数方程直接与Lux相关的,这个方程有如下几个参数:<br />
+- GA(Glass Attenuation)<br />
+- DF(Device Factor)<br />
+- 结合上面2个,得到DGF(Device and Glass Factor)<br />
+可以简单的把它们理解为在不同应用场景下的校正系数,CPL计算如下:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1"></a>CPL = (ATIME_ms * AGAINx) / (GA * DF)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>alse means: CPL = (ATIME_ms * AGAINx) / DGF</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>Lux = G2 / CPL</span></code></pre></div>
+<p>具体的GA、DF如何取值,DN40里有详细的介绍。</p>
+<h4 id="colortemperature-calculations">ColorTemperature Calculations</h4>
+<p>IR成分的滤除对色温计算至关重要。用上面提到的IR Filter算法,得到R'和B',再用如下的公式来计算ColorTemp:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1"></a>CT = CT_Coef * B<span class="ch">&#39; </span><span class="er">/ R</span><span class="ch">&#39;</span> + CT_Offset</span></code></pre></div>
+<p>对应代码是这样的:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1"></a>    <span class="co">/* AMS RGB sensors have no IR channel, so the IR content must be */</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>    <span class="co">/* calculated indirectly. */</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>    ir = (r + g + b &gt; c) ? (r + g + b - c) / <span class="dv">2</span> : <span class="dv">0</span>;</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="co">/* Remove the IR component from the raw RGB values */</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    r2 = r - ir;</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    b2 = b - ir;</span>
+<span id="cb7-8"><a href="#cb7-8"></a></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="cf">if</span> (r2 == <span class="dv">0</span>) &#123;</span>
+<span id="cb7-10"><a href="#cb7-10"></a>        <span class="cf">return</span> <span class="dv">0</span>;</span>
+<span id="cb7-11"><a href="#cb7-11"></a>    &#125;</span>
+<span id="cb7-12"><a href="#cb7-12"></a></span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="co">/* A simple method of measuring color temp is to use the ratio of blue */</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="co">/* to red light, taking IR cancellation into account. */</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>    <span class="dt">uint16_t</span> cct = (<span class="dv">3810</span> * (<span class="dt">uint32_t</span>)b2) / <span class="co">/** Color temp coefficient. */</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>                   (<span class="dt">uint32_t</span>)r2 +</span>
+<span id="cb7-17"><a href="#cb7-17"></a>                   <span class="dv">1391</span>; <span class="co">/** Color temp offset. */</span></span></code></pre></div>
+<h4 id="device-count-saturation">Device Count Saturation</h4>
+<p>当光线逐渐变强,Clear通道一般会率先饱和(R+G+B 接近C),如果Clear通道饱和,那么我们上面提到的IR Rejection算法就失效了...<br />
+在这时我们要么不用,要么用更复杂的算法去Reject IR content。<br />
+Analog Saturation的满量程值取决于我们设定的传感器曝光时间,多数设备累积1024 counts per 2.4ms,最大counts是65535 counts(16bit),达到满量程需要154ms,所以在配置曝光时间154ms以上时才能达到16bit的满量程。</p>
+<p>如果ALS的积分时间大于154ms,那么Digital Saturation就会在Analog Saturation之前出现,也就是count到了65535,具体在代码中体现如下:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1"></a><span class="cf">if</span> ((<span class="dv">256</span> - TCS34725_IntergrationTime) &gt; <span class="dv">63</span>) &#123;</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    <span class="co">/* Track digital saturation */</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>    sat = <span class="dv">65535</span>;</span>
+<span id="cb8-4"><a href="#cb8-4"></a>&#125; <span class="cf">else</span> &#123;</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="co">/* Track analog saturation */</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>    sat = <span class="dv">1024</span> * (<span class="dv">256</span> - TCS34725_IntergrationTime);</span>
+<span id="cb8-7"><a href="#cb8-7"></a>&#125;</span></code></pre></div>
+<h4 id="ripple-rejection-saturation">Ripple Rejection &amp; Saturation</h4>
+<p>50/60HZ纹波对我们的光积分过程也有很大的影响。当传感器的积分时间很短时,我们需要注意滤除这些工频光源干扰,代码如下:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">/* Ripple rejection:</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co"> *</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co"> * (a) An integration time of 50ms or multiples of 50ms are required to</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"> *     reject both 50Hz and 60Hz ripple.</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co"> * (b) If an integration time faster than 50ms is required, you may need</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co"> *     to average a number of samples over a 50ms period to reject ripple</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co"> *     from fluorescent and incandescent light sources.</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"> *</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co"> * Ripple saturation notes:</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co"> *</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="co"> * (a) If there is ripple in the received signal, the value read from C</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co"> *     will be less than the max, but still have some effects of being</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co"> *     saturated. This means that you can be below the &#39;sat&#39; value, but</span></span>
+<span id="cb9-14"><a href="#cb9-14"></a><span class="co"> *     still be saturating. At integration times &gt;150ms this can be</span></span>
+<span id="cb9-15"><a href="#cb9-15"></a><span class="co"> *     ignored, but &lt;= 150ms you should calculate the 75% saturation</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a><span class="co"> *     level to avoid this problem.</span></span>
+<span id="cb9-17"><a href="#cb9-17"></a><span class="co"> */</span></span>
+<span id="cb9-18"><a href="#cb9-18"></a><span class="cf">if</span> ((<span class="dv">256</span> - TCS34725_IntergrationTime) &lt;= <span class="dv">63</span>) &#123;</span>
+<span id="cb9-19"><a href="#cb9-19"></a>    <span class="co">/* Adjust sat to 75% to avoid analog saturation if atime &lt; 153.6ms */</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a>    sat -= sat / <span class="dv">4</span>;</span>
+<span id="cb9-21"><a href="#cb9-21"></a>&#125;</span></code></pre></div>
+<h2 id="暂时摸鱼db">~~暂时摸鱼d=====(￣▽￣*)b~~</h2>
+<h1 id="日更新-1">5.20日更新</h1>
+<p>俺画的板子老早就打样ok并到手了，前几天才花钱买了一批元器件，开始了我们的硬件方案验证~</p>
+<blockquote>
+<p>刚到手的小板几~</p>
+</blockquote>
+<center>
+<p><img src="https://s1.ax1x.com/2020/05/20/Y7qeC6.jpg" alt="Y7qeC6.jpg" border="0" /></p>
+</center>
+<blockquote>
+<p>焊接好了的样子~<br />
+手头没有洗板水，为了焊板子还买了个T12焊台和小刀头...由于手里的锡比较垃圾，残留助焊剂贼多，所以看着很恶心口区(</p>
+</blockquote>
+<center>
+<p><img src="https://s1.ax1x.com/2020/05/20/Y7qm8K.jpg" alt="Y7qm8K.jpg" border="0" /></p>
+</center>
+<h2 id="bug-report">Bug report</h2>
+<p>这一板是直接废掉了orz 因为我焊完了MCU才发现，我的传感器焊盘画错了，应该镜像一下的。。。。。。</p>
+<p>这就非常坑爹了.jpg，不过我本来也有换MCU的打算啦，所以这个板子也不算是白打了~它可以帮我验证我的其他硬件方案有没有问题！</p>
+<h3 id="bug1">Bug#1</h3>
+<p>只留了一个调试焊盘作为单片机复位，这是一个错误的选择...具体体现为复位脚上电位不稳定，单片机无法正常连接到ST-Link并被识别...然后我手动焊了2根线上去手动复位(</p>
+<p>大家千万别学我啊233 复位还是焊个按键上去比较好。</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/05/20/Y7qEU1.jpg" alt="Y7qEU1.jpg" border="0" /></p>
+</center>
+<h3 id="bug2">Bug#2</h3>
+<p>我发现SSD1306的驱动电路我画错了。<br />
+当时画电路图可能脑抽了，没看清楚datasheet里写的几行字...总之就是一个电阻应该接地，我给接到3v3了，还有一个数据脚D2在串行模式的时候需要和D0连接到一起，我没连...</p>
+<p>在用各种骚操作手动修复了这些bug之后，我烧录了SSD1306的测试程序：</p>
+<center>
+<p><img src="https://s1.ax1x.com/2020/05/20/Y7qV4x.jpg" alt="Y7qV4x.jpg" border="0" /></p>
+</center>
+<p><strong>(我已出舱，感觉良好~)</strong></p>
+<h3 id="bug3">Bug#3</h3>
+<p>也不算是Bug吧，就是一点小发现。</p>
+<p>比如说，LT4054锂电充电ic在不接锂电池的时候是不导通的...(表现为插上了USB供电板子也不会工作 (摊手) )，然后我找了个n年前买的不知好坏的小锂电接上去了，开启开关，正常工作~</p>
+<h2 id="后续">后续</h2>
+<p>应该是要重新打板子了(悲<br />
+然后呢，我预计会做如下改动:</p>
+<ul>
+<li>去掉占地方的大按键,换用贴片中龟按钮<br />
+</li>
+<li>不用外部晶振,用单片机内部RC(降低成本,节省PCB空间)<br />
+</li>
+<li>更换MCU为STM32F070CBT6(LQFP-48),它有128KB的FLASH和16KB的RAM,可以满足我的代码需求...(F6P6太弟弟了555)<br />
+</li>
+<li>改用Type-C插口供电<br />
+</li>
+<li>可能采用1.14英寸的IPS屏幕取代OLED(暂定)</li>
+</ul>
+<h2 id="敬请期待下一次更咕新咕吧">敬请期待下一次更(咕)新(咕)吧！</h2>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E5%9D%91/" rel="tag"># 坑</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" rel="prev" title="EVMeter-理论篇">
+      <i class="fa fa-chevron-left"></i> EVMeter-理论篇
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/04/22/%E5%85%89%E5%BD%B1%E8%AE%B0%E5%BF%86-1/" rel="next" title="光影记忆-1">
+      光影记忆-1 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#evmeter-%E7%9F%B3%E5%89%91%E7%AF%87"><span class="nav-number">1.</span> <span class="nav-text">EVMeter-石剑篇</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E8%93%9D%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">设计蓝图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hardware-design"><span class="nav-number">3.</span> <span class="nav-text">Hardware Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#layout"><span class="nav-number">3.0.1.</span> <span class="nav-text">Layout</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E4%BC%A0%E6%84%9F%E5%99%A8%E5%92%8Cmcu%E7%9A%84%E8%81%94%E8%B0%83%E5%95%A6"><span class="nav-number">4.</span> <span class="nav-text">接下来就是传感器和mcu的联调啦</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E6%9B%B4%E6%96%B0"><span class="nav-number">5.</span> <span class="nav-text">2020.4.3日更新</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%AB%E9%AB%98%E5%85%B4%E5%BE%97%E5%A4%AA%E6%97%A9..."><span class="nav-number">5.0.1.</span> <span class="nav-text">别高兴得太早...</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%89%B2%E6%B8%A9%E6%B5%8B%E9%87%8F%E5%8E%9F%E7%90%86dn25"><span class="nav-number">5.0.2.</span> <span class="nav-text">色温测量原理(DN25)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lux-and-cct-calculationsdn40"><span class="nav-number">5.0.3.</span> <span class="nav-text">Lux and CCT Calculations(DN40)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ir-rejection"><span class="nav-number">5.0.3.1.</span> <span class="nav-text">IR Rejection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lux-calculations"><span class="nav-number">5.0.3.2.</span> <span class="nav-text">Lux Calculations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#colortemperature-calculations"><span class="nav-number">5.0.3.3.</span> <span class="nav-text">ColorTemperature Calculations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#device-count-saturation"><span class="nav-number">5.0.3.4.</span> <span class="nav-text">Device Count Saturation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ripple-rejection-saturation"><span class="nav-number">5.0.3.5.</span> <span class="nav-text">Ripple Rejection &amp; Saturation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9A%82%E6%97%B6%E6%91%B8%E9%B1%BCdb"><span class="nav-number">5.1.</span> <span class="nav-text">~~暂时摸鱼d&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;(￣▽￣*)b~~</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A5%E6%9B%B4%E6%96%B0-1"><span class="nav-number">6.</span> <span class="nav-text">5.20日更新</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#bug-report"><span class="nav-number">6.1.</span> <span class="nav-text">Bug report</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bug1"><span class="nav-number">6.1.1.</span> <span class="nav-text">Bug#1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bug2"><span class="nav-number">6.1.2.</span> <span class="nav-text">Bug#2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bug3"><span class="nav-number">6.1.3.</span> <span class="nav-text">Bug#3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD"><span class="nav-number">6.2.</span> <span class="nav-text">后续</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%AC%E8%AF%B7%E6%9C%9F%E5%BE%85%E4%B8%8B%E4%B8%80%E6%AC%A1%E6%9B%B4%E5%92%95%E6%96%B0%E5%92%95%E5%90%A7"><span class="nav-number">6.3.</span> <span class="nav-text">敬请期待下一次更(咕)新(咕)吧！</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

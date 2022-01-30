@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="微观尽头——精密信号测量:Intro 我们一般只会关心身边那些明显的、容易察觉的变化——比如温度变高了几度，车辆的行驶速度变快了几m&#x2F;s，无所事事的一天又过去了...诸如此类。 但你有关注过一些微不足道的变化吗？比如空气中二氧化碳的浓度具体是多少 ppm（百万分之一） ？你的体重变化了几克？ 当然没有吧，因为这些细微的变化超出了人感知的能力，我们自身并不能感受到这些微不足道的变化。 ——当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微观尽头——精密信号测量:Intro">
+<meta property="og:url" content="https://floydfish.xyz/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="微观尽头——精密信号测量:Intro 我们一般只会关心身边那些明显的、容易察觉的变化——比如温度变高了几度，车辆的行驶速度变快了几m&#x2F;s，无所事事的一天又过去了...诸如此类。 但你有关注过一些微不足道的变化吗？比如空气中二氧化碳的浓度具体是多少 ppm（百万分之一） ？你的体重变化了几克？ 当然没有吧，因为这些细微的变化超出了人感知的能力，我们自身并不能感受到这些微不足道的变化。 ——当">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/1.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/5.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/6.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/7.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/8.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/9.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/11.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/10.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/12.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/13.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/14.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/15.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/16.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/17.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/18.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/19.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/20.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/fluke%20720A%20kelvin-Varley%20Divider.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/21.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/4.png">
+<meta property="article:published_time" content="2021-09-04T07:15:19.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:12:20.338Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/1.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>微观尽头——精密信号测量:Intro | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微观尽头——精密信号测量:Intro
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-04 15:15:19" itemprop="dateCreated datePublished" datetime="2021-09-04T15:15:19+08:00">2021-09-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:12:20" itemprop="dateModified" datetime="2022-01-30T20:12:20+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/" class="post-meta-item leancloud_visitors" data-flag-title="微观尽头——精密信号测量:Intro" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="微观尽头精密信号测量intro">微观尽头——精密信号测量:Intro</h1>
+<p>我们一般只会关心身边那些明显的、容易察觉的变化——比如温度变高了几度，车辆的行驶速度变快了几m/s，无所事事的一天又过去了...诸如此类。<br />
+但你有关注过一些微不足道的变化吗？比如空气中二氧化碳的浓度具体是多少 <strong>ppm（百万分之一）</strong> ？你的体重变化了几克？<br />
+当然没有吧，因为这些细微的变化超出了人感知的能力，我们自身并不能感受到这些微不足道的变化。</p>
+<p>——当然上述多数是一些直观感受，我们只能对其有个大概的把握，并不能精确量化它们。如果在电子测量领域，我们就有许多种手段去量化这些变化。最常用的方法就是利用 <strong>传感器（sensor）</strong> 去将真实世界中的物理量转化为电信号，并用电子测量电路去对电信号进行处理并分析。</p>
+<h1 id="such-as">Such as?</h1>
+<p>比如 <strong>电子体重秤</strong>。我选了一个烂大街的解决方案来举例子。<br />
+<strong>HX711</strong>是一片高度定制化的24位ADC,专门用于 <strong>桥式电路（Bridge Circuit），也叫惠斯通电桥（Wheatstone bridge）</strong> 测量（图中的细线红色方框）。</p>
+<p>紫色方框圈出来的是一个 <strong>应变片</strong>,本质上是一个电阻,它的阻值会随着形变的大小（所受压力）变化，而这个变化是近似线性的。设计一个与其接近匹配的桥式电路，测量中间节点的电压差，就可以实现 <strong>压力大小-&gt;电压大小</strong> 的转换。（你可以画4个电阻拼成一个桥，在上下两端加上电压，测量左右两端的电压，简单分析一下）</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/1.png" alt="" /><figcaption>HX711</figcaption>
+</figure>
+<span id="more"></span>
+<p>但是这个变化的程度具体有多大呢？有20kg的重物压在其上时和在无形变时，电桥节点处测量到的电压的变化可能只有mV级别。如果直接把这个信号送入测量量程为2V甚至5V的ADC，那么想必测量的精度会相当不理想。来做一个简单的计算:<br />
+如果用一个满量程5V、位数为16位的ADC去采集一个5mV的直流电平信号——</p>
+<p><span class="math display">\[
+{5V \over 2^{16}} = 76.3uV \\  
+{5mV \over 76.3uV} = 65.53 (counts) \\
+\]</span></p>
+<p>这是不考虑噪声和其他误差以及各种各样的干扰的情况下得到的结果。显然直接测量得到的结果基本没有什么参考价值（毕竟我满量程可是65535 counts啊！）</p>
+<p>那么很自然的我们需要对这个信号进行 <strong>调理</strong>。（不是tiaojiao）</p>
+<p>在上面的HX711框图中，我们可以看到输入选择器（Input MUX）之后有一个 <strong>PGA（Programmable Gain Amplifier，可编程增益放大器）</strong>。这就是一个简单有效的调理电路。它可以将输入信号放大32倍、64倍、或者128倍之后再送进ADC测量单元去进行测量，5mV的电压经过32、64、128倍放大之后，就变成了160mV、320mV、640mV，这样我们的adc读数就精准多了。。而且这个增益设定是 <code>可编程</code> 的，即可以通过对该芯片内的某个寄存器进行配置从而改变增益，比纯分立元件实现要快捷方便得多，而且整个单元做在一块ic内也保证了信号的质量，同时减少了外界干扰和人为布线引入的未知不良因素（比如骨骼清奇的工程师，可能会做出比较迷惑的设计...）。</p>
+<p>最后我们要做的是通过该芯片的数字接口（SPI/IIC等）将测量到的电压数据读出来，并在MCU上作进一步的处理，通过电桥电压与实际压力的数学关系将其转换为重量。当然，整个系统在上电时应该执行 <strong>校准（Calibration）操作</strong>。你会发现很多电子秤有个功能叫<code>去皮</code>23333。</p>
+<h1 id="有意思的坑又增加了">有意思的坑又增加了！</h1>
+<p>上述例子中使用的芯片是一个专门为电桥测量设计的高度集成化的 <strong>混合信号前端（Mixed Signal Front End）</strong>。它包括了激励信号控制、输入选择、信号调理电路、ADC，以及统筹一切的数字接口（当然内部还有带隙基准源，以及内部振荡器）。</p>
+<blockquote>
+<p>tips:通常在应用广泛、工业市场需求量大的领域，半导体公司都会为这种测量需求专门定制混合信号测量前端，以降低系统成本，提高系统集成度。多数数字传感器也都运用了 <strong>MEMS（微机电系统）</strong> 在芯片内部集成了所有的测量单元以及处理电路，最后直接通过数字接口输出测量到的结果。具体可以去各大半导体公司官网去看看他们的产品线都有哪些~</p>
+</blockquote>
+<p>如果要实现更通用的测量，我们应该自己搭建一套精密信号链。之前🐟买了一个24位ADC模块，经过我的一番测试之后，发现它的有效精度和噪声性能稀烂。。（与模块电路板设计有关）于是我决定自己做一个 <strong>地表次精度级</strong> ADC模块，来验证一下其性能。</p>
+<h1 id="凿壁偷光">凿壁偷光</h1>
+<p>首先嘛，我只是个半吊子学生，还不是一名卓越工程师，没有独立设计精密模拟电路的能力...所以我需要借鉴前辈们的卓越技术与宝贵经验，来让我完成这个设计。</p>
+<p>首先我盯上了当年地表最强的DMM——HP 3458A。<br />
+在1989年那个只有8051的年代，HP的工程师们就凭借过硬的技术和精湛的技艺，创造了这台8位半的数字万用表，实在是令人叹为观止。在网络上搜集了大量资料，经过几天的剖析，我大致弄懂了一丢丢3458A的构造，这里简单介绍一下。</p>
+<h2 id="hp-journal">HP Journal</h2>
+<p>CNPP同学告诉我说1989年4月的HP Journal专门讲解了HP3458A的核心技术架构，我直接芜湖开冲！</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/5.png" alt="HP Journal 1989.4" border="0"/></p>
+</center>
+<p>上图是该期Journal的封面图，前面就是我们的主角——大名鼎鼎的3458A，后面是...？<br />
+详细翻阅了下面的英文后，得知后面那个大罐子是 <strong>Josephson Junction Array</strong>，简单来说是 <strong>标准电压源</strong>。标准电压源的原理是 <strong><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Josephson_voltage_standard">Josephson Voltage Standard</a></strong>，是用液氦将超导集成电路芯片稳定在4K温度下产生的稳定电压，该电压仅取决于施加的频率和基本物理常数。其背后又是一个诺贝尔物理学奖的故事...</p>
+<p>嗯，看着显示屏上的小数点后的位数，一脸满足&gt; &lt;<br />
+来到目录，开头的2篇文章将是我们需要重点研读的。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/6.png" alt="HP Journal 1989.4 Menu" border="0"/></p>
+</center>
+<h2 id="multislope-adc-structure">MultiSlope ADC Structure</h2>
+<p>3458A采用了 <strong>多斜率ADC架构</strong>（回收标题）来实现高达28位有效分辨率的模拟-数字转换。</p>
+<blockquote>
+<p>The HP 3458A's ADC uses an enhanced implementation of the same multislope technique to achieve a range of speeds and resolutions never before achieved-from 1B-bit resolution at 100,000 readings per second to 28-bit resolution at six readings per second. In addition to high resolution, the ADC has high integral linearity-deviations are less than 0.1. ppm (parts per million) of input.</p>
+</blockquote>
+<p>3458A采用了改进型的多斜率积分式ADC，可以实现16bit@10KHz 到28bit@6Hz的采样率，并且在整个测量范围内具有极高的线性度（0.1ppm）。要想理解这种高级的改进架构ADC，需要先理解它的前身——双斜率积分式。</p>
+<h3 id="双斜率积分">双斜率积分</h3>
+<p>双斜率是一个简单的 <strong>积分型ADC算法</strong>。以下电路实现了一个比较简单的双斜率积分ADC。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/7.jpg" alt="dual-slope basic" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/8.jpg" alt="dual-slope waveform" border="0"/></p>
+</center>
+<p>上图是这个算法工作的波形图，先看一眼有个印象。<br />
+在双斜率积分算法的初始状态时，电容上的电压为0（电容内无电荷），只需要将电容旁边的开关接通就可以实现。在 t = 0 时刻，断开sw2，接通开关 sw1，未知的输入电压（待测量电压）Vin通过电阻R施加到电容C上，这个充电时间是可控制的，记为tu，这个充电的过程叫做 <strong>"runup"</strong>。在runup的结束时（将sw1断开时），Vo的值可以用下式表示:</p>
+<p><span class="math display">\[
+V_o(t_u) = -(1/RC)\int_0^{t_u}V_{in}(t)dt
+\]</span></p>
+<p>如果Vin是不随时间变化的（DC）,那么Vo可表达为:</p>
+<p><span class="math display">\[
+V_o(t_u) = -(1/RC)V_{in}t_u
+\]</span></p>
+<p>下一步，将sw1断开，接通sw2，将 <strong>与Vin极性相反的Vref</strong> 施加到电容C上，这时将启动一个 <strong>计数器（counter）</strong>，当电容上的电压降至0的时候，计数器停止计数。这个过程就叫 <strong>"rundown"</strong>。当这个过程结束之后，计数器计数的值的大小就可以代表未知输入电压的大小:</p>
+<p><span class="math display">\[
+V_o(t_2) = V_o(t_u) - (1/RC)V_{ref}t_d = 0,
+\]</span></p>
+<p>td就是rundown这个过程所需要的时间，有了这些就可以求解出Vin:</p>
+<p><span class="math display">\[
+V_{in} = -V_{ref}(t_d/t_u)
+\]</span></p>
+<p>然后我们得到了runup过程计数器的计数值 $ N_u $ 和rundown过程计数器的计数值 $ N_d $，于是我们可以消去时间，只用计数器的计数值就可以求解出输入电压:</p>
+<p><span class="math display">\[
+Vin = -V_{ref}(N_d/N_u)
+\]</span></p>
+<p>双斜率积分ADC技术的美妙之处就在于它对于大多数的电路参数并不敏感！看看最终的表达式吧，如果我们想要精确地得到测量结果，我们只需要一个足够精准的Vref（基准电压源）和一个频率足够高（时间细度更小）的计数器！<br />
+更喵的一点是，这种架构可以牺牲采样速度来换取更高的采样精度！（改变电阻/电容就可以使runup和rundown的时间变长）</p>
+<p>但是这种架构也是有缺点的。双斜率算法的主要问题是它的分辨率和速度是有上限的。一个双斜率ADC的测量时间是:</p>
+<p><span class="math display">\[
+T_m = 2T_{ck}M
+\]</span></p>
+<p>Tm是理论上执行一次满量程测量的最小时间。Tck是ADC时钟的周期（也就是那个计数器的周期），M是满量程分辨率的计数值（比如24位是2的24次方）。即使使用20MHz的时钟，执行一次10000counts分辨率的测量也需要至少1ms（采样率就是1kHz），这个参数约等于采样率1kHz，分辨率为13.3位的ADC。</p>
+<p>同时，宽带电路噪声和积分器的最高电压摆幅（约为±10V）同样限制了双斜率ADC的分辨率。宽带噪声决定了rundown过程结尾的过零点检测精度，想要检测1mV，甚至1uV的过零比较是难以实现的。所以这种算法受限于自身原因，最高分辨率能做到4-5位有效数字。（比如10V满量程，可分辨1mV）</p>
+<h3 id="更好的双斜率积分">更好的双斜率积分</h3>
+<p>我们可以简单地用一个额外的电阻让双斜率的采样速度直接翻倍。一个电阻用于runup,一个用于rundown。电路如下所示。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/9.jpg" alt="Dual-Slope Improved" border="0"/></p>
+</center>
+<p>待测电压Vin连接到runup电阻Ru上，Ru是 <strong>远小于</strong> rundown电阻Rd的，这样就会加快runup过程（积分电容充电），而减缓rundown过程（积分电容放电），这样就可以在不牺牲精度的情况下加速runup过程，加速比就是2电阻之比，Vin的测量结果可由下式计算:</p>
+<p><span class="math display">\[
+V_{in} = -V_{ref}(N_d/N_u)(R_u/R_d)
+\]</span></p>
+<p>因为电阻网络可以精确匹配并且通过物理手段使其温漂保持一致，所以这种增强方法非常不错。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/11.jpg" alt="Improved Dual-Slope Waveform" border="0"/></p>
+</center>
+<h3 id="多斜率">多斜率！</h3>
+<p>增强型双斜率缩短了runup所需的时间，而多斜率则是缩短了rundown的时间——<br />
+多斜率使用多个电阻来执行rundown操作，并且进行多次过零比较，可以简单理解为逐次逼近，每次都会更加精准。相比于使用单个电阻它的rundown时间更短。多斜率的电阻比例是 <strong>基于一个数</strong> 的，比如基2、基10。（下图是基10）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/10.jpg" alt="Multi-Slope Circuit" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/12.jpg" alt="Multi-Slope Waveform" border="0"/></p>
+</center>
+<p>上面这个多斜率电路使用了 <strong>4个斜率</strong>，通过4个不同的电阻来实现，它们的权重分别是1000、100、10和1。根据每个斜率的极性（+Vref和-Vref）和比例大小，在波形图中标识了其符号（S)。比如说，S1000是一个一个时钟周期计数+1000次的正斜率，-S100是一个时钟周期计数-100次的负斜率。意思就是说在+S1000阶段，每一个时钟周期计数器将计数加1000个，在-S100阶段，每一个时钟周期计数器将减100个计数，如此往复逼近之后将得到一个最终稳定下来的计数值，这就是我们最终的、最精确的结果。</p>
+<p>如果每一个斜率对应的曲线在过零之后的一个时钟周期后关闭，那么下一个斜率对应曲线应该需要额外的10个或以下个时钟周期来完成过零。那么，理论上完成rundown过程所需要的时间Td就是:</p>
+<p><span class="math display">\[
+t_d &lt; NBT_{ck}
+\]</span></p>
+<p>其中，N是斜率的个数，B是多斜率的比例基数。实际上，rundown要花费的时间会更长一些，因为不可能每次过零之后的一个时钟周期后就可以关断并切换至下一个斜率。考虑到这些延迟，最终花费的时间最大应该是:</p>
+<p><span class="math display">\[
+t_d &lt; kNBT_{ck}
+\]</span></p>
+<p>其中k是一个大于1的常数（<del>废话</del>）关掉一个斜率对应的充放电过程的时延导致了积分器的输出会产生 <strong>过冲（overshooting）</strong> 。对于每一个斜率曲线末端的时延对应的过冲，接下来的一个斜率曲线必须要经过 <strong>B</strong> 个时钟周期去平缓（安抚ww）这个过冲。k的典型值大概是2到4，上图的多斜率积分式ADC可以实现如下性能：</p>
+<p>k=2，使用20MHz的时钟，以10000counts分辨率进行采样，完整的一个采样周期是4us，采样率约为250kHz。这比上面的Dual-Slope快了125倍。。。</p>
+<h4 id="更逆天的多斜率积分">更逆天的多斜率积分</h4>
+<p>通过选择合适的斜率倍率基数B，可以实现更快的多斜率积分测量。。请注意下式中的斜率个数N，也可以写成 $ log_B(M) $，M是指定测量精度对应的rundown过程所需要的counts数。</p>
+<p><span class="math display">\[
+t_d&lt; kBlog_B(M)T_{ck}
+\]</span></p>
+<p>数学上的最优基底是常数 <strong>e</strong>，无关分辨率（数学是魔鬼！）。使用e作为上面例子的基底来完成多斜率积分，其他参数不变，可以将采样时间缩短至2.5us，又比之前以10为基底的快了60%。。。</p>
+<p>多斜率积分也是有代价的，代价就是需要 <strong>超精密匹配的电阻网络</strong>，不然最终ADC的精度和线性度无法达到要求。同时多斜率积分也需要一个更复杂的控制电路去实现各种状态的检测、控制和切换。</p>
+<h3 id="多斜率runup">多斜率runup</h3>
+<p>多斜率runup是一个用于提升ADC分辨率的改进技术。之前提到过，双斜率积分的分辨率受限于积分器的最高电压摆幅还有电路中的宽带噪声。多斜率runup可以让ADC拥有比 <strong>积分器物理限制的最高电压摆幅</strong> 高得多的 <strong>等效电压摆幅</strong>。</p>
+<p>多斜率runup涉及到在runup过程中周期性地为积分器的输入中添加+Vref和-Vref电压（未知的输入电压Vin是一直加载的），以此来保证积分器的输出永远不会饱和。在这个过程中同样是使用计数器去记下Vref的等效充/放电时间，然后在rundown过程中用相应的时长来加/减去Vref，通过这种方法能得到高得多的分辨率。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/13.jpg" alt="Multi-Slope Runup" border="0"/></p>
+</center>
+<p>在Ra上加上+Vref，在Rb上加上-Vref，同样地通过开关控制2个Vref接入的时间，就可以精确地控制referenec为积分器充/放电的时间。下表列出了可能的4中runup过程中基准电压电流的情况。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/14.jpg" alt="Multi-Slope Runup Situation" border="0"/></p>
+</center>
+<p>需要注意的一点是，S+为积分器添加正积分量，S-为积分器添加负积分量。如果我们让S+和S-电流等大小反相，并且比满量程Vin输入所产生的电流稍微大那么一点点，那么基准电流总是能移除输入Vin所贡献的的积分量（如果基准电流比满量程Vin输入所产生的电流小，那么2个电流最终体现出来的还是为积分器充电，无法降低积分器的输出）。因此，这种方法就可以避免积分器输出饱和，通过周期性地检测积分器输出的极性，然后根据当前的极性相应地加入/减去S+和S-分量，就可以将积分器输出强制限制在0附近振荡。</p>
+<p>Fig.5是一个典型的多斜率runup波形，带箭头的虚线是普通runup的波形，可以看出它很容易就会饱和。而绿色的曲线就是使用了Multi-Slope的runup波形，优点显而易见。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/15.jpg" alt="Multi-Slope Runup Waveform" border="0"/></p>
+</center>
+<p>多斜率runup算法相比于双斜率runup有以下几点好处:<br />
+- runup可以 <strong>持续任意长时间</strong>，因为积分器不会饱和。不过需要足够的计数器位数去存储计数数据。<br />
+- 可以在runup和rundown两个过程中同时提高精度，HP 3458A就是在runup过程中解析4位半精度，再在rundown过程中解析另外4位精度，实现了8位半精度。</p>
+<p>对于任何一个ADC来说，<strong>线性度（Linearity）</strong> 都是一个极为重要的指标。但是多斜率runup算法并没有很好的线性度，因为每次开关都会为积分器传入一个 <strong>不可预测</strong> 的充电量/放电量，下图显示了2个应该为积分器传入同样电荷量的波形，但是由于它们的开关次数不同，它们最终传入的电荷量也不一样。（下面的有2次重复开关动作，导致了本应一直上升的三角波被翻折下来。而上面只有一次。）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/16.jpg" alt="Multi-Slope Runup Waveform 2" border="0"/></p>
+</center>
+<p>如果在每次转换时，使开关的开关次数为恒定值，那么无论输入信号是什么样的，这个问题都将不复存在。如果做到这点，那么每次转换的结果中都会有一个 <strong>offset</strong>。只要周期性地用一个零信号加载到输入上用来校准offset（读取零信号，得到的值就是offset，将这个值在后续每次读数中减去），就可以肥肠完美地解决这个问题。但要注意的是，<strong>必须周期性地去执行校准操作</strong>，因为开关的上升/下降时间是随温度而变化的，必须要确保校准数据和读数操作在同一温度附近，校准数据才有意义。</p>
+<p>多斜率runup算法可以通过在每一个runup斜率上交替地施加恒定个开关周期时长的 S+0 和 S-0 信号来实现，下图展示了任意2个 S0+ 斜率之间的 4 种可能的斜率模式。不同的ADC输入电压会导致多斜率runup算法在这4种模式中切换。但无论是哪种模式，每个开关周期仅仅在第一个 S+0 斜率和 S-0 斜率之间传入 <strong>一次</strong> 电荷，并且在 S-0 斜率和下一个 S+0 斜率之间传入另一个。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/17.jpg" alt="4 possible patterns in Multi-Slope Runup" border="0"/></p>
+</center>
+<p>多斜率runup算法的开销相对来说比较小，多斜率runup的斜率可以和多斜率rundown的第一个斜率保持相同的权重。所以，只需要添加相反极性的斜率，以及相应的逻辑组件就可以完成这个算法。</p>
+<h2 id="hp3458a-adc-design">HP3458A ADC Design</h2>
+<p>HP3458A的ADC设计就是基于以上描述的多斜率积分型ADC理论知识。设计ADC时，我们需要考虑如何去控制ADC、如何选择斜率比例基数、积分器能做到多快、线性度能做到多高，以及为积分器输入多大的电流（电阻的大小）等许多许多因素。。。需要同时兼顾ADC的高速和高精度，属实是项困难的工作。比如说如果需要实现高速，那么斜率就需要选得非常大以缩短总积分时间，但是这样一来积分器的非线性度就大幅增加，从而导致精度降级。</p>
+<p>一个最简单的决策是选择多斜率rundown的比例基数。用数学常数e可以实现最高的速度，但是如果选择了e，那么ADC的输出就比较困难，因为ADC最终输出的是binary（二进制）。用2或4是非常适合binary系统的，并且它们都接近e。实际上用2或4当比例基数的转换速度是同等的，大致比e慢了百分之六左右，但是基2需要用2倍多的斜率去实现同样的精度，这样会导致硬件复杂度增加。因此选择4作为基底是比较经济合适的选择。</p>
+<p>一般我们会用微处理器去控制多斜率ADC，但是HP3458A的速度要求扼杀了用微处理器作为主控的可能性。ADC的时钟预期是10MHz到20MHz之间，如果要在这种速度下做复杂的逻辑切换，微处理器是难以满足的。（1989年只有80C51，主频才12M...就算放到今天，要想在执行一堆复杂的判断时同时让微处理器的IO翻转速率达到20MHz也并不是一件容易的事情）所以，我们需要专用的硬件电路去控制ADC。因此，HP采用了Gate Array（FPGA或CPLD）实现了一个运行在20MHz的状态机，去控制ADC。ADC控制逻辑和积分器功能大约消耗了6k个CMOS门阵列。还需要另外的门阵列去实现计数器和触发控制，并且跑一个UART接口（2Mbits/sec），通过光纤将数据传输到数据处理和控制单元。</p>
+<p>斜率的个数以及每个斜率的电流大小则是更为微妙的选择。如果斜率对应的电流过大，它将让积分器的输出级——运放不堪重负，从而导致严重的非线性。如果斜率对应的电流太小，开关和运放的漏电流可能会比最小的斜率对应的电流还要大，这样该斜率对应电流就无法让积分器的输出降至0。我们要确保最小的斜率对应的电流不小于1微安（1uA）来避免漏电流的影响。同样的，我们可以确信在5到6位半精度时，积分器可以承担起几mA（毫安）的输入电流，但是如果需要最高的精度和线性度（7位、8位半），我们必须要求输入电流小于1mA。而另一方面，如果需要实现高速，那么我们可能需要更大的输入电流（1mA以上）。因此，我们选择了2输入的ADC架构。</p>
+<p>如下图所示，当执行高速测量时，输入电压通过10k电阻加载，这时是ADC的最大斜率，输入电流可能超过1mA。当执行高精度测量时，输入电压通过50k电阻加载，同样是最大斜率，但是此时输入电流必定小于1mA。最大斜率是S1024，对应电流1.2mA。总共有6个不同斜率（S1024,S256,S64,S16,S4和S1），其中S1的电流是1.2uA。S1024和S256都用于多斜率runup过程，因此无论是runup还是rundown，正负极性都存在。±S256斜率（0.3mA）用于通过50k电阻加载时，当输入通过10k电阻加载时，同时使用±S1024和±S256斜率并联（共1.5mA）。S256斜率比使用50k电阻作满量程输入时还要高出百分之25，这样可以避免积分器输入饱和。10k输入比50k输入要强5倍，因此同时使用S1024和S256，可以使用比最高斜率高25%的斜率用于高速转换。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/18.jpg" alt="Simplified HP 3458A ADC circuit" border="0"/></p>
+</center>
+<h3 id="积分器">积分器</h3>
+<p>当最陡峭的斜率对应的压摆率逼近积分器的运算放大器的压摆率时，积分器的非线性度会增加。有2个影响积分器的压摆率的因素：</p>
+<ul>
+<li>积分器总输入电流<br />
+</li>
+<li>积分器的积分电容大小</li>
+</ul>
+<p>如果想要保持积分器的压摆率在10V/us以下，那么需要一个330pF的积分电容。这个积分电容必须具有 <strong>非常小的</strong> 介电吸收性，因为每次充电只需50fC（50飞库伦）</p>
+<p>积分器电路需要对基准电流的变化做出快速响应，积分器的积分值在下一次可能的开关切换前要稳定到目标期望值的±0.01%区间内（整个过程约200ns）。同时积分器必须具有超低的电流/电压噪声，大约100V/us的压摆率、直流增益至少为25000，直流offset电压5mV、偏置电流小于10nA。有必要自行设计一个运算放大器来实现这所有的指标。。。</p>
+<h3 id="电阻网络">电阻网络</h3>
+<p>电阻网络有几个关键需求。最严格的需求是要求有极低的 <strong>温漂比例失配系数</strong>。因为ADC的增益和斜率比例系数和大小都由电阻网络的比例严格控制，如果电阻网络的比例随温度变化严重，那么ADC将不存在精度可言。HP3458A上的ADC电阻网络总共的温漂失配系数约为0.4ppm/°C（4千万分之一/每摄氏度）。即使是做到了如此恐怖的境地，如果电阻网络的温度有0.1度的变化，也将会在满量程8位半模式下ADC的最终读数中呈现出5 counts的跳动。（自动校准使得该系数可以小于0.15ppm/°C）。</p>
+<p>对电阻网络的另一个需求是拥有足够低的绝对温度系数，这样可以确保电阻网络的自加热不会为整个系统贡献额外的非线性度。比如说，50k的输入电阻的输入电压范围是-12V到+12V。输入为0V和输入为12V时，电阻消耗的功率差值是2.88mW（毫瓦）,电阻消耗的功率转换成热，致使电阻温度上升，就会为ADC的非线性度做贡献。比如说这个电阻的绝对温度系数是1ppm/°C，那么在8位半测量模式下，仅仅0.01°C的温度变化就会引起1 count的跳动误差。HP3458A中使用的电阻网络并没有显示出这种由于 <strong>自加热现象</strong> 而产生的非线性。（你们用了什么天顶星黑科技电阻啊...）</p>
+<p>最后的需求是电阻网络必须在HP3458A的一生中保持恒定的比率——也就是我们常常说的 <strong>长期稳定性（long-term stability）</strong>。为了在高速测量时保持良好的线性度，最不济的比例误差是0.1%，这是个相对简单的指标。如果要使ADC在8位半分辨率时的微分非线性度小于0.02ppm，对电阻比例的容差仅仅需要3%。</p>
+<h3 id="开关">开关</h3>
+<p>最后一个需要谨慎选择的是控制输入的开关（switches），因为这些开关和电阻串联，它们的参数也会影响到ADC的温度系数。HP自己定制了一颗IC来做这个功能，保证开关的特性跟电阻的阻值数量级相匹配，这样就保证了ADC对于 开关的<strong>比例跟踪</strong>温度系数敏感，而对绝对温度系数不敏感，这样保证了开关器件在同一温度下的一致性。另一个定制IC的好处是开关的控制信号可以在驱动级之前被锁存，这样可以让控制信号和时钟重新同步，可以有效减小开关过程中的时钟抖动。最终体现出的结果就是减小了ADC的整体噪声。</p>
+<h3 id="性能">性能</h3>
+<p>ADC的性能被一些非理想的性质所限制，通常ADC所标识的位数被微分线性度或者噪声所限制。（即使在测量结果中跳动几counts，看起来精度要比标称高一些，实际上是噪声的锅）。比如说HP 3458A的ADC标称可达到9位半精度，但实际上只做了8位半测量，（约3.几bit差距）因为第9位已经呈现出严重的噪声特性，跳动非常严重以至于无法读取准确的测量数，并且微分线性度大约为8位。因此，在标识一个ADC的速度和分辨率时，指明这些参数是在何种条件下是 <strong>可信的（reliable）</strong> 是非常重要的（事实上几乎所有芯片都需要这样标识）。下图展示了3458A的采样速度和采样精度之间的关系（假定噪声真有效值小于1count）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/19.jpg" alt="HP3458A ADC speed versus resolution for one count of rms noise" border="0"/></p>
+</center>
+<p>给定一个噪声值大小，就可以给出一个ADC在特定采样率下的分辨率极限。可以看出一个信号中高斯白噪声的带宽是一个时间T的积分：</p>
+<p><span class="math display">\[
+BW = 1/2T.
+\]</span></p>
+<p>如果rundown不消耗时间，那么一个积分型ADC可以每T秒采样一次，在这个采样速率下，分辨率M受噪声限制为：</p>
+<p><span class="math display">\[
+M = (V_{fs}\sqrt{2T})/V_n
+\]</span></p>
+<p>Vfs是ADC的满量程输入电压，Vn是高斯白噪声噪声的噪声密度，单位是V每根号Hz。下图表示了在100nV/根号Hz下，输入10V电压时，ADC的最高理论分辨率。3458A的表现非常接近一个工作在130nV/根号Hz高斯白噪声下的ADC的理论分辨率极限（靠近7位半区域）。在更低的分辨率区域，ADC的rundown时间在总共的转换时间中占比越来越高，因此降低了ADC的表现。在高分辨率时，ADC的1/f噪声会在测量周期内多次强制测量0信号用以降低噪声，提高精度至8位半精度，这同时降低了测量速率。</p>
+<p>另一个评估ADC的性能的方法是画一个分辨率-积分时间图。积分时间指的就是runup的时间，见下图。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/20.jpg" alt="HP3458A ADC speed versus resolution for one count of rms noise" border="0"/></p>
+</center>
+<p>图中，有100nV/根号Hz的理论极限，还有ADC的理想无噪声分辨率曲线。在短积分时间区域内，3458A的分辨率远不如理论噪声极限，因为这时在rundown过程中检测最终的过零点将会带来大量的噪声（积分时间短），即多斜率积分算法并不能在这时达到理论极限。而如果把积分时间拉长，情况则会好很多。</p>
+<h3 id="线性度">线性度</h3>
+<p>高精度线性度是ADC设计中的一个主要挑战。自动校准技术需要0.1ppm的积分线性度与0.02ppm的微分线性度。一个更重要的问题是如何测量、校验积分线性度。。（我们在做地球上最精密的ADC，用什么去校准呢？）最线性、且能用于商业用途的器件是 <strong>Kelvin-Varley divider</strong>。</p>
+<p>我搜了搜，这种结构的分压器是目前地球上公认的精度最高的。。我还搜到一款Fluke公司生产的Kelvin-Varley 分压器，用于校准仪表。同时这种分压结构也可以用于制作最精密的DAC（数模转换器），看看这怪物的参数，0.1ppm精度，0.1ppm绝对线性度。。orz</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/fluke%20720A%20kelvin-Varley%20Divider.jpg" alt="Fluke 720A kelvin-Varley Divider" border="0"/></p>
+</center>
+<p>校准线性度这部分挺复杂的，我暂时偷个懒不翻了）</p>
+<p>以下是用Kelvin-Varley Divider和Josephson Junction Array联合测试出来的3458A线性度表现，可以看出，已经非常优秀了。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/21.jpg" alt="HP3458A ADC speed versus resolution for one count of rms noise" border="0"/></p>
+</center>
+<h2 id="致谢">致谢</h2>
+<p>从15年前（1989-15=1974年）的HP 3455A 数字万用表开始，多斜率积分型ADC开始发扬光大，经过众多工程师和科学家的不懈工作后，将其推进至今天的高度。包括以下人员: - Advancement in Multisolpe ADC concepts - Al Gookin<br />
+- Joe Marriott<br />
+- Larry Jones<br />
+- James Ressmeyer<br />
+- Larry DesJardin - Custom switch chip - John Roe （from HP Colorado Intergrated Circuits Division） - Gate Array Development - David Czenkusch<br />
+- David Rustici - Integrator Design<br />
+- Steve Venzke<br />
+- U.S. National Bureau of Standards - Clark Hamilton<br />
+- Dick Harris - （for developing Josephson Junction Array Voltage System.）</p>
+<h2 id="information-packet">Information Packet</h2>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/4.png" alt="Information Packet for 3458A" border="0"/></p>
+</center>
+<p>我在某个神奇的网站找到了3458A的元器件级文档，这个文档包括了3458A的主板上的所有元器件BOM表，以及每块板的布局和电路图，可谓是非常详尽了。但遗憾的是这个文档是扫描版本的，有些折页处有一些内容遗失了。诶，毕竟是30年前的东西了...</p>
+<p>如果你对这个东西感兴趣可以去康康。</p>
+<p>下一篇，我们将开始着手设计自己的万用表前端电路。敬请期待~</p>
+<h1 id="资源索引">资源索引</h1>
+<p><a target="_blank" rel="noopener" href="http://hparchive.com/Journals/HPJ-1989-04.pdf">HP Journal 1989 April</a></p>
+<p><a target="_blank" rel="noopener" href="https://xdevs.com/review/dmm6500/">DMM6500拆解</a></p>
+<p><a target="_blank" rel="noopener" href="https://xdevs.com/doc/Keithley/DMM6500/doc/DMM6500-901-01_A_April_2018_Ref_DMM6500-901-01A.pdf">DMM6500参考手册（pdf）</a></p>
+<p><a target="_blank" rel="noopener" href="https://xdevs.com/doc/HP_Agilent_Keysight/3458A/doc/3458A%20CLIP.pdf">3458A CLIP（pdf）</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" rel="prev" title="做一个锁定放大器">
+      <i class="fa fa-chevron-left"></i> 做一个锁定放大器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/" rel="next" title="微观尽头——精密信号测量:理论分析">
+      微观尽头——精密信号测量:理论分析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8Fintro"><span class="nav-number">1.</span> <span class="nav-text">微观尽头——精密信号测量:Intro</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#such-as"><span class="nav-number">2.</span> <span class="nav-text">Such as?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%89%E6%84%8F%E6%80%9D%E7%9A%84%E5%9D%91%E5%8F%88%E5%A2%9E%E5%8A%A0%E4%BA%86"><span class="nav-number">3.</span> <span class="nav-text">有意思的坑又增加了！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BF%E5%A3%81%E5%81%B7%E5%85%89"><span class="nav-number">4.</span> <span class="nav-text">凿壁偷光</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hp-journal"><span class="nav-number">4.1.</span> <span class="nav-text">HP Journal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multislope-adc-structure"><span class="nav-number">4.2.</span> <span class="nav-text">MultiSlope ADC Structure</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E6%96%9C%E7%8E%87%E7%A7%AF%E5%88%86"><span class="nav-number">4.2.1.</span> <span class="nav-text">双斜率积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84%E5%8F%8C%E6%96%9C%E7%8E%87%E7%A7%AF%E5%88%86"><span class="nav-number">4.2.2.</span> <span class="nav-text">更好的双斜率积分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%96%9C%E7%8E%87"><span class="nav-number">4.2.3.</span> <span class="nav-text">多斜率！</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E9%80%86%E5%A4%A9%E7%9A%84%E5%A4%9A%E6%96%9C%E7%8E%87%E7%A7%AF%E5%88%86"><span class="nav-number">4.2.3.1.</span> <span class="nav-text">更逆天的多斜率积分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%96%9C%E7%8E%87runup"><span class="nav-number">4.2.4.</span> <span class="nav-text">多斜率runup</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hp3458a-adc-design"><span class="nav-number">4.3.</span> <span class="nav-text">HP3458A ADC Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%AF%E5%88%86%E5%99%A8"><span class="nav-number">4.3.1.</span> <span class="nav-text">积分器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E9%98%BB%E7%BD%91%E7%BB%9C"><span class="nav-number">4.3.2.</span> <span class="nav-text">电阻网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%85%B3"><span class="nav-number">4.3.3.</span> <span class="nav-text">开关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD"><span class="nav-number">4.3.4.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%BA%A6"><span class="nav-number">4.3.5.</span> <span class="nav-text">线性度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%B4%E8%B0%A2"><span class="nav-number">4.4.</span> <span class="nav-text">致谢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#information-packet"><span class="nav-number">4.5.</span> <span class="nav-text">Information Packet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B5%84%E6%BA%90%E7%B4%A2%E5%BC%95"><span class="nav-number">5.</span> <span class="nav-text">资源索引</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微观尽头——精密信号测量:理论分析">
+<meta property="og:url" content="https://floydfish.xyz/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/3.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/4.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/5.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/6.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/7.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/8.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/9.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/10.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/11.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/12.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/13.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/14.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/15.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/16.jpg
+">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/17.jpg
+">
+<meta property="article:published_time" content="2021-09-22T23:03:40.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:11:32.933Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="坑">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/1.jpg">
+
+<link rel="canonical" href="https://floydfish.xyz/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>微观尽头——精密信号测量:理论分析 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微观尽头——精密信号测量:理论分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-09-23 07:03:40" itemprop="dateCreated datePublished" datetime="2021-09-23T07:03:40+08:00">2021-09-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:11:32" itemprop="dateModified" datetime="2022-01-30T20:11:32+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/" class="post-meta-item leancloud_visitors" data-flag-title="微观尽头——精密信号测量:理论分析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="微观尽头精密信号测量理论分析">微观尽头——精密信号测量:理论分析</h1>
+<p>在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。</p>
+<h2 id="商业数字万用表dmm">商业数字万用表(DMM)</h2>
+<p>我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的<a target="_blank" rel="noopener" href="https://www.tek.com/tektronix-and-keithley-digital-multimeter/dmm6500">DMM6500</a>。为什么是这款呢？因为我用过最高端的DMM是这个（</p>
+<p>这款6位半的数字万用表能测量10pA到10A的电流，1uΩ到100MΩ的电阻，以及100nV到1000V的电压，同时具有5英寸的电容触控屏，可以将采集到的数据以曲线、表格等形式呈现出来以供分析。（怎么搞得我像是打广告的（雾））</p>
+<p>这台万用表的核心ADC器件是一个16位、1MSPS的ADC，光靠这片ADC是无法实现6位半精度的（22位有效精度），我猜测他们应该是使用过采样算法将有效精度提升至了6位半。</p>
+<h2 id="evm">EVM</h2>
+<p>当然，光靠ADC本身是不能实现如此多的功能、也不能实现如此高的测量范围的，如果要做一台数字万用表，那么必须为ADC设计不同的前端电路来实现各种功能和档位切换，而这个系统对于验证阶段的我们来说太过于复杂。所以我的计划是设计一个ADC评估模块（Evaluation Module，EVM），先用这个模块简单地验证一下ADC和模拟前端的性能参数是否达标，同时也锻炼一下我的精密小信号电路、以及数模混合系统 PCB Layout的能力，积累经验（踩坑）。</p>
+<p>所以我将设计一块这样的板子:</p>
+<ul>
+<li>搭载核心器件——ADC，型号为ADI的AD7177-2（32位集成式ADC）<br />
+</li>
+<li>使用市电+变压器为电路供电<br />
+</li>
+<li>使用超低噪声LDO为精密模拟电路供电<br />
+</li>
+<li>板载一块MCU，用于连接ADC和控制模拟前端电路，同时MCU负责处理数据并通过串口将数据回传至电脑</li>
+</ul>
+<p>我决定为他命名为——EmoeMetrology :)</p>
+<span id="more"></span>
+<h3 id="借鉴cern-hpm7177">借鉴——CERN HPM7177</h3>
+<p>前段时间Hackaday上公开了 <strong><a target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">这么一篇文章</a></strong>，CERN制作的开源8位半数据采集系统，核心的ADC器件是AD7177，所以它们为这个工程命名为HPM7177，这个数据采集系统将用于CERN的 <strong><a target="_blank" rel="noopener" href="https://hilumilhc.web.cern.ch/">高光度大型强子对撞机</a></strong> 项目,它们需要上百个这样的数据采集器来完成高精度的实验数据采集任务。（不得不说CERN的宣传做的真不戳。）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/1.jpg" alt="Homebrew Metrology CERN" border="0"/></p>
+</center>
+<p><a target="_blank" rel="noopener" href="https://edms.cern.ch/ui/#!master/navigator/document?I:100912592:100912593:subDocs">这里</a> 可以找到他们开源的项目文件，在他们的文件托管服务器上，其中最核心的模拟前端+电压基准的电路图可以在 <strong><a target="_blank" rel="noopener" href="https://edms.cern.ch/ui/file/2605823/1/EDA-04061-V3-0_sch.pdf">这里</a></strong> 摸到。</p>
+<p>可以看到他们的设计非常精细，为整个模拟电路部分设计了一个恒温腔室，用以确保基准源和模拟前端的热稳定性，同时金属腔体也起到了屏蔽外界电磁干扰的作用。看到那块小板子上的2片金灿灿的芯片了吗？如果我告诉你它其实是电阻你会不会...</p>
+<p>好吧，其实它真的是电阻，是Vishay生产的超精准、精密匹配、低温漂、无感薄膜电阻网络。这2片电阻网络一个将用于精密的模拟前端电路，另一个部分会用于基准电压源输出的分压网络。</p>
+<p>看见那个银色的圆金属封装芯片了吗？那个就是LTZ1000，地表最强的基准电压源。它拥有0.05ppm/°C的超强绝对温度系数，以及超低的长期漂移特性，上一期我们讲的HP 3458A 数字万用表就使用了LTZ1000作为电压基准源。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/2.jpg" alt="Homebrew Metrology CERN Core Analog Board" border="0"/></p>
+</center>
+<p>嗯，顺便，他们使用了一块Xilinx生产的 <strong>XC7A35T</strong> FPGA作为整个系统的控制器，那块大底板上的35T就是这块FPGA的最小系统板。</p>
+<p>银色的巨大铝块就是恒温腔了，它的底部塞了一块TEC（半导体加热/制冷片），同时配备了控制器，用以控制精密模拟电路部分的恒温状态。</p>
+<h3 id="前端电路">前端电路</h3>
+<p>但这些都不是重点，重点是我们需要借鉴它的电路图！</p>
+<p>我们可以找到它的模拟前端电路，然后我们来分析一下——</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/3.jpg
+" alt="Analog Front End - Emoe Metrology" border="0"/></p>
+</center>
+<p>信号流动的方向是从左至右，那么我们也这么来分析。</p>
+<p>首先差分信号经由10M电阻接地、同时接了一个RC共模滤波器，然后接入了共模电感，这一部分主要是EMI滤波;</p>
+<p>共模电感输出接入了2个模拟开关，这2个模拟开关的另一路输入是接地的，主要用于系统测试用。</p>
+<p>第一级模拟开关输出接入了第二级模拟开关输入，第二级的模拟开关是8选1Mux，除了输入信号接入了之外，还接入了很多的基准电压信号，这一级模拟开关主要用于为整个系统提供全量程的校准。（包括offset校准、INL、DNL校准）</p>
+<p>像过火车隧道一样过了2级模拟开关之后，信号接入了一个电压跟随器。这个buffer所使用的运放型号是OPA189，我查了一下，它具有60TΩ的共模输入阻抗......我只能说逆天。如此之高的输入阻抗保证了信号在这一级缓冲之后不会有损失。</p>
+<p>经过buffer后，信号来到了全差分放大级。乍一看还挺复杂，但拆分出来看的话，其实就是2个复合差动放大器，他们的输入端反相，然后输出差分信号相减，就可以得到2倍增益的输出。单个差动放大器的增益是3.5k/20k=0.175，然后经过输出差分乘以2，就是图上所标识的0.35了。</p>
+<p>在这一级它使用了复合放大器结构，经过查阅数据手册我们就可知其原因——<br />
+第一级放大器OPA388属于高精度零漂放大器，但其增益带宽积较低，输出压摆率不高。而第二级放大器AD8065属于高速精密放大器，输出压摆率和增益带宽积都很优秀，将8065用作输出级可以增强这个电路的驱动能力，而OPA388作为前放可确保这个电路的零漂移特性。</p>
+<p>当然，下面还为这个差分级提供了共模偏置，他使用了来自ADC内部基准源的2.5V电压，同时为其设置了CMRR调节电路，如果电阻匹配度不佳会导致电路共模抑制比降低，这2个电位器支路可小范围微调CMRR。</p>
+<h3 id="基准电路">基准电路</h3>
+<p>在基准这一块，它使用的LTZ1000内部是带有加热丝的（就是LTZ1000框框里面那一小段蛇形线），所以有些外围电路是用来做加热丝闭环控制的，我们暂时可以不用理会。</p>
+<p>LTZ1000输出电压约为7V，它使用了分压电阻网络+放大器的结构，输出了5V、7V、10V 3个电压。其实也没啥好看的...</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/4.jpg" alt="Voltage Reference Circuit diagram - Emoe Metrology" border="0"/></p>
+</center>
+<h3 id="adc电路">ADC电路</h3>
+<p>可以看到从左边输入进来的VREF电压经过一个精密复合跟随器和简单的滤波和退耦电路后接入了ADC的外部基准电压输入引脚。同时图上特别标注了一点，需要小心地设计基准电压信号路径和地。</p>
+<p>然后剩下的就都是些AD7177-2的各种电源和配置电路了。在AD7177-2的供电网络（正5V模拟供电和2.5V数字供电）前我们都可以看到有0.1uF的退耦电容和馈通滤波器组合，这样的设计是为了最小化电源轨上的高频噪声对电路产生的影响。同时在时钟输入处，使用了一个16MHz的有源晶振，供电串联了高频电感。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/5.jpg" alt="ADC Circuit diagram - Emoe Metrology" border="0"/></p>
+</center>
+<h2 id="信号路径signal-path">信号路径（Signal Path）</h2>
+<p>至此嘛，最核心的模拟电路前端已经全部讲完了。我们做一张系统的框图，就可以大致把握整个系统该如何去设计了。</p>
+<p>系统主要分为几个部分:</p>
+<ul>
+<li>Input &amp; MUXs | 输入级与模拟开关</li>
+<li>Differential Stage | 全差分增益级</li>
+<li>AD7177-2 | 核心ADC及其外围<br />
+</li>
+<li>Power Supplies | 系统电源分配网络</li>
+<li>Reference | 基准电压源及其外围</li>
+<li>MCU &amp; Peripherals | 单片机以及外设接口等</li>
+</ul>
+<p>老样子，还是用KiCad完成了Schematic Design和PCB Layout，在顶层电路结构图中我划分了整个系统的框图，还算是比较清晰吧——</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/6.jpg" alt="KiCad System Design - Emoe Metrology" border="0"/></p>
+</center>
+<h1 id="设计理论-经验">设计理论 &amp; 经验</h1>
+<p>这一节可谓是整个系统中的精华之一了。因为我自己造不了轮子，我用了现成的集成式ADC芯片，那么我现在还需要做的就是设计好精密小信号模拟前端和基准电压源的线路布局等。</p>
+<p>因为这是一个典型的数模混合系统，在数字域会产生上MHz的高频噪声，而模拟域中 <strong>有用信号</strong> 的最高频率不过kHz，两者不在一个数量级上，不良的PCB设计会导致数字与模拟域互相干扰（主要是数字干扰模拟，老恶棍了），最终呈现出来的就是系统可靠性、稳定性下降，精度也将无法达到要求（高频噪声增高）。</p>
+<p>以我的菜鸡水平，目前能想到的一些需要在设计过程中重点考虑的是:</p>
+<ul>
+<li>整体电路布局划分<br />
+</li>
+<li>电源分配网络<br />
+</li>
+<li>电源与输入EMI滤波、抗干扰<br />
+</li>
+<li>完整地平面与星形接地法则<br />
+</li>
+<li>合适的电源退耦与馈通滤波器<br />
+</li>
+<li>运放外围元器件布局</li>
+</ul>
+<p>我借助了ADI的众多文档，大致上算是完成了这些复杂的设计。虽然最后的效果不一定有多好。。。那么我就不长篇大论了，直接摆上我看完这些文档的总结经验吧~</p>
+<h2 id="去耦技术总结">去耦技术总结</h2>
+<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></strong></p>
+<ol type="1">
+<li><p>距离ic不超过2in（5.08cm）的地方放置一个10uF~100uF的大电解<br />
+这个电容的作用是充当电路的动态电荷库，从而使电路需要瞬态大电流时，电流无需通过带有更高寄生电感的电源引线，从离芯片更近的电容中直接获取能量。</p></li>
+<li><p>再并联一个更小的（0.01uF~0.1uF）电容 这个电容的作用是将高频噪声短路，从而使高频噪声无法进入IC。</p></li>
+<li><p>所有的退耦电容都应该使用尽可能短的连线连接到一大块 <strong>低阻抗地平面</strong>，以最小化引线电感</p></li>
+<li><p>（可选的）在IC的电源引脚和电源总线之间串联一铁氧体磁珠，多半时间在调试时可以这样做，有如下好处:<br />
+定位系统中的噪声<br />
+将高频噪声隔离<br />
+避免该支路芯片内部产生的噪声传播到系统的其余部分</p></li>
+</ol>
+<h2 id="模数混合系统共地问题">模数混合系统共地问题</h2>
+<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></strong></p>
+<p>我认为这篇文章中最重要的一句话是: <strong>没有任何一种接地的方法能始终保持最佳性能！！！</strong><br />
+有股听君一席话，如听一席话的感觉.jpg</p>
+<h3 id="接地层的作用">接地层的作用</h3>
+<ol type="1">
+<li>去耦高频电流的低阻抗返回路径<br />
+</li>
+<li>将EMI/RFI辐射降至最低<br />
+</li>
+<li>将外部的EMI/RFI影响降到最低<br />
+</li>
+<li>可使用传输线技术（微带线/带状线）传输高速数字或模拟信号，需要可控阻抗</li>
+</ol>
+<h3 id="接地技术">接地技术</h3>
+<ol type="1">
+<li>星形接地（单点接地）</li>
+<li>避免 <strong>"孤岛"</strong> 产生</li>
+<li>避免接地层的相邻大面积区块间有薄弱连接</li>
+<li>电源层和接地层 <strong>彼此相邻</strong> 可提供额外的层间电容，有助于电源的高频去耦</li>
+<li>在物理上分离敏感的模拟元件与多噪声的数字器件，也可针对模拟和数字电路使用分离的接地层，避免叠可将两者间的容性耦合降至最低</li>
+<li>多PCB系统中，在模拟/数字地间串联背对背肖特基二极管，防止插拔时产生的尖峰损坏敏感器件</li>
+<li>多关注系统整体布局！</li>
+</ol>
+<h2 id="基准电压源">基准电压源</h2>
+<p>我使用了ADR4525这片电压基准源，<strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">数据手册在这</a></strong></p>
+<p>为了保证基准电压源能发挥最佳性能，需要考虑的因素有非常多。<br />
+在ADR4525的Datasheet中陈列了诸多影响基准源性能的指标和原因:<br />
+- 焊接热阻<br />
+- 环境温度<br />
+- 环境湿度<br />
+- 电源纹波<br />
+- 热致输出电压迟滞<br />
+- 长期稳定性<br />
+- 功率循环迟滞</p>
+<p>其中有些参数我们是无法左右的，我们大致能把控的就是温度和湿度，还有电源纹波。</p>
+<h3 id="电压基准源的湿度敏感度">电压基准源的湿度敏感度</h3>
+<p>因为ADR4525采用SOIC塑料封装，湿气敏感度等级为MSL-1，符合JEDEC标准，但是从空气中吸收到封装的湿气会 <strong>改变裸片内的机械应力</strong>，从而使输出电压发生变化。如下图所示，相对湿度阶跃变化随时间推移对输出电压产生的影响。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/7.jpg" alt="ADR4525 Humidity Sensitivity 1 - Emoe Metrology" border="0"/></p>
+</center>
+<p>相对湿度从30%到70%再回到30%期间，每增加10%所产生的效应。相对湿度回到30%之后，输出电压将回到其起点。不过这将耗费一定的时间，在短期内带来的变化将会明显地改变整体系统的测量误差和精度。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/8.jpg" alt="ADR4525 Humidity Sensitivity 2 - Emoe Metrology" border="0"/></p>
+</center>
+<p>塑料模具化合物会吸收水分。随着相对湿度的变化，塑料封装材料施加于芯片内部的压力会发生改变，这会导致基准电压源的输出发生轻微变化（通常约为 100ppm）。PCB板的材料可能会吸收水分并对芯片施加机械应力。合适的板材料和布局也至关重要。−40°C 至 125°C 的迟滞曲线PCB板布局对获取最佳稳定性至关重要。PCB板温度和位置变化以及老化程度都会改变施加于焊接到板上的元件的机械应力。FR4和类似材料也会吸收水分，导致电路板鼓起。虽然可以通过降低吸收率来延迟这种征兆，但即使采用保形涂层或电路板灌封也并不能完全消除这种影响。</p>
+<p>同时应当省略基准电压源 IC 下面的电源层和接地层，以获得最佳稳定性。</p>
+<h3 id="基准电压ic的pcb布局">基准电压IC的PCB布局</h3>
+<p>将IC焊接至PCB上时所引起的机械应力可能会导致输出变压发生偏移和温度系数发生变化。为了减少与应力相关的偏移影响，可以将基准电压源安装与靠近PCB短边附近或拐角处。此外，可以在器件两侧的板上开槽，以减小机械应力。更厚更小的电路板更硬，并且不易弯曲。最后在安装电路板时采取消除应力措施（如柔性支座）。</p>
+<p>其他预防措施包括确保焊点清洁和PCB上无残留助焊剂，因为这些残留助焊剂将导致PCB表面导电性能发生变化，在电路中会增加漏电流路径。</p>
+<p>可以运用下图所示的三边拉环式切割PCB板，这将显著降低IC上的应力（如应用笔记-82所述）。为了获得更好的性能，下面还有四边切槽PCB板。切槽应尽可能长，<strong>拐角尺寸只需足以容纳走线</strong>。现已表明，以这种方法设计的PCB板在相对湿度变化约为60％时，湿敏度可降低至 35ppm 以下。将基准电压源安装在电路板中心位置附近，并在四边切槽，可以将湿敏度进一步降低至 10ppm 以下。PCB板切槽的另一个优势是可将芯片与周围电路热隔离。这有助于减少热电偶效应并提高准确度。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/9.jpg" alt="Reference PCB Cutting pattern 2 - Emoe Metrology" border="0"/></p>
+</center>
+<p>关于更多电压基准源的相关文献，我还参考了下列:</p>
+<p>为何基准电压噪声这一指标如此重要？<br />
+请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog Dialogue 第54卷第2期</a></strong></p>
+<p>基准电压源原理 请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></strong></p>
+<h2 id="精密运算放大器外围布局布线">精密运算放大器外围布局布线</h2>
+<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></strong></p>
+<p>考虑的问题如下:<br />
+- 避免泄漏电流，保持PCB表面洁净干燥<br />
+- 正确旁路电源，保持短连线<br />
+- 考虑外围阻容的热均衡，避免 <strong>Peltier-Seebeck电压（其实就是热电效应）</strong> 降低失调性能</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/10.jpg
+" alt="ADA4522 PCB Layout - Emoe Metrology" border="0"/></p>
+</center>
+<h1 id="layout">Layout！</h1>
+<p>我就来献献丑吧= =</p>
+<p>还是用KiCad画的，4层PCB，交由JLC免费打样，FR-4基板，厚度1.6mm，TG值130，最低端的板材。打完样之后想了想，其实我应该加点钱上个好一些的板材的。。。不过原型验证阶段嘛，先跑起来再说~</p>
+<p>PCB Editor View:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/11.jpg
+" alt="PCB Editor View - Emoe Metrology" border="0"/></p>
+</center>
+<p>光追渲染图（缺了几个3D Model，问题不大。）:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/12.jpg
+" alt="3D View 1 - Emoe Metrology" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/13.jpg
+" alt="3D View 2 - Emoe Metrology" border="0"/></p>
+</center>
+<p>然后是一点实物图:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/14.jpg
+" alt="PCB real 1 - Emoe Metrology" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/15.jpg
+" alt="PCB real 2 - Emoe Metrology" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/16.jpg
+" alt="PCB real 3 - Emoe Metrology" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/17.jpg
+" alt="PCB real 4 - Emoe Metrology" border="0"/></p>
+</center>
+<p>嘿，我觉得从板子背面看内层的电源轨走线，还挺好看的。</p>
+<p>好啦，这期就到这里~接下来我们即将进入激动人心的测试和二次开发环节！敬请期待——</p>
+<h1 id="后记参考文献">后记:参考文献</h1>
+<p><a target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">Homebrew Metrology</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">ADR4525 Datasheet</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog Dialogue 第54卷第2期</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E5%9D%91/" rel="tag"># 坑</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/04/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-Intro/" rel="prev" title="微观尽头——精密信号测量:Intro">
+      <i class="fa fa-chevron-left"></i> 微观尽头——精密信号测量:Intro
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/" rel="next" title="微观尽头——精密信号测量:EmoeMetrology">
+      微观尽头——精密信号测量:EmoeMetrology <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">微观尽头——精密信号测量:理论分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%95%86%E4%B8%9A%E6%95%B0%E5%AD%97%E4%B8%87%E7%94%A8%E8%A1%A8dmm"><span class="nav-number">1.1.</span> <span class="nav-text">商业数字万用表(DMM)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#evm"><span class="nav-number">1.2.</span> <span class="nav-text">EVM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%9F%E9%89%B4cern-hpm7177"><span class="nav-number">1.2.1.</span> <span class="nav-text">借鉴——CERN HPM7177</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E7%94%B5%E8%B7%AF"><span class="nav-number">1.2.2.</span> <span class="nav-text">前端电路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E7%94%B5%E8%B7%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">基准电路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#adc%E7%94%B5%E8%B7%AF"><span class="nav-number">1.2.4.</span> <span class="nav-text">ADC电路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E5%8F%B7%E8%B7%AF%E5%BE%84signal-path"><span class="nav-number">1.3.</span> <span class="nav-text">信号路径（Signal Path）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E7%90%86%E8%AE%BA-%E7%BB%8F%E9%AA%8C"><span class="nav-number">2.</span> <span class="nav-text">设计理论 &amp; 经验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%BB%E8%80%A6%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93"><span class="nav-number">2.1.</span> <span class="nav-text">去耦技术总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%95%B0%E6%B7%B7%E5%90%88%E7%B3%BB%E7%BB%9F%E5%85%B1%E5%9C%B0%E9%97%AE%E9%A2%98"><span class="nav-number">2.2.</span> <span class="nav-text">模数混合系统共地问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%9C%B0%E5%B1%82%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">2.2.1.</span> <span class="nav-text">接地层的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A5%E5%9C%B0%E6%8A%80%E6%9C%AF"><span class="nav-number">2.2.2.</span> <span class="nav-text">接地技术</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E7%94%B5%E5%8E%8B%E6%BA%90"><span class="nav-number">2.3.</span> <span class="nav-text">基准电压源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%8E%8B%E5%9F%BA%E5%87%86%E6%BA%90%E7%9A%84%E6%B9%BF%E5%BA%A6%E6%95%8F%E6%84%9F%E5%BA%A6"><span class="nav-number">2.3.1.</span> <span class="nav-text">电压基准源的湿度敏感度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%87%86%E7%94%B5%E5%8E%8Bic%E7%9A%84pcb%E5%B8%83%E5%B1%80"><span class="nav-number">2.3.2.</span> <span class="nav-text">基准电压IC的PCB布局</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E5%AF%86%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%A4%96%E5%9B%B4%E5%B8%83%E5%B1%80%E5%B8%83%E7%BA%BF"><span class="nav-number">2.4.</span> <span class="nav-text">精密运算放大器外围布局布线</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#layout"><span class="nav-number">3.</span> <span class="nav-text">Layout！</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">后记:参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gith">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用STM32的片上DAC实现DDS">
+<meta property="og:url" content="https://floydfish.xyz/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gith">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/3.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/4.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/8.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/13.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/14.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/11.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/12.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/5.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/6.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/7.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/15.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/16.jpg">
+<meta property="article:published_time" content="2021-05-20T04:20:14.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:08:18.378Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>利用STM32的片上DAC实现DDS | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用STM32的片上DAC实现DDS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-20 12:20:14" itemprop="dateCreated datePublished" datetime="2021-05-20T12:20:14+08:00">2021-05-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:08:18" itemprop="dateModified" datetime="2022-01-30T20:08:18+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/" class="post-meta-item leancloud_visitors" data-flag-title="利用STM32的片上DAC实现DDS" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="利用stm32的片上dac实现dds数字频率合成">利用STM32的片上DAC实现DDS（数字频率合成）</h1>
+<h1 id="前言">前言</h1>
+<p>本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。<br />
+后续还会发布基于FPGA的DDS版本,敬请期待哦ovo</p>
+<p>本文用到的资源<br />
+- <a target="_blank" rel="noopener" href="https://www.st.com/en/microcontrollers-microprocessors/stm32f303cc.html">STM32F303CCT6 Overview</a><br />
+- <a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending the DAC performance of STM32 Microcontroller</a><br />
+- 本文示例代码 <strong><a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/STM32_DAC_DDS">Github</a></strong></p>
+<h1 id="dds">DDS</h1>
+<p>Direct-Digital Synthesizer是一种频率合成技术,用于产生周期性波形。目前，从低频到上百MHz的正弦波、三角波的产生，绝大多数都用DDS完成。包括我们买到的信号源之类的，里面的核心也是DDS芯片。传统的模拟电路——即振荡器产生正弦、方波、三角波的方式在DDS面前都得叫大哥:D</p>
+<p>DDS的优点有:<br />
+- 可精细选择输出频率，实现从低到高的频率选择。<br />
+- 可快速跳频，且可以保证相位连续，这在模拟电路方法中是难以实现的。<br />
+- 可实现正交输出，可实现相位设置<br />
+- 可实现正弦、三角波输出，配合比较器可实现同频同相方波输出<br />
+- 事实上，只要有波表，随便什么波形都能给你打出来。。（你甚至可以在示波器屏幕上看Badapple）</p>
+<p>当然DDS也不是浑身是宝，他也有弊端:<br />
+- 在发出高质量的正弦波中,DDS无法实现超低失真度，这是最大的弊端。（因为是一个点一个点地突变,不可避免会引起非线性失真,即增加了高频谐波分量）<br />
+- DDS中使用的DAC位数不会很高（常见的14位）,其积分非线性INL不可能做到很小,其次DDS一般采用普通DAC,没有为降低失真度做出更多考虑<br />
+- 目前DDS实现的正弦波输出，失真度一般只能做到-80dB左右。</p>
+<span id="more"></span>
+<h1 id="dds核心思想">DDS核心思想</h1>
+<p>先假设DDS有一个固定的时钟MCLK=36MHz。</p>
+<p>要实现高精度的DDS,我们需要一个正弦波的<code>相位-幅度</code>表,且它应具有足够细密的步长,比如0.01°。那么一个完整的正弦波表就需要36000个点。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png" alt="" /><figcaption>sin table</figcaption>
+</figure>
+<p>如上图所示,N代表相位点的序号,phase代表这个点对应的正弦相位,Am代表这个点对应的正弦的值（也就是sin（phase））,Data_10代表这个值对应的10位DAC的Code。</p>
+<blockquote>
+<p>一个10位的DAC全幅度为1023,我们令code=1023时对应正弦的峰值,也就是1。code=0时对应正弦的谷值,也就是-1。所以正弦的值为0时,对应的code为512。</p>
+</blockquote>
+<p>在前12个相位点,正弦的幅度变化非常小,以至于DAC输出的Code一直是512。在第13个相位点,DAC输出Code增加了1。由此可见这个具有36000点的波表几乎记录了一个标准正弦波的全部。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/3.png" alt="" /><figcaption>DDS表的前100点</figcaption>
+</figure>
+<p>将这个表首位衔接,假设相位步长m=1,以DDS主时钟MCLK为节拍，依序发作： - 第一个CLK时，DAC输出N=0时对应的DATA_OUT，即512.<br />
+- 第二个CLK时，DAC输出N=1时对应的DATA_OUT,即512 - ...... - 当36000个CLK过去之后，一个完整的正弦波便被打了出来。</p>
+<p>之前我们假设DDS时钟为F_MCLK=36MHz<br />
+那么这个正弦波的频率就非常容易算出了:</p>
+<p><span class="math display">\[ f_{out} = {1 \over T_{MCLK}* {N_{max} \over m}} = {f_{MCLK}*m \over N_{max}} = {36*10^6*1 \over 36000} = 1000Hz \]</span></p>
+<p>上式代表了DDS最核心的计算,参数含义如下:<br />
+- T_MCLK 为DDS主振荡器时钟周期,即1/36MHz,约为27.78ns。<br />
+- N_max为正弦波波表总点数,为36000<br />
+- m为循环增加中的步长,这里m=1,意味着逐个遍历整个表格。</p>
+<p>如果m=2,意味着隔一个数据点扫一遍,那么此时输出信号的频率将翻倍。<br />
+m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高。</p>
+<p>可见,<strong>改变步长m就可以改变输出频率</strong>,当然,改变时钟频率也可以。不过一般采用固定的时钟。</p>
+<p>那么DDS的最小分辨率就是:</p>
+<p><span class="math display">\[ \Delta f_{OUT} = {f_{MCLK}* \Delta m \over N_{max}} \]</span></p>
+<p>根据上述参数确定的DDS输出最小分辨率为1000Hz。</p>
+<h2 id="实际dds">实际DDS</h2>
+<p>前面假设的DDS主频不高,样点不多。</p>
+<p>我们来看一个专用DDS芯片的内部框图。<br />
+<a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/ad9833.html">AD9833</a>是一款28位分辨率,25MHz完整DDS芯片。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png" alt="" /><figcaption>ad9833</figcaption>
+</figure>
+<p>DDS核心由相位累加器<code>PA</code>、<code>相位幅度表(波表)</code>和<code>数模转换器(DAC)</code>组成。</p>
+<p>对应上面的框图是这样的（好啦知道某些读者嘤语不好了orz）:</p>
+<ul>
+<li>Phase accumulator（28-BIT）是28位相位累加器<br />
+</li>
+<li>SIN ROM是只读存储器（Read-Only Memory）,存储了正弦波表<br />
+</li>
+<li>10-BIT DAC就是10位数模转换器<br />
+</li>
+<li>其他的框图你可以暂时忽略不看~</li>
+</ul>
+<p>28位相位累加器意味着什么呢？意味着它可以计数0~2<sup>28,或者说,它的相位表点数为2</sup>28=268435456点（2亿6800万）,远远大于36000点。</p>
+<p>如果我们要使用这个DDS,我们需要输入一个计数步长m（当然这个m小于2^28）。此后外部时钟MCLK每出现一个脉冲,相位累加器PA完成一次累加（以计数步长m为步进,在SIN ROM里等间隔抽值）,DAC输出一个从正弦波表里抠出来的值。</p>
+<p>那么这个DDS的最小频率分辨率是:</p>
+<p><span class="math display">\[ \Delta f = {1 \over 2^{28} }*f_{MCLK}= {25MHz \over 2^{28}} = 0.0931Hz \]</span></p>
+<p>多么恐怖的分辨率.jpg<br />
+也就意味着你可以设置这个DDS输出频率为10khz,10.0000931kHz,10.0001862kHz......</p>
+<p>这个DDS输出的最高频率是FMCLK的一半。这时候整个波表中只有2个点会被扫描到，这时候输出的是一个三角波，而非正弦。</p>
+<h2 id="那么..32怎么做呢">那么..32怎么做呢</h2>
+<p>斯密马赛,我们的STM32并不是DDS专用芯片,是存储不了如此恐怖的数据量（指超长波表）的。<br />
+那么我们从DAC的工作方式出发吧——</p>
+<p>我们先解释方法,原因之后讲。<br />
+通常如果要使用STM32的DAC进行高速转换,我们需要用到DMA传输,数据流如下图所示:</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/4.png" alt="" /><figcaption>DAC DMA</figcaption>
+</figure>
+<p>首先我们手搓一个波表出来（具体后面讲）,然后把他存到RAM中（当然是RAM咯,实时运算出来的...）,然后我们开启一个定时器,比如TIM8,配置成更新事件模式（Update Event）。</p>
+<p>接下来,开启DMA传输,将DAC与DMA总线链接起来（Link）,并指定DMA传输的源地址（source address）,也就是我们存储在RAM里的波表数组的起始地址,同时指定DMA传输的长度（也就是波表长度）。</p>
+<p>完成上述初始化操作之后,每当一个定时器更新事件出现时,DMA就会将一个波形数据点传输到DAC的输出保持寄存器中,过一会儿这个数据就会被自动装载到DAC的输出寄存器中,DAC便按这个数据进行相应的输出。</p>
+<p>看到这里是不是明白了？我们将这个系统与前文的DDS对比一下:</p>
+<ul>
+<li>定时器更新事件的频率 = DDS的主振荡器频率<br />
+</li>
+<li>RAM中的波形数据长度 = DDS的波表长度<br />
+</li>
+<li>相位累加器步长m = 1,而DDS的m是可变的</li>
+</ul>
+<p>为什么我们不用像真正DDS那样的固定波表呢?原因有2:<br />
+- STM32的DMA的 <strong>增量地址是连续的</strong>,也就是说DMA搬运数据时只能搬运地址连续的存储空间。<br />
+- STM32的存储空间有限,无法容纳如此巨量的数据。（毕竟是身娇体柔的单片机嘛）</p>
+<p>那么我们如果需要一个可变长度的波表, <strong>最好的办法就是现算现用</strong> ,这样才能实现可调步长,也即实现输出频率可调。<br />
+并且,使用STM32有一个专用DDS芯片不太好实现的功能——可变时钟频率,只要更改定时器的更新事件触发频率,就改变了<code>"DDS"</code>的时钟频率。</p>
+<p>那么我么来实践一下。</p>
+<h2 id="stm32的dac">STM32的DAC</h2>
+<p>STM32的DAC在手册中注明了转换速率可达1Msps。但是这还不够—— 我们要更快!</p>
+<p>参考这篇手册,<a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending the DAC Performance of STM32 microcontrollers</a></p>
+<p>文中提到了一件非常重要的事——STM32的DAC等效模型,以及为何DAC的输出速度提不上去</p>
+<h3 id="stm32的dac等效模型">STM32的DAC等效模型</h3>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/8.png" alt="" /><figcaption>model</figcaption>
+</figure>
+<p>可以看到,当输出Buffer关闭的时候,DAC的等效输出阻抗为Ra+Rb,RDAC=2Ra。当输出Buffer开启时,一个内置的运放配置为反相放大模式,增益为-1,输出阻抗接近于0。（低阻）</p>
+<p>但是当使用了输出Buffer的时候也带来了几个问题:</p>
+<ul>
+<li><strong>输出幅度被限制为正负电源轨±0.2V （因为这个运放并非轨到轨运放）</strong><br />
+</li>
+<li>输出速度取决于这个运放的性能（通常只能到1MHz）</li>
+</ul>
+<p>同时手册举了个例子,见下图:</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png" alt="" /><figcaption>explain</figcaption>
+</figure>
+<p>简单来说,在输出Buffer关闭的情况下,如果输出有容性负载（事实上绝大多数情况下不可避免）,如果要得到1LSB精度的输出值（也就是DAC输出稳定下来）,通过RC充电电路的计算公式可以得出 DAC的 <strong>Settling time</strong>。</p>
+<p>算出来约为1.8us,也就是DAC的输出速率最高只能到 <strong>555kHz</strong> 左右!<br />
+而且这个计算还没考虑到DAC在高速运行时的其他寄生参数带来的影响,也就是说实际上这个最大速率会更低。</p>
+<h3 id="外部运放-提升性能">外部运放-提升性能</h3>
+<p>诶..我这么好的性能,怎么就速度上不去呢?（<del>我没有开某人</del>（bushi））</p>
+<p>既然内部的Buffer太弟弟了,我们就外接一个牛逼点的。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png" alt="" /><figcaption>Ex op</figcaption>
+</figure>
+<p>在这个模型中，限制DAC输出速度的主要有3个因素:</p>
+<ol type="1">
+<li>RC常数<br />
+</li>
+<li>运放速度（压摆率,增益带宽积）<br />
+</li>
+<li>DAC的数据更新率（主要是单片机限制）</li>
+</ol>
+<p>当运用了外置运放之后,RC的影响就很小了,可以暂时忽略掉。现在对外置运放提出了要求——也就是高压摆率和高增益带宽积。(<del>这个简单,氪金就行了。</del>)</p>
+<p>我使用了<a target="_blank" rel="noopener" href="https://www.ti.com.cn/product/cn/OPA2211-EP">OPA2211</a>,性能很牛的片子。 以下是我的电路图,用Kicad绘制。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/13.png" alt="" /><figcaption>opa2211</figcaption>
+</figure>
+<p>其中,0.5VBUS使用一个精密运放作为Buffer产生:</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/14.png" alt="" /><figcaption>opa27</figcaption>
+</figure>
+<h3 id="dac的数据更新率">DAC的数据更新率</h3>
+<p>解决了RC和运放的问题,最后就是DAC的数据更新率了。<br />
+纵使我的外围硬件电路再牛逼,DAC的数据更新慢,输出频率一样上不去嘛。<br />
+先康康手册的描述:</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/11.png" alt="" /><figcaption>update rate</figcaption>
+</figure>
+<p>有几种将数据传送到DAC的方法:</p>
+<ol type="1">
+<li>阻塞式,CPU将RAM中的数据搬运到DAC输出寄存器中（DOR)<br />
+</li>
+<li>非阻塞式,利用DMA将CPU从繁重的苦力活里解放出来。DMA接管整个数据传输过程。</li>
+</ol>
+<p>当然,我们是不希望CPU去当黑奴的,我们还要单片机干别的事情呢...<br />
+非阻塞情况下,我们使用定时器的更新事件去触发DMA搬运数据。所以数据更新率就取决于DMA总线的速度上限了。具体体现在以下几个参数:</p>
+<ul>
+<li>APB总线或AHB总线的时钟周期（视型号不同）<br />
+</li>
+<li>DMA传输周期（从RAM到DAC的DOR寄存器）<br />
+</li>
+<li>定时器触发频率</li>
+</ul>
+<p>比如STM32F407x的APB1总线上,当触发信号之后的3个周期,DHR中的数据被转移到DOR中,同时DMA产生请求,DMA花费至少一个时钟周期将数据搬运完成。<br />
+满打满算算下来搬运一个数据总共需要4个时钟周期。如果APB1总线频率42MHz,那么DAC的数据更新率能达到<strong>10.5Msps（M sample per second）</strong>。</p>
+<p>当然这是F407的情况,别的型号具体还得查数据手册。<br />
+总之,DAC你还是蛮快的嘛（笑）</p>
+<h4 id="dma-double-data-mode">DMA Double Data Mode</h4>
+<p>还有一个小细节。</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/12.png" alt="" /><figcaption>dma ddm</figcaption>
+</figure>
+<p>有些型号的DAC支持双数据模式。什么意思呢?<br />
+就是说DMA的总线是32-bit宽的,而DAC的数据是12-bit宽的,一般存储的话就使用<code>uint16_t</code>类型,是16-bit宽度。那么在DMA传输的时候,将2个数据一并传过去,占满DMA总线的位宽,可以提升2倍的数据速率（在定时器触发频率不变的情况下）。</p>
+<p>当然,上限还是摆在那里的，这样做的意义是可以降低一半的定时器触发频率。</p>
+<p>至此,我们找到了提升DAC输出速率的方法,从硬件到软件,从理论到实践,All Pass.</p>
+<h2 id="配置stm32">配置STM32</h2>
+<p>在CubeMx中配置STM32F303CCT6,这里就放最关键的配置啦,具体的可以看开头我传的工程文件~</p>
+<p>配置DAC通道2,触发器选择 <code>TIM8触发输出事件</code>,<strong>同时禁用Buffer</strong>（具体为什么请看前文）</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/5.png" alt="" /><figcaption>DAC Param</figcaption>
+</figure>
+<p>然后配置DAC的DMA通道: - 选择DMA2_CHANNEL_4（我在网上看有人说F3的DAC只能用DMA2,我也没验证过DMA1能不能用...）<br />
+- Priority（优先级）设置为High<br />
+- Mode 选择 Circular（传输完成之后回到开头自动重新开始,即不间断传输）<br />
+- Data Width选择Word,即32位位宽,可以使用Double data Mode</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/6.png" alt="" /><figcaption>dma conf</figcaption>
+</figure>
+<p>接下来是配置DAC的Trigger——TIM8</p>
+<ul>
+<li>Clock source选择Internal,查看时钟树可以看到TIM8的clock是72MHz<br />
+</li>
+<li>然后Prescaler（预分频）设置为0,不分频<br />
+</li>
+<li>Counter Period（计数周期）设置为18-1，那么定时器的触发频率就是 72MHz / 18 = 4MHz</li>
+<li><strong>Trigger Event Selection TRGO</strong>选择Update Event,即更新事件,这个事件用于触发DAC的DMA去搬数据</li>
+</ul>
+<p>别忘了,我们开了Double data Mode,定时器更新事件频率为4MHz,实际的DAC 输出 sampling rate应该是8MHz哦</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/7.png" alt="" /><figcaption>TIM8</figcaption>
+</figure>
+<h2 id="生成波形算法">生成波形算法</h2>
+<p>其实很简单,就是算。<br />
+比如以下是一个算正弦的例子</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#define DAC_AMP                         (uint16_t)1600</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#define LUT_MAX_LENGTH                  (uint32_t)4096</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="dt">volatile</span> <span class="dt">uint16_t</span>        dds_lut[LUT_MAX_LENGTH];</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="cf">if</span> (type == SINE_WAVE)</span>
+<span id="cb1-7"><a href="#cb1-7"></a>&#123;</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="dt">float</span> sin_step = <span class="fl">2.0</span><span class="bu">f</span> * <span class="fl">3.14159</span><span class="bu">f</span> / (<span class="dt">float</span>)(length-<span class="dv">1</span>);</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="cf">for</span> (<span class="dt">uint16_t</span> i = <span class="dv">0</span>; i &lt; length; i++)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>    &#123;</span>
+<span id="cb1-11"><a href="#cb1-11"></a>        dds_lut[i] = (<span class="dt">uint16_t</span>)(DAC_AMP+(DAC_AMP*sinf(sin_step*(<span class="dt">float</span>)i)));</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    &#125;</span>
+<span id="cb1-13"><a href="#cb1-13"></a>&#125;</span></code></pre></div>
+<p>方波和三角波更为简单了,详细的请去文章开头的Git仓库看看吧~</p>
+<h1 id="测试">测试!</h1>
+<p>输出200kHz的正弦波</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/15.jpg" alt="" /><figcaption>200k</figcaption>
+</figure>
+<p>输出40kHz的正弦波+小板子合影</p>
+<figure>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/16.jpg" alt="" /><figcaption>40k</figcaption>
+</figure>
+<p>还有更多测试图,待后续上传.jpg</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/17/%E4%B8%93%E8%BE%91%E6%94%B6%E8%97%8F-1/" rel="prev" title="《Fate Stay Night》相关专辑收藏">
+      <i class="fa fa-chevron-left"></i> 《Fate Stay Night》相关专辑收藏
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/30/%E6%8A%8A%E9%97%B2%E7%BD%AE%E7%9A%84%E6%A0%91%E8%8E%93%E6%B4%BE%E5%8F%98%E6%88%90%E4%B8%80%E4%B8%AA%E7%9B%91%E8%A7%86%E5%99%A8/" rel="next" title="把闲置的树莓派变成一个监视器">
+      把闲置的树莓派变成一个监视器 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A9%E7%94%A8stm32%E7%9A%84%E7%89%87%E4%B8%8Adac%E5%AE%9E%E7%8E%B0dds%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">利用STM32的片上DAC实现DDS（数字频率合成）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">2.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dds"><span class="nav-number">3.</span> <span class="nav-text">DDS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dds%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="nav-number">4.</span> <span class="nav-text">DDS核心思想</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85dds"><span class="nav-number">4.1.</span> <span class="nav-text">实际DDS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%A3%E4%B9%88..32%E6%80%8E%E4%B9%88%E5%81%9A%E5%91%A2"><span class="nav-number">4.2.</span> <span class="nav-text">那么..32怎么做呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stm32%E7%9A%84dac"><span class="nav-number">4.3.</span> <span class="nav-text">STM32的DAC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stm32%E7%9A%84dac%E7%AD%89%E6%95%88%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.3.1.</span> <span class="nav-text">STM32的DAC等效模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%96%E9%83%A8%E8%BF%90%E6%94%BE-%E6%8F%90%E5%8D%87%E6%80%A7%E8%83%BD"><span class="nav-number">4.3.2.</span> <span class="nav-text">外部运放-提升性能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dac%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9B%B4%E6%96%B0%E7%8E%87"><span class="nav-number">4.3.3.</span> <span class="nav-text">DAC的数据更新率</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dma-double-data-mode"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">DMA Double Data Mode</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEstm32"><span class="nav-number">4.4.</span> <span class="nav-text">配置STM32</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%B3%A2%E5%BD%A2%E7%AE%97%E6%B3%95"><span class="nav-number">4.5.</span> <span class="nav-text">生成波形算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">测试!</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

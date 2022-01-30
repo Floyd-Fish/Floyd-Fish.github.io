@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Floy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="中高速模拟信号采集系统">
+<meta property="og:url" content="https://floydfish.xyz/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Floy">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN81AO.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8MB6.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8J9H.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8Y3d.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8tgA.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gNYbvj.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gNY78g.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gNYTPS.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8NjI.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN884e.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN83ND.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8QHK.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc7EPf.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc7Fat.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc7VG8.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5Acd.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5uAf.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5mHP.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5ZnI.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5eBt.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5EjA.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gc5k1H.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/05/16/gcbk38.png">
+<meta property="article:published_time" content="2021-05-15T20:44:34.000Z">
+<meta property="article:modified_time" content="2022-01-30T12:13:09.588Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="坑">
+<meta property="article:tag" content="STM32">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/05/10/gN81AO.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>中高速模拟信号采集系统 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">28</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          中高速模拟信号采集系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-16 04:44:34" itemprop="dateCreated datePublished" datetime="2021-05-16T04:44:34+08:00">2021-05-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-30 20:13:09" itemprop="dateModified" datetime="2022-01-30T20:13:09+08:00">2022-01-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/" class="post-meta-item leancloud_visitors" data-flag-title="中高速模拟信号采集系统" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="创作说明">创作说明</h2>
+<p>本文首发于<a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1457">EmoeStudio</a><br />
+感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi)</p>
+<h2 id="正文">正文</h2>
+<p>米娜桑好久不见!<br />
+废话就不多说啦。来点正经的技术文~</p>
+<p>这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~</p>
+<h2 id="资料汇总">资料汇总</h2>
+<blockquote>
+<ul>
+<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>): https://github.com/Floyd-Fish/ADS8860-STM32F4<br />
+</li>
+<li>本教程所有设计资源: https://github.com/Floyd-Fish/ADS8860_SignalChain<br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860 Datasheet</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189 Datasheet</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G Datasheet</a></li>
+</ul>
+</blockquote>
+<span id="more"></span>
+<h2 id="电路性能参数">电路性能参数</h2>
+<ul>
+<li>使用ADS8860完成16-bit 1Msps(1M sample per second)的模拟信号采集<br />
+</li>
+<li>输入信号为跨在0V上的(无直流偏置的正负信号),幅值为16V(Vpp=32V)的模拟信号<br />
+</li>
+<li>模拟信号频率范围: DC~100KHz<br />
+</li>
+<li>通过数字串行接口(SPI)将采集到的数据传回MCU<br />
+</li>
+<li>整个模拟电路系统的供电为3.3V单电源</li>
+</ul>
+<h2 id="adc前端设计">ADC前端设计</h2>
+<p>参考 <strong><新概念模拟电路></strong> -Section-125:单电源标准运放ADC驱动电路</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN81AO.png" alt="gN81AO.png" border="0" /></p>
+<p>参考电路性能设计需求:</p>
+<ul>
+<li>采用3.3V为运放和ADC供电(运放为轨到轨运放)</li>
+<li>16bit采样精度，采样率1Msps，VRef=2.5V(REF03G)<br />
+</li>
+<li>采集输入信号跨在0V上，幅度为16V(Vpp = 32V)，频率范围 DC~100KHz</li>
+</ul>
+<p>那么ADC的单端输入最大范围是0-2.5V,考虑裕量,输入安全范围为0V-2V。</p>
+<p>确定ADC驱动电路参数要求如下:</p>
+<blockquote>
+<ul>
+<li>电路输出静默电压 Uoz = 1V</li>
+<li>增益 G = 2/32 = 1/16 = 0.0625<br />
+</li>
+<li>Vdd = 3.3V</li>
+</ul>
+</blockquote>
+<p>分析过程就简略了~如果需要了解的话请自行翻书哦</p>
+<p><span class="math display">\[ R_2 = {G * V_{dd} \over U_{oz}} * R_1 \]</span></p>
+<p><span class="math display">\[R_5 = {G * V_{dd}} \over {V_{dd} - G * V_{dd} - U_{oz}} * R_1\]</span></p>
+<p><span class="math display">\[R_4 = R1 || R2 || R5\]</span> 设R1 = 100k,根据上述参数代入公式计算R2,R4,R5</p>
+<h2 id="抗混叠滤波器设计">抗混叠滤波器设计</h2>
+<h3 id="什么为什么">什么&amp;为什么?</h3>
+<p>当输入被测信号频率为Fi,按照奈奎斯特采样定律,要想采集完整的信号,采样率Fs必须大于2倍被测信号频率Fi。当采样率小于2Fi时，<code>一定会出现混叠现象</code>,即采集的波形中出现很低的混叠频率。下图演示了混叠频率出现的原因——</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN8MB6.png" alt="gN8MB6.png" border="0" /></p>
+<p>输入信号为黑色的高频信号,当Fs小于2Fi时,我们获得的采样点形成了红色的波形,其频率不是信号频率,而是混叠频率,很低。<strong>混叠现象欺骗了我们的双眼</strong>,因此我们不希望出现这种现象。一旦采样数据中出现混叠频率,即使后期增加软件滤波,也是难以滤除的。</p>
+<p>唯一的方法就是让大于Fs/2的频率的信号不要出现在ADC的输入端,或者这种频率分量的信号在ADC输入端只有很小的幅度。因此增加一个抗混叠滤波器是非常有必要的。</p>
+<p>最简单、最常见的方法就是在ADC输入端前增加一级截止频率Fh的无源低通滤波电路,以实现抗混叠滤波。</p>
+<p>抗混叠滤波器的截止频率选择有如下要求:</p>
+<p><span class="math display">\[ f_{signal} &lt;&lt; f_H &lt;&lt; {f_s} / 2  \]</span></p>
+<p>比如信号频率100KHz,采样频率1MHz,那么fH就在100KHz和500KHz之间取值。但是不能太过于靠近这2个极限值,太过接近100k,会损伤有用信号。太过接近500k,滤波效果会打折扣。</p>
+<p>杨老师的比喻是:</p>
+<blockquote>
+<p>这样看起来,fH像个夹板丈夫,左边是媳妇,右边是母亲......</p>
+</blockquote>
+<p>所以还是需要斟酌一下.jpg</p>
+<h3 id="设计">设计</h3>
+<p>ADS8860最高采样率1MHz,输入信号频率不超过100KHz,根据前面的公式可得:</p>
+<p><span class="math display">\[ 1kHz &lt; f_H &lt; {f_s \over 2} = 500kHz  \]</span></p>
+<p>在没有其他已知条件下,建议将Fh选为两者的乘法平均数:</p>
+<p><span class="math display">\[ f_H = {1 \over 2*pi*R_{ISO}*C_L} = {\sqrt{100k*500k}} = 223.607kHz  \]</span></p>
+<p>即</p>
+<p><span class="math display">\[ R_{ISO}*C_L = 0.7118us  \]</span></p>
+<p>同时兼顾采样误差对电阻的要求,查询 <strong><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860的Datasheet</a></strong></p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN8J9H.png" alt="gN8J9H.png" border="0" /></p>
+<p>可知转换时间最少为500ns,也就是</p>
+<p><span class="math display">\[ T_{SAM} = 0.5us   \]</span></p>
+<p>再看ADS8860内部等效采样电路</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN8Y3d.png" alt="gN8Y3d.png" border="0" /></p>
+<p>而ADS8860内部采样电容约为4pF,考虑到最为苛刻的要求:</p>
+<p><span class="math display">\[ R_s*(4pF+C_L) &lt;= {T_{SAM} \over {0.69314*(16+1)}} = 0.042433us  \]</span></p>
+<p>设CL = 100pF,解得:</p>
+<p><span class="math display">\[ R_s &lt;= 408Ω  \]</span></p>
+<p>即前级驱动电路的输出电阻加内部开关电阻不得超过408欧姆。OPA2189的开环输出电阻在f=100kHz时约为200Ω(见下图)。所以可以选择电阻为100欧姆。</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN8tgA.png" alt="gN8tgA.png" border="0" /></p>
+<p>至此,抗混叠滤波器设计完毕。</p>
+<h2 id="仿真一下">仿真一下</h2>
+<p>使用LTSpice对ADC驱动电路进行仿真,选择了一个能够单电源供电且轨到轨输出的运算放大器作为OPA2189的替代:</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gNYbvj.png" alt="gNYbvj.png" border="0" /></p>
+<p>仿真结果表明,在输入信号频率为100kHz,幅度为32V时,输出能够满足设计要求。</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gNY78g.png" alt="gNY78g.png" border="0" /></p>
+<p>放大看一下,顶部和底部存在少量非线性失真,具体效果如何待我实际测试的时候再康康。<br />
+总之,输入幅度范围是满足了设计要求且十分安全的。</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gNYTPS.png" alt="gNYTPS.png" border="0" /></p>
+<h3 id="电路图与bom">电路图与BOM</h3>
+<p>最后,用开源人喜闻乐见的KiCad设计了schematic。<br />
+<img src="https://z3.ax1x.com/2021/05/10/gN8NjI.png" alt="gN8NjI.png" border="0" /></p>
+<p>并且阻容取值如下:</p>
+<table>
+<thead>
+<tr class="header">
+<th>元件</th>
+<th>计算值</th>
+<th>实际取值</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>R1</td>
+<td>100kΩ</td>
+<td>100kΩ</td>
+</tr>
+<tr class="even">
+<td>R2</td>
+<td>20.625kΩ</td>
+<td>20kΩ+620Ω</td>
+</tr>
+<tr class="odd">
+<td>R4</td>
+<td>6.2kΩ</td>
+<td>6.2kΩ</td>
+</tr>
+<tr class="even">
+<td>R5</td>
+<td>9850Ω</td>
+<td>10kΩ</td>
+</tr>
+<tr class="odd">
+<td>Riso</td>
+<td>100Ω</td>
+<td>100Ω</td>
+</tr>
+<tr class="even">
+<td>CL</td>
+<td>100pF</td>
+<td>100pF</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ic清单">IC清单</h2>
+<p>本次实验使用的器件如下:</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 21%" />
+<col style="width: 36%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Quantity</th>
+<th>Description</th>
+<th>Usage</th>
+<th>厂牌</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ADS8860</td>
+<td>1</td>
+<td>16-bit 1MHz采样率 高精度单端ADC</td>
+<td>用途？当然是作主ADC呀</td>
+<td>Texas Instruments</td>
+</tr>
+<tr class="even">
+<td>OPA2189</td>
+<td>1</td>
+<td>极低偏置　高精度运算放大器,同时具有高GBW</td>
+<td>一个单元作为基准电压BUFFER,一个单元用作ADC驱动电路</td>
+<td>Texas Instruments</td>
+</tr>
+<tr class="odd">
+<td>REF03G</td>
+<td>1</td>
+<td>2.5V 精密基准电压源</td>
+<td>用作ADC的基准电压</td>
+<td>Analog Devices</td>
+</tr>
+<tr class="even">
+<td>TLV70033</td>
+<td>1</td>
+<td>3.3V LDO</td>
+<td>整个模拟电路系统的电源</td>
+<td>Texas Instruments</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pcb-layout">PCB Layout</h2>
+<p>同样的,用KiCad进行PCB Layout,最后交由某5块钱PCB代工厂(懂得都懂)进行加工。</p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN884e.png" alt="gN884e.png" border="0" /></p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN83ND.jpg" alt="gN83ND.jpg" border="0" /></p>
+<p><img src="https://z3.ax1x.com/2021/05/10/gN8QHK.jpg" alt="gN8QHK.jpg" border="0" /></p>
+<h2 id="测试">测试——</h2>
+<p>测试单片机平台 <code>STM32F303CCT6</code><br />
+代码我之前写过一份最简单的3-wire模式操作,放在文章开头的资料链接里了~</p>
+<p><del>啊,板子还没到,暂时先鸽着.jpg</del></p>
+<p>到了到了,但是基准电压IC-REF03G我还没买 (<del>好贵的说</del>) ,于是先用LDO的3.3V输出当reference用用~</p>
+<p>正面</p>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc7EPf.jpg" alt="" /><figcaption>gc7EPf.jpg</figcaption>
+</figure>
+<p>反面</p>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc7Fat.jpg" alt="" /><figcaption>gc7Fat.jpg</figcaption>
+</figure>
+<p>连上杜邦线的样子:</p>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc7VG8.jpg" alt="" /><figcaption>gc7VG8.jpg</figcaption>
+</figure>
+<h3 id="adc驱动电路测试">ADC驱动电路测试</h3>
+<p>使用的测试仪器有:</p>
+<ul>
+<li>500MHz带宽,4Gsa采样率示波器<br />
+</li>
+<li>200MHz信号源</li>
+</ul>
+<p>首先,用信号源产生一个 <strong>16Vpp,无直流偏置 /(±8V) ,频率100kHz的正弦信号</strong> ,输入模拟前端,在ADC输入侧,即模拟前端输出的测试点,用示波器测试如下:</p>
+<center>
+<strong>100kHz正弦信号</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5Acd.jpg" alt="" /><figcaption>gc5Acd.jpg</figcaption>
+</figure>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5uAf.jpg" alt="" /><figcaption>gc5uAf.jpg</figcaption>
+</figure>
+<p>依据我们ADC驱动电路的设计传输函数:</p>
+<p><span class="math display">\[ y = G * x + b \]</span></p>
+<p><span class="math display">\[
+ G = 0.0625, b = 1 
+\]</span></p>
+<p><span class="math display">\[
+ y为输出,x为输入 
+\]</span></p>
+<p>计算得出的结果符合实际测试结果~ 真不戳</p>
+<p>再来测试一些别的信号:</p>
+<center>
+<strong>1kHz,±8V正弦信号</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5mHP.jpg" alt="" /><figcaption>gc5mHP.jpg</figcaption>
+</figure>
+<center>
+<strong>10Hz,±8V正弦信号</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5ZnI.jpg" alt="" /><figcaption>gc5ZnI.jpg</figcaption>
+</figure>
+<center>
+<strong>100kHz,±8V三角波信号</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5eBt.jpg" alt="" /><figcaption>gc5eBt.jpg</figcaption>
+</figure>
+<center>
+<strong>100kHz,±1V三角波信号</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5EjA.jpg" alt="" /><figcaption>gc5EjA.jpg</figcaption>
+</figure>
+<center>
+<strong>100kHz,奇怪的信号增加了~</strong>
+</center>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gc5k1H.jpg" alt="" /><figcaption>gc5k1H.jpg</figcaption>
+</figure>
+<h3 id="单片机收集数据">单片机收集数据</h3>
+<p>我用了STM32F303CCT6来控制ADS8860采集信号并接受其发送的转换数据,配置ADS8860工作模式为</p>
+<center>
+<strong>3-wire CS mode without BUSY Indicator</strong>
+</center>
+<p>我使用TIM6定时产生的事件来控制ADS8860的采样率,在定时器中断中完成采样和数据传输。</p>
+<p>最核心的代码是这一小段,非常简单。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="dt">uint16_t</span> ads8860_readADCRawValue(<span class="dt">void</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>&#123;</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="dt">uint8_t</span> data[<span class="dv">2</span>];</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    </span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="co">//  Set CONVST to high to start a conversion</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>    GPIOB -&gt; BSRR = ADS8860_CVST_Pin;</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    </span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="co">//  At least 700ns delay</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    <span class="cf">for</span>(<span class="dt">uint16_t</span> i = <span class="dv">0</span>; i &lt; <span class="dv">42</span>; i++)</span>
+<span id="cb1-11"><a href="#cb1-11"></a>        __nop();</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13"></a>    GPIOB -&gt; BRR = ADS8860_CVST_Pin;</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    </span>
+<span id="cb1-15"><a href="#cb1-15"></a>    HAL_SPI_Receive(&amp;ADS8860_SPI_Port, data, <span class="dv">2</span>, <span class="bn">0xFF</span>);</span>
+<span id="cb1-16"><a href="#cb1-16"></a>    </span>
+<span id="cb1-17"><a href="#cb1-17"></a>    <span class="co">//  Return converted data</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>    <span class="cf">return</span> ((data[<span class="dv">0</span>] &lt;&lt; <span class="dv">8</span>) | data[<span class="dv">1</span>]);</span>
+<span id="cb1-19"><a href="#cb1-19"></a>&#125;</span></code></pre></div>
+<p>定时器回调函数</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1"></a><span class="dt">void</span> HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>&#123;</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="cf">if</span> (htim -&gt; Instance == TIM6)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    &#123;</span>
+<span id="cb2-5"><a href="#cb2-5"></a>        <span class="cf">if</span>(adc_conv_flag == <span class="dv">1</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>        &#123;</span>
+<span id="cb2-7"><a href="#cb2-7"></a>            <span class="cf">if</span> (adc_printf_flag == <span class="dv">1</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>            &#123;</span>
+<span id="cb2-9"><a href="#cb2-9"></a>                adc_conv_flag = <span class="dv">0</span>;</span>
+<span id="cb2-10"><a href="#cb2-10"></a>                adc_printf_flag = <span class="dv">0</span>;</span>
+<span id="cb2-11"><a href="#cb2-11"></a>            &#125;</span>
+<span id="cb2-12"><a href="#cb2-12"></a>            <span class="cf">else</span> </span>
+<span id="cb2-13"><a href="#cb2-13"></a>                __nop();</span>
+<span id="cb2-14"><a href="#cb2-14"></a>        &#125;</span>
+<span id="cb2-15"><a href="#cb2-15"></a>        </span>
+<span id="cb2-16"><a href="#cb2-16"></a>        <span class="cf">else</span> </span>
+<span id="cb2-17"><a href="#cb2-17"></a>        &#123;</span>
+<span id="cb2-18"><a href="#cb2-18"></a>            adcRawData[adc_counter] = ads8860_readADCRawValue();</span>
+<span id="cb2-19"><a href="#cb2-19"></a>            adc_counter++;</span>
+<span id="cb2-20"><a href="#cb2-20"></a>            </span>
+<span id="cb2-21"><a href="#cb2-21"></a>            <span class="cf">if</span> (adc_counter == ADC_SAMPLE_SIZE)</span>
+<span id="cb2-22"><a href="#cb2-22"></a>            &#123;</span>
+<span id="cb2-23"><a href="#cb2-23"></a>                adc_counter = <span class="dv">0</span>;</span>
+<span id="cb2-24"><a href="#cb2-24"></a>                adc_conv_flag = <span class="dv">1</span>;</span>
+<span id="cb2-25"><a href="#cb2-25"></a>            &#125;</span>
+<span id="cb2-26"><a href="#cb2-26"></a>        &#125;</span>
+<span id="cb2-27"><a href="#cb2-27"></a>    &#125;</span>
+<span id="cb2-28"><a href="#cb2-28"></a>&#125;</span></code></pre></div>
+<p>驱动代码和其他资料一起打包放在开头的github仓库里了~</p>
+<p>采集一个1kHz 峰峰值16V,无直流偏置的正弦信号,并将波形数据通过串口打印到上位机绘图,得到如下结果:</p>
+<figure>
+<img src="https://z3.ax1x.com/2021/05/16/gcbk38.png" alt="" /><figcaption>gcbk38.png</figcaption>
+</figure>
+<p>真不戳。</p>
+<p>在调试的时候遇到了一些问题,比如采样率和定时器计算值不符,后来发现可能是F3的主频太低,spi速率不太够...</p>
+<p>现在测试出来最高采样率差不多只能跑到20kHz (<strong><del>啊喂,这也差太多了吧!</del></strong>) 如果以后有条件我会尝试使用更高速的单片机进行测试的~</p>
+<p>这期就是这样,感谢你耐心地看完~</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E5%9D%91/" rel="tag"># 坑</a>
+              <a href="/tags/STM32/" rel="tag"># STM32</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/" rel="prev" title="未来规划">
+      <i class="fa fa-chevron-left"></i> 未来规划
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/05/17/%E4%B8%93%E8%BE%91%E6%94%B6%E8%97%8F-1/" rel="next" title="《Fate Stay Night》相关专辑收藏">
+      《Fate Stay Night》相关专辑收藏 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E4%BD%9C%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">创作说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%96%99%E6%B1%87%E6%80%BB"><span class="nav-number">3.</span> <span class="nav-text">资料汇总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E6%80%A7%E8%83%BD%E5%8F%82%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">电路性能参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#adc%E5%89%8D%E7%AB%AF%E8%AE%BE%E8%AE%A1"><span class="nav-number">5.</span> <span class="nav-text">ADC前端设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%97%E6%B7%B7%E5%8F%A0%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1"><span class="nav-number">6.</span> <span class="nav-text">抗混叠滤波器设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E4%B8%BA%E4%BB%80%E4%B9%88"><span class="nav-number">6.1.</span> <span class="nav-text">什么&amp;为什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1"><span class="nav-number">6.2.</span> <span class="nav-text">设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BF%E7%9C%9F%E4%B8%80%E4%B8%8B"><span class="nav-number">7.</span> <span class="nav-text">仿真一下</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E8%B7%AF%E5%9B%BE%E4%B8%8Ebom"><span class="nav-number">7.1.</span> <span class="nav-text">电路图与BOM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ic%E6%B8%85%E5%8D%95"><span class="nav-number">8.</span> <span class="nav-text">IC清单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pcb-layout"><span class="nav-number">9.</span> <span class="nav-text">PCB Layout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">10.</span> <span class="nav-text">测试——</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#adc%E9%A9%B1%E5%8A%A8%E7%94%B5%E8%B7%AF%E6%B5%8B%E8%AF%95"><span class="nav-number">10.1.</span> <span class="nav-text">ADC驱动电路测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%89%87%E6%9C%BA%E6%94%B6%E9%9B%86%E6%95%B0%E6%8D%AE"><span class="nav-number">10.2.</span> <span class="nav-text">单片机收集数据</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
