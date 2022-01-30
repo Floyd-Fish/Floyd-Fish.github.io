@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="-Actually it doesn&#39;t exist">
@@ -196,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 21:17:27" itemprop="dateModified" datetime="2022-01-30T21:17:27+08:00">2022-01-30</time>
+                <time title="修改时间：2022-01-30 22:46:14" itemprop="dateModified" datetime="2022-01-30T22:46:14+08:00">2022-01-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -314,7 +314,7 @@ y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 20:10:06" itemprop="dateModified" datetime="2022-01-30T20:10:06+08:00">2022-01-30</time>
+                <time title="修改时间：2022-01-30 22:50:22" itemprop="dateModified" datetime="2022-01-30T22:50:22+08:00">2022-01-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -367,7 +367,7 @@ y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。</p>
 <p>由于上一篇文章 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1469">利用STM32的片上DAC实现DDS（数字频率合成）</a></strong> 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了。直接从第二章开始~</p>
 <h2 id="section-2.理解dds的采样输出特性">Section 2.理解DDS的采样输出特性</h2>
-<p>在分析DDS输出特性的时候，<strong>采样理论</strong> 分析是必不可少的。采样输出的信号频谱如下图（Fig 2-1）所示,这个例子中,采样时钟 <span class="math display">\[f_{CLOCK}\]</span> 是300MHz,输出信号基波频率 <span class="math display">\[f_{OUT}\]</span> 是80MHz。</p>
+<p>在分析DDS输出特性的时候，<strong>采样理论</strong> 分析是必不可少的。采样输出的信号频谱如下图（Fig 2-1）所示,这个例子中,采样时钟 <span class="math inline">\(f_{CLOCK}\)</span> 是300MHz,输出信号基波频率 <span class="math inline">\(f_{OUT}\)</span> 是80MHz。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/1.jpg" alt="Spectral Analysis of Sampled Output" border="0"/> "采样"输出的频谱成分</p>
 <p>可以看出,输出频谱具有sinx/x包络（Envelope）形状,奈奎斯特极限频率是时钟的一半,也就是150MHz,左边阴影区域是奈奎斯特带宽。</p>

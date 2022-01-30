@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="想象一下有一天...  地球上爆发了核战争，毁灭性的攻击使得地表生灵涂炭，辐射超标，大量浮尘与有毒有害气体漂浮在大气中，强烈的紫外线照射...... 这样的世界在许多科幻电影和游戏中都曾出现过，比如Fallout 4:       总之，这将是一个不太适合生存的世界，如果我们想要在这种环境生存下去，此时你需要的不仅仅是一部动力装甲，你更需要这个宝贝...(把头伸过来，我给你看个">
@@ -319,177 +319,177 @@ MQ-135 - 模拟电压输出 - 有毒有害气体传感器，输出模拟电压�
 </center>
 <p>等所有的模块都通过了测试(QC Pass!)，你就可以着手设计电路连线怎样合理了，其实也没什么需要注意的，IIC协议是固定的2根信号线，UART端口我直接用了默认的下载口(我偷了个懒，因为这样连的话，下载程序时必须断开PMS7003传感器的连接，不然串口会冲突导致下载失败)<br />
 至于OLED，我买的SPI的版本，主控是SH1106，对应U8g2的初始化是这样的:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">/*</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="co">  代码不够闲话来凑</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co">  代码不够闲话来凑</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co">  代码不够闲话来凑</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co">  代码不够闲话来凑</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">  代码不够闲话来凑</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co">*/</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, <span class="co">/* cs=*/</span> <span class="dv">7</span>, <span class="co">/* dc=*/</span> <span class="dv">6</span>, <span class="co">/* reset=*/</span> <span class="dv">5</span>);</span></code></pre></div>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">&#x2F;*
+  代码不够闲话来凑
+  代码不够闲话来凑
+  代码不够闲话来凑
+  代码不够闲话来凑
+  代码不够闲话来凑
+*&#x2F;
+U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, &#x2F;* cs&#x3D;*&#x2F; 7, &#x2F;* dc&#x3D;*&#x2F; 6, &#x2F;* reset&#x3D;*&#x2F; 5);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>看代码可以看出，<strong>CS(片选)</strong> 连D7，<strong>DC(指令/数据选择)</strong> 连D6，<strong>RST(复位)</strong> 连D5。</p>
 <p>我的测试代码我也在这里贴一遍吧~ 看完你就知道调库(白嫖)是多么的快乐了！</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1"></a><span class="pp">#include </span><span class="im">&lt;Arduino.h&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="pp">#include </span><span class="im">&lt;Wire.h&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;SPI.h&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="pp">#include </span><span class="im">&lt;U8g2lib.h&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="pp">#include </span><span class="im">&quot;Adafruit_SHT31.h&quot;</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="pp">#include </span><span class="im">&quot;Adafruit_VEML6070.h&quot;</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a><span class="pp">#include </span><span class="im">&quot;PMS.h&quot;</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a></span>
-<span id="cb2-10"><a href="#cb2-10"></a>PMS pms(Serial);</span>
-<span id="cb2-11"><a href="#cb2-11"></a>PMS::DATA data;</span>
-<span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a>Adafruit_SHT31 sht31 = Adafruit_SHT31();</span>
-<span id="cb2-14"><a href="#cb2-14"></a>Adafruit_VEML6070 uv = Adafruit_VEML6070();</span>
-<span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a>U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, <span class="co">/* cs=*/</span> <span class="dv">7</span>, <span class="co">/* dc=*/</span> <span class="dv">6</span>, <span class="co">/* reset=*/</span> <span class="dv">5</span>);</span>
-<span id="cb2-17"><a href="#cb2-17"></a></span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="dt">char</span> i = <span class="dv">0</span>;</span>
-<span id="cb2-19"><a href="#cb2-19"></a></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="dt">const</span> <span class="dt">char</span> s1[] PROGMEM = <span class="st">&quot;End World Kit&quot;</span>;</span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="dt">const</span> <span class="dt">char</span> s2[] PROGMEM = <span class="st">&quot;&gt;-Temp: &quot;</span>;</span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="dt">const</span> <span class="dt">char</span> s3[] PROGMEM = <span class="st">&quot;*C&quot;</span>;</span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="dt">const</span> <span class="dt">char</span> s4[] PROGMEM = <span class="st">&quot;&gt;-Humidity: &quot;</span>;</span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="dt">const</span> <span class="dt">char</span> s5[] PROGMEM = <span class="st">&quot;%&quot;</span>;</span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="dt">const</span> <span class="dt">char</span> s6[] PROGMEM = <span class="st">&quot;&gt;-UV level: &quot;</span>;</span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="dt">const</span> <span class="dt">char</span> s7[] PROGMEM = <span class="st">&quot;&gt;-Light LX: &quot;</span>;</span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="dt">const</span> <span class="dt">char</span> s8[] PROGMEM = <span class="st">&quot;&gt;-PM2.5(ug/m^3):  &quot;</span>;</span>
-<span id="cb2-28"><a href="#cb2-28"></a><span class="dt">const</span> <span class="dt">char</span> s9[] PROGMEM = <span class="st">&quot;&gt;-PM10(ug/m^3):   &quot;</span>;</span>
-<span id="cb2-29"><a href="#cb2-29"></a><span class="dt">const</span> <span class="dt">char</span> s10[] PROGMEM = <span class="st">&quot;&gt;-PM1.0(ug/m^3): &quot;</span>;</span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="dt">const</span> <span class="dt">char</span> s11[] PROGMEM = <span class="st">&quot;No data response.&quot;</span>;</span>
-<span id="cb2-31"><a href="#cb2-31"></a><span class="dt">const</span> <span class="dt">char</span> *index[] = &#123; s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11&#125;;</span>
-<span id="cb2-32"><a href="#cb2-32"></a></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="dt">void</span> _firstPage(<span class="dt">void</span>);</span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="dt">void</span> _secondPage(<span class="dt">void</span>);</span>
-<span id="cb2-35"><a href="#cb2-35"></a><span class="dt">void</span> _homePage(<span class="dt">void</span>);</span>
-<span id="cb2-36"><a href="#cb2-36"></a></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="dt">void</span> setup()</span>
-<span id="cb2-38"><a href="#cb2-38"></a>&#123;</span>
-<span id="cb2-39"><a href="#cb2-39"></a>  Serial.begin(<span class="dv">9600</span>);     <span class="co">//init baudrate at 9600 to communicate with laser-gas sensor</span></span>
-<span id="cb2-40"><a href="#cb2-40"></a>  uv.begin(VEML6070_HALF_T );   <span class="co">//Integration time sets to 62.5ms.</span></span>
-<span id="cb2-41"><a href="#cb2-41"></a>  sht31.begin(<span class="bn">0x45</span>);  <span class="co">// 0X45 OR 0X44</span></span>
-<span id="cb2-42"><a href="#cb2-42"></a>  pms.passiveMode();    <span class="co">//set laser-gas sensor to passivemode</span></span>
-<span id="cb2-43"><a href="#cb2-43"></a>  pms.wakeUp();   <span class="co">//wake up the laser-gas sensor</span></span>
-<span id="cb2-44"><a href="#cb2-44"></a>  <span class="co">//u8g2.begin();</span></span>
-<span id="cb2-45"><a href="#cb2-45"></a>  </span>
-<span id="cb2-46"><a href="#cb2-46"></a>  u8g2.begin();</span>
-<span id="cb2-47"><a href="#cb2-47"></a>  u8g2.setPowerSave(<span class="dv">0</span>);</span>
-<span id="cb2-48"><a href="#cb2-48"></a>  _homePage();</span>
-<span id="cb2-49"><a href="#cb2-49"></a>  <span class="co">/*</span></span>
-<span id="cb2-50"><a href="#cb2-50"></a><span class="co">  u8g2.begin();</span></span>
-<span id="cb2-51"><a href="#cb2-51"></a><span class="co">  u8g2.clearBuffer();</span></span>
-<span id="cb2-52"><a href="#cb2-52"></a><span class="co">  u8g2.setFont(u8g2_font_helvB08_tf);   //title Font.</span></span>
-<span id="cb2-53"><a href="#cb2-53"></a><span class="co">  u8g2.drawStr(30,8,&quot;End World Kit&quot;);</span></span>
-<span id="cb2-54"><a href="#cb2-54"></a><span class="co">  u8g2.setFont(u8g2_font_t0_11_mf);  // choose Internal font.</span></span>
-<span id="cb2-55"><a href="#cb2-55"></a><span class="co">  u8g2.sendBuffer();</span></span>
-<span id="cb2-56"><a href="#cb2-56"></a><span class="co">  */</span></span>
-<span id="cb2-57"><a href="#cb2-57"></a>  </span>
-<span id="cb2-58"><a href="#cb2-58"></a>&#125;</span>
-<span id="cb2-59"><a href="#cb2-59"></a></span>
-<span id="cb2-60"><a href="#cb2-60"></a><span class="dt">void</span> loop()</span>
-<span id="cb2-61"><a href="#cb2-61"></a>&#123;</span>
-<span id="cb2-62"><a href="#cb2-62"></a>  _firstPage();</span>
-<span id="cb2-63"><a href="#cb2-63"></a>  delay(<span class="dv">2500</span>);</span>
-<span id="cb2-64"><a href="#cb2-64"></a>  _secondPage();</span>
-<span id="cb2-65"><a href="#cb2-65"></a>  delay(<span class="dv">2500</span>);</span>
-<span id="cb2-66"><a href="#cb2-66"></a>&#125;</span>
-<span id="cb2-67"><a href="#cb2-67"></a></span>
-<span id="cb2-68"><a href="#cb2-68"></a><span class="dt">void</span> _firstPage(<span class="dt">void</span>)</span>
-<span id="cb2-69"><a href="#cb2-69"></a>&#123; </span>
-<span id="cb2-70"><a href="#cb2-70"></a>  u8g2.clearDisplay();</span>
-<span id="cb2-71"><a href="#cb2-71"></a>  u8g2.setFont(u8g2_font_helvB08_tf);</span>
-<span id="cb2-72"><a href="#cb2-72"></a>  <span class="dt">float</span> temp = sht31.readTemperature();</span>
-<span id="cb2-73"><a href="#cb2-73"></a>  <span class="dt">float</span> humidity = sht31.readHumidity();</span>
-<span id="cb2-74"><a href="#cb2-74"></a>  <span class="cf">do</span> &#123;</span>
-<span id="cb2-75"><a href="#cb2-75"></a>    u8g2.setCursor(<span class="dv">30</span>, <span class="dv">8</span>);</span>
-<span id="cb2-76"><a href="#cb2-76"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">0</span>]);</span>
-<span id="cb2-77"><a href="#cb2-77"></a>    </span>
-<span id="cb2-78"><a href="#cb2-78"></a>  <span class="cf">if</span> (! isnan(temp)) </span>
-<span id="cb2-79"><a href="#cb2-79"></a>  &#123;  <span class="co">// check if &#39;is not a number&#39;</span></span>
-<span id="cb2-80"><a href="#cb2-80"></a>    u8g2.setCursor(<span class="dv">0</span>, <span class="dv">24</span>);</span>
-<span id="cb2-81"><a href="#cb2-81"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">1</span>]);</span>
-<span id="cb2-82"><a href="#cb2-82"></a>    u8g2.print(temp);</span>
-<span id="cb2-83"><a href="#cb2-83"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">2</span>]);</span>
-<span id="cb2-84"><a href="#cb2-84"></a>  &#125;</span>
-<span id="cb2-85"><a href="#cb2-85"></a>  <span class="cf">if</span> (! isnan(humidity)) </span>
-<span id="cb2-86"><a href="#cb2-86"></a>  &#123;  <span class="co">// check if &#39;is not a number&#39;</span></span>
-<span id="cb2-87"><a href="#cb2-87"></a>    u8g2.setCursor(<span class="dv">0</span>, <span class="dv">40</span>);</span>
-<span id="cb2-88"><a href="#cb2-88"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">3</span>]);</span>
-<span id="cb2-89"><a href="#cb2-89"></a>    u8g2.print(humidity);</span>
-<span id="cb2-90"><a href="#cb2-90"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">4</span>]);</span>
-<span id="cb2-91"><a href="#cb2-91"></a>  &#125; </span>
-<span id="cb2-92"><a href="#cb2-92"></a>  u8g2.setCursor(<span class="dv">0</span>, <span class="dv">56</span>);</span>
-<span id="cb2-93"><a href="#cb2-93"></a>  u8g2.print((class __FlashStringHelper *) index[<span class="dv">5</span>]);</span>
-<span id="cb2-94"><a href="#cb2-94"></a>  u8g2.print(uv.readUV());</span>
-<span id="cb2-95"><a href="#cb2-95"></a>  &#125; <span class="cf">while</span> (u8g2.nextPage());</span>
-<span id="cb2-96"><a href="#cb2-96"></a>&#125;</span>
-<span id="cb2-97"><a href="#cb2-97"></a></span>
-<span id="cb2-98"><a href="#cb2-98"></a><span class="dt">void</span> _secondPage(<span class="dt">void</span>)</span>
-<span id="cb2-99"><a href="#cb2-99"></a>&#123;</span>
-<span id="cb2-100"><a href="#cb2-100"></a>  u8g2.setFont(u8g2_font_helvB08_tf  );</span>
-<span id="cb2-101"><a href="#cb2-101"></a>  <span class="dt">unsigned</span> <span class="dt">int</span> lx = <span class="dv">0</span>, anr = <span class="dv">0</span>;</span>
-<span id="cb2-102"><a href="#cb2-102"></a>  <span class="cf">for</span> (i = <span class="dv">0</span>; i &lt; <span class="dv">16</span>; i++)</span>
-<span id="cb2-103"><a href="#cb2-103"></a>  &#123;</span>
-<span id="cb2-104"><a href="#cb2-104"></a>    anr = analogRead(A6);</span>
-<span id="cb2-105"><a href="#cb2-105"></a>    lx = lx + anr; </span>
-<span id="cb2-106"><a href="#cb2-106"></a>    anr = <span class="dv">0</span>;</span>
-<span id="cb2-107"><a href="#cb2-107"></a>    delay(<span class="dv">5</span>);</span>
-<span id="cb2-108"><a href="#cb2-108"></a>  &#125;</span>
-<span id="cb2-109"><a href="#cb2-109"></a>  lx = lx / <span class="dv">16</span>;</span>
-<span id="cb2-110"><a href="#cb2-110"></a></span>
-<span id="cb2-111"><a href="#cb2-111"></a>  </span>
-<span id="cb2-112"><a href="#cb2-112"></a>  <span class="cf">do</span> &#123;</span>
-<span id="cb2-113"><a href="#cb2-113"></a>    u8g2.clearDisplay();</span>
-<span id="cb2-114"><a href="#cb2-114"></a>    u8g2.setCursor(<span class="dv">0</span>, <span class="dv">10</span>);</span>
-<span id="cb2-115"><a href="#cb2-115"></a>    u8g2.print((class __FlashStringHelper *) index[<span class="dv">6</span>]);</span>
-<span id="cb2-116"><a href="#cb2-116"></a>    u8g2.print(lx);</span>
-<span id="cb2-117"><a href="#cb2-117"></a>    lx = <span class="dv">0</span>;</span>
-<span id="cb2-118"><a href="#cb2-118"></a>    pms.requestRead();</span>
-<span id="cb2-119"><a href="#cb2-119"></a>    <span class="cf">if</span> (pms.readUntil(data))</span>
-<span id="cb2-120"><a href="#cb2-120"></a>    &#123;</span>
-<span id="cb2-121"><a href="#cb2-121"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">24</span>);</span>
-<span id="cb2-122"><a href="#cb2-122"></a>      u8g2.print((class __FlashStringHelper *) index[<span class="dv">7</span>]);</span>
-<span id="cb2-123"><a href="#cb2-123"></a>      u8g2.print(data.PM_AE_UG_2_5);</span>
-<span id="cb2-124"><a href="#cb2-124"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">38</span>);</span>
-<span id="cb2-125"><a href="#cb2-125"></a>      u8g2.print((class __FlashStringHelper *) index[<span class="dv">8</span>]);</span>
-<span id="cb2-126"><a href="#cb2-126"></a>      u8g2.print(data.PM_AE_UG_10_0);</span>
-<span id="cb2-127"><a href="#cb2-127"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">52</span>);</span>
-<span id="cb2-128"><a href="#cb2-128"></a>      u8g2.print((class __FlashStringHelper *) index[<span class="dv">9</span>]);</span>
-<span id="cb2-129"><a href="#cb2-129"></a>      u8g2.print(data.PM_AE_UG_1_0);</span>
-<span id="cb2-130"><a href="#cb2-130"></a>    &#125;</span>
-<span id="cb2-131"><a href="#cb2-131"></a>    <span class="cf">else</span> </span>
-<span id="cb2-132"><a href="#cb2-132"></a>    &#123;</span>
-<span id="cb2-133"><a href="#cb2-133"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">40</span>);</span>
-<span id="cb2-134"><a href="#cb2-134"></a>      u8g2.print((class __FlashStringHelper *) index[<span class="dv">10</span>]);</span>
-<span id="cb2-135"><a href="#cb2-135"></a>    &#125;</span>
-<span id="cb2-136"><a href="#cb2-136"></a>  &#125; <span class="cf">while</span> ( u8g2.nextPage() );</span>
-<span id="cb2-137"><a href="#cb2-137"></a>  </span>
-<span id="cb2-138"><a href="#cb2-138"></a>&#125;</span>
-<span id="cb2-139"><a href="#cb2-139"></a></span>
-<span id="cb2-140"><a href="#cb2-140"></a><span class="dt">void</span> _homePage(<span class="dt">void</span>)</span>
-<span id="cb2-141"><a href="#cb2-141"></a>&#123;</span>
-<span id="cb2-142"><a href="#cb2-142"></a>  u8g2.clearDisplay();</span>
-<span id="cb2-143"><a href="#cb2-143"></a>  u8g2.setFont(u8g2_font_helvB08_tf);</span>
-<span id="cb2-144"><a href="#cb2-144"></a>  <span class="cf">do</span></span>
-<span id="cb2-145"><a href="#cb2-145"></a>  &#123;</span>
-<span id="cb2-146"><a href="#cb2-146"></a>    <span class="co">//u8g2.setFont(u8g2_font_helvB08_tf);  // choose Internal font.</span></span>
-<span id="cb2-147"><a href="#cb2-147"></a>      u8g2.setCursor(<span class="dv">30</span>, <span class="dv">8</span>);</span>
-<span id="cb2-148"><a href="#cb2-148"></a>    u8g2.print(F(<span class="st">&quot;End world Kit&quot;</span>));</span>
-<span id="cb2-149"><a href="#cb2-149"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">20</span>);</span>
-<span id="cb2-150"><a href="#cb2-150"></a>    u8g2.print(F(<span class="st">&quot;Test &amp; developed by &quot;</span>));</span>
-<span id="cb2-151"><a href="#cb2-151"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">32</span>);</span>
-<span id="cb2-152"><a href="#cb2-152"></a>    u8g2.print(F(<span class="st">&quot;Floydfish.In case of &quot;</span>));</span>
-<span id="cb2-153"><a href="#cb2-153"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">44</span>);</span>
-<span id="cb2-154"><a href="#cb2-154"></a>    u8g2.print(F(<span class="st">&quot;extreme conditions.&quot;</span>));</span>
-<span id="cb2-155"><a href="#cb2-155"></a>      u8g2.setCursor(<span class="dv">0</span>, <span class="dv">56</span>);</span>
-<span id="cb2-156"><a href="#cb2-156"></a>    u8g2.print(F(<span class="st">&quot;detect everything around.&quot;</span>));</span>
-<span id="cb2-157"><a href="#cb2-157"></a>  &#125; <span class="cf">while</span> ( u8g2.nextPage() );</span>
-<span id="cb2-158"><a href="#cb2-158"></a>  </span>
-<span id="cb2-159"><a href="#cb2-159"></a>  delay(<span class="dv">3000</span>);</span>
-<span id="cb2-160"><a href="#cb2-160"></a></span>
-<span id="cb2-161"><a href="#cb2-161"></a>&#125;</span></code></pre></div>
+<pre class="line-numbers language-C" data-language="C"><code class="language-C">#include &lt;Arduino.h&gt;
+#include &lt;Wire.h&gt;
+#include &lt;SPI.h&gt;
+
+#include &lt;U8g2lib.h&gt;
+#include &quot;Adafruit_SHT31.h&quot;
+#include &quot;Adafruit_VEML6070.h&quot;
+#include &quot;PMS.h&quot;
+
+PMS pms(Serial);
+PMS::DATA data;
+
+Adafruit_SHT31 sht31 &#x3D; Adafruit_SHT31();
+Adafruit_VEML6070 uv &#x3D; Adafruit_VEML6070();
+
+U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, &#x2F;* cs&#x3D;*&#x2F; 7, &#x2F;* dc&#x3D;*&#x2F; 6, &#x2F;* reset&#x3D;*&#x2F; 5);
+
+char i &#x3D; 0;
+
+const char s1[] PROGMEM &#x3D; &quot;End World Kit&quot;;
+const char s2[] PROGMEM &#x3D; &quot;&gt;-Temp: &quot;;
+const char s3[] PROGMEM &#x3D; &quot;*C&quot;;
+const char s4[] PROGMEM &#x3D; &quot;&gt;-Humidity: &quot;;
+const char s5[] PROGMEM &#x3D; &quot;%&quot;;
+const char s6[] PROGMEM &#x3D; &quot;&gt;-UV level: &quot;;
+const char s7[] PROGMEM &#x3D; &quot;&gt;-Light LX: &quot;;
+const char s8[] PROGMEM &#x3D; &quot;&gt;-PM2.5(ug&#x2F;m^3):  &quot;;
+const char s9[] PROGMEM &#x3D; &quot;&gt;-PM10(ug&#x2F;m^3):   &quot;;
+const char s10[] PROGMEM &#x3D; &quot;&gt;-PM1.0(ug&#x2F;m^3): &quot;;
+const char s11[] PROGMEM &#x3D; &quot;No data response.&quot;;
+const char *index[] &#x3D; &#123; s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11&#125;;
+
+void _firstPage(void);
+void _secondPage(void);
+void _homePage(void);
+
+void setup()
+&#123;
+  Serial.begin(9600);     &#x2F;&#x2F;init baudrate at 9600 to communicate with laser-gas sensor
+  uv.begin(VEML6070_HALF_T );   &#x2F;&#x2F;Integration time sets to 62.5ms.
+  sht31.begin(0x45);  &#x2F;&#x2F; 0X45 OR 0X44
+  pms.passiveMode();    &#x2F;&#x2F;set laser-gas sensor to passivemode
+  pms.wakeUp();   &#x2F;&#x2F;wake up the laser-gas sensor
+  &#x2F;&#x2F;u8g2.begin();
+  
+  u8g2.begin();
+  u8g2.setPowerSave(0);
+  _homePage();
+  &#x2F;*
+  u8g2.begin();
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_helvB08_tf);   &#x2F;&#x2F;title Font.
+  u8g2.drawStr(30,8,&quot;End World Kit&quot;);
+  u8g2.setFont(u8g2_font_t0_11_mf);  &#x2F;&#x2F; choose Internal font.
+  u8g2.sendBuffer();
+  *&#x2F;
+  
+&#125;
+
+void loop()
+&#123;
+  _firstPage();
+  delay(2500);
+  _secondPage();
+  delay(2500);
+&#125;
+
+void _firstPage(void)
+&#123; 
+  u8g2.clearDisplay();
+  u8g2.setFont(u8g2_font_helvB08_tf);
+  float temp &#x3D; sht31.readTemperature();
+  float humidity &#x3D; sht31.readHumidity();
+  do &#123;
+    u8g2.setCursor(30, 8);
+    u8g2.print((class __FlashStringHelper *) index[0]);
+    
+  if (! isnan(temp)) 
+  &#123;  &#x2F;&#x2F; check if &#39;is not a number&#39;
+    u8g2.setCursor(0, 24);
+    u8g2.print((class __FlashStringHelper *) index[1]);
+    u8g2.print(temp);
+    u8g2.print((class __FlashStringHelper *) index[2]);
+  &#125;
+  if (! isnan(humidity)) 
+  &#123;  &#x2F;&#x2F; check if &#39;is not a number&#39;
+    u8g2.setCursor(0, 40);
+    u8g2.print((class __FlashStringHelper *) index[3]);
+    u8g2.print(humidity);
+    u8g2.print((class __FlashStringHelper *) index[4]);
+  &#125; 
+  u8g2.setCursor(0, 56);
+  u8g2.print((class __FlashStringHelper *) index[5]);
+  u8g2.print(uv.readUV());
+  &#125; while (u8g2.nextPage());
+&#125;
+
+void _secondPage(void)
+&#123;
+  u8g2.setFont(u8g2_font_helvB08_tf  );
+  unsigned int lx &#x3D; 0, anr &#x3D; 0;
+  for (i &#x3D; 0; i &lt; 16; i++)
+  &#123;
+    anr &#x3D; analogRead(A6);
+    lx &#x3D; lx + anr; 
+    anr &#x3D; 0;
+    delay(5);
+  &#125;
+  lx &#x3D; lx &#x2F; 16;
+
+  
+  do &#123;
+    u8g2.clearDisplay();
+    u8g2.setCursor(0, 10);
+    u8g2.print((class __FlashStringHelper *) index[6]);
+    u8g2.print(lx);
+    lx &#x3D; 0;
+    pms.requestRead();
+    if (pms.readUntil(data))
+    &#123;
+      u8g2.setCursor(0, 24);
+      u8g2.print((class __FlashStringHelper *) index[7]);
+      u8g2.print(data.PM_AE_UG_2_5);
+      u8g2.setCursor(0, 38);
+      u8g2.print((class __FlashStringHelper *) index[8]);
+      u8g2.print(data.PM_AE_UG_10_0);
+      u8g2.setCursor(0, 52);
+      u8g2.print((class __FlashStringHelper *) index[9]);
+      u8g2.print(data.PM_AE_UG_1_0);
+    &#125;
+    else 
+    &#123;
+      u8g2.setCursor(0, 40);
+      u8g2.print((class __FlashStringHelper *) index[10]);
+    &#125;
+  &#125; while ( u8g2.nextPage() );
+  
+&#125;
+
+void _homePage(void)
+&#123;
+  u8g2.clearDisplay();
+  u8g2.setFont(u8g2_font_helvB08_tf);
+  do
+  &#123;
+    &#x2F;&#x2F;u8g2.setFont(u8g2_font_helvB08_tf);  &#x2F;&#x2F; choose Internal font.
+      u8g2.setCursor(30, 8);
+    u8g2.print(F(&quot;End world Kit&quot;));
+      u8g2.setCursor(0, 20);
+    u8g2.print(F(&quot;Test &amp; developed by &quot;));
+      u8g2.setCursor(0, 32);
+    u8g2.print(F(&quot;Floydfish.In case of &quot;));
+      u8g2.setCursor(0, 44);
+    u8g2.print(F(&quot;extreme conditions.&quot;));
+      u8g2.setCursor(0, 56);
+    u8g2.print(F(&quot;detect everything around.&quot;));
+  &#125; while ( u8g2.nextPage() );
+  
+  delay(3000);
+
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>我唯一的代码量就是写GUI，因为数据项太多，小小的13264屏幕放不下，所以我分了2页显示，对应的刷新函数为_firstPage()和_secondPage(),以及上电初始化页面_homePage()。</p>
 <blockquote>
 <p>其实U8g2库对于Arduino Nano来说过于臃肿了...我这个程序占用了80%多的代码存储空间，几乎塞满，在我优化前它一度占到了90%多...于是我刚开始还写了一遍U8X8的版本，但是我发现u8x8没有我中意的字体，所以又换了回来233</p>

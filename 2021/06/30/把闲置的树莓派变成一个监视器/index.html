@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="本文首发于 Emoe工作室。 本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~ 前言——树莓派是什么？ 树莓派（Raspberry Pi） 是基于Linux的单板电脑 （Single Board Computer,简称SBC），由英国 树莓派基金会 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的diy">
@@ -459,170 +459,171 @@ github链接如下</p>
 <li><p>升级树莓派与Python3（注意,python2不支持）<br />
 在升级之前,记得换一下软件源,我推荐把apt的源和pip的源都换掉,可以清华源也可以阿里源。</p></li>
 </ol>
-<pre class="shell"><code>sudo apt-get update
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">sudo apt-get update
 
 sudo apt-get upgrade
 
-//  如果没装过pip，使用这条安装，装过就跳过这条
+&#x2F;&#x2F;  如果没装过pip，使用这条安装，装过就跳过这条
 sudo apt-get install python3-pip
 
-sudo pip3 install --upgrade setuptools</code></pre>
+sudo pip3 install --upgrade setuptools<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ol start="3" type="1">
 <li>下载Adafruit提供的安装脚本进行安装</li>
 </ol>
-<pre class="shell"><code>//  进入用户根目录
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">&#x2F;&#x2F;  进入用户根目录
 cd ~
 
 sudo pip3 install --upgrade adafruit-python-shell
 
-wget https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/master/raspi-blinka.py
+wget https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;adafruit&#x2F;Raspberry-Pi-Installer-Scripts&#x2F;master&#x2F;raspi-blinka.py
 
-sudo python3 raspi-blinka.py</code></pre>
+sudo python3 raspi-blinka.py<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ol start="4" type="1">
 <li>检查I2C与SPI是否启用</li>
 </ol>
-<pre class="shell"><code>ls /dev/i2c* /dev/spi*
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">ls &#x2F;dev&#x2F;i2c* &#x2F;dev&#x2F;spi*
 
-//  如果没问题,你应该看到这些内容:
-/dev/i2c-1 /dev/spidev0.0 /dev/spidev0.1</code></pre>
+&#x2F;&#x2F;  如果没问题,你应该看到这些内容:
+&#x2F;dev&#x2F;i2c-1 &#x2F;dev&#x2F;spidev0.0 &#x2F;dev&#x2F;spidev0.1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>如果需要更改使用的SPI port,请参考原文进行操作。</p>
 <ol start="5" type="1">
 <li>测试Blinka</li>
 </ol>
 <p>新建一个 <code>blinkatest.py</code>，然后抄代码:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="im">import</span> board</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="im">import</span> digitalio</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="im">import</span> busio</span>
-<span id="cb4-4"><a href="#cb4-4"></a></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="bu">print</span>(<span class="st">&quot;Hello blinka!&quot;</span>)</span>
-<span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># Try to great a Digital input</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>pin <span class="op">=</span> digitalio.DigitalInOut(board.D4)</span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="bu">print</span>(<span class="st">&quot;Digital IO ok!&quot;</span>)</span>
-<span id="cb4-10"><a href="#cb4-10"></a></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="co"># Try to create an I2C device</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a>i2c <span class="op">=</span> busio.I2C(board.SCL, board.SDA)</span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="bu">print</span>(<span class="st">&quot;I2C ok!&quot;</span>)</span>
-<span id="cb4-14"><a href="#cb4-14"></a></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="co"># Try to create an SPI device</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a>spi <span class="op">=</span> busio.SPI(board.SCLK, board.MOSI, board.MISO)</span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="bu">print</span>(<span class="st">&quot;SPI ok!&quot;</span>)</span>
-<span id="cb4-18"><a href="#cb4-18"></a></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="bu">print</span>(<span class="st">&quot;done!&quot;</span>)</span></code></pre></div>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> board
+<span class="token keyword">import</span> digitalio
+<span class="token keyword">import</span> busio
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hello blinka!"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Try to great a Digital input</span>
+pin <span class="token operator">=</span> digitalio<span class="token punctuation">.</span>DigitalInOut<span class="token punctuation">(</span>board<span class="token punctuation">.</span>D4<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Digital IO ok!"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Try to create an I2C device</span>
+i2c <span class="token operator">=</span> busio<span class="token punctuation">.</span>I2C<span class="token punctuation">(</span>board<span class="token punctuation">.</span>SCL<span class="token punctuation">,</span> board<span class="token punctuation">.</span>SDA<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"I2C ok!"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Try to create an SPI device</span>
+spi <span class="token operator">=</span> busio<span class="token punctuation">.</span>SPI<span class="token punctuation">(</span>board<span class="token punctuation">.</span>SCLK<span class="token punctuation">,</span> board<span class="token punctuation">.</span>MOSI<span class="token punctuation">,</span> board<span class="token punctuation">.</span>MISO<span class="token punctuation">)</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"SPI ok!"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"done!"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>保存,然后run一下:</p>
-<pre class="shell"><code>python3 blinkatest.py</code></pre>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">python3 blinkatest.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>看看输出信息如何~</p>
 <h2 id="coding...">Coding...</h2>
 <p>其实用了Python之后,就几乎没有什么代码量了:)<br />
 我不打算将所有代码开放,（毕竟我不希望我的服务器也被别人盯着...）,放个删减版吧#手动和谐</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">import</span> os</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="im">import</span> time</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="im">import</span> subprocess</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="im">import</span> digitalio</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="im">import</span> board</span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="im">from</span> PIL <span class="im">import</span> Image, ImageDraw, ImageFont</span>
-<span id="cb6-7"><a href="#cb6-7"></a><span class="im">import</span> adafruit_rgb_display.ili9341 <span class="im">as</span> ili9341</span>
-<span id="cb6-8"><a href="#cb6-8"></a><span class="im">from</span> adafruit_rgb_display.rgb <span class="im">import</span> color565</span>
-<span id="cb6-9"><a href="#cb6-9"></a><span class="im">import</span> adafruit_bmp280</span>
-<span id="cb6-10"><a href="#cb6-10"></a></span>
-<span id="cb6-11"><a href="#cb6-11"></a><span class="co"># 注册传感器,这里只用了BMP280,SHT30D没用</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a>i2c <span class="op">=</span> board.I2C()</span>
-<span id="cb6-13"><a href="#cb6-13"></a>bmp280 <span class="op">=</span> adafruit_bmp280.Adafruit_BMP280_I2C(i2c)</span>
-<span id="cb6-14"><a href="#cb6-14"></a>bmp280.sea_level_pressure <span class="op">=</span> <span class="fl">1013.25</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a></span>
-<span id="cb6-16"><a href="#cb6-16"></a><span class="co"># 屏幕接口配置</span></span>
-<span id="cb6-17"><a href="#cb6-17"></a>cs_pin <span class="op">=</span> digitalio.DigitalInOut(board.CE0)</span>
-<span id="cb6-18"><a href="#cb6-18"></a>dc_pin <span class="op">=</span> digitalio.DigitalInOut(board.D27)</span>
-<span id="cb6-19"><a href="#cb6-19"></a>reset_pin <span class="op">=</span> digitalio.DigitalInOut(board.D22)</span>
-<span id="cb6-20"><a href="#cb6-20"></a>backlight <span class="op">=</span> digitalio.DigitalInOut(board.D17)</span>
-<span id="cb6-21"><a href="#cb6-21"></a>backlight.switch_to_output()</span>
-<span id="cb6-22"><a href="#cb6-22"></a>backlight.value <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a></span>
-<span id="cb6-24"><a href="#cb6-24"></a>BAUDRATE <span class="op">=</span> <span class="dv">64000000</span>  <span class="co"># SPI速率配置,使用PCB的话上到50MHz应该是没问题的,实测也不会花屏啥的</span></span>
-<span id="cb6-25"><a href="#cb6-25"></a>spi <span class="op">=</span> board.SPI()</span>
-<span id="cb6-26"><a href="#cb6-26"></a></span>
-<span id="cb6-27"><a href="#cb6-27"></a><span class="co"># Create the ST7789 display:</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a>display <span class="op">=</span> ili9341.ILI9341(</span>
-<span id="cb6-29"><a href="#cb6-29"></a>    spi,</span>
-<span id="cb6-30"><a href="#cb6-30"></a>    cs<span class="op">=</span>cs_pin,</span>
-<span id="cb6-31"><a href="#cb6-31"></a>    dc<span class="op">=</span>dc_pin,</span>
-<span id="cb6-32"><a href="#cb6-32"></a>    rst<span class="op">=</span>reset_pin,</span>
-<span id="cb6-33"><a href="#cb6-33"></a>    baudrate<span class="op">=</span>BAUDRATE,</span>
-<span id="cb6-34"><a href="#cb6-34"></a>    <span class="co">#width=320,</span></span>
-<span id="cb6-35"><a href="#cb6-35"></a>    <span class="co">#height=240,</span></span>
-<span id="cb6-36"><a href="#cb6-36"></a>    <span class="co">#x_offset=0,</span></span>
-<span id="cb6-37"><a href="#cb6-37"></a>    <span class="co">#y_offset=0,</span></span>
-<span id="cb6-38"><a href="#cb6-38"></a>)</span>
-<span id="cb6-39"><a href="#cb6-39"></a></span>
-<span id="cb6-40"><a href="#cb6-40"></a><span class="co"># 这里使用了PIL库新建了个320x240的图像对象</span></span>
-<span id="cb6-41"><a href="#cb6-41"></a><span class="co"># Create blank image for drawing.</span></span>
-<span id="cb6-42"><a href="#cb6-42"></a>width <span class="op">=</span> <span class="dv">320</span></span>
-<span id="cb6-43"><a href="#cb6-43"></a>height <span class="op">=</span> <span class="dv">240</span></span>
-<span id="cb6-44"><a href="#cb6-44"></a>img <span class="op">=</span> Image.new(<span class="st">&quot;RGB&quot;</span>, (width, height))</span>
-<span id="cb6-45"><a href="#cb6-45"></a></span>
-<span id="cb6-46"><a href="#cb6-46"></a>rotation <span class="op">=</span> <span class="dv">270</span></span>
-<span id="cb6-47"><a href="#cb6-47"></a><span class="co"># Get drawing object to draw on image.</span></span>
-<span id="cb6-48"><a href="#cb6-48"></a>draw <span class="op">=</span> ImageDraw.Draw(img)</span>
-<span id="cb6-49"><a href="#cb6-49"></a></span>
-<span id="cb6-50"><a href="#cb6-50"></a><span class="co"># Draw a black filled box to clear the image.</span></span>
-<span id="cb6-51"><a href="#cb6-51"></a>draw.rectangle((<span class="dv">0</span>, <span class="dv">0</span>, width, height), outline<span class="op">=</span><span class="dv">0</span>, fill<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
-<span id="cb6-52"><a href="#cb6-52"></a>display.image(img, rotation)</span>
-<span id="cb6-53"><a href="#cb6-53"></a>padding <span class="op">=</span> <span class="op">-</span><span class="dv">2</span></span>
-<span id="cb6-54"><a href="#cb6-54"></a>top <span class="op">=</span> padding</span>
-<span id="cb6-55"><a href="#cb6-55"></a>bottom <span class="op">=</span> height <span class="op">-</span> padding</span>
-<span id="cb6-56"><a href="#cb6-56"></a>x <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb6-57"><a href="#cb6-57"></a></span>
-<span id="cb6-58"><a href="#cb6-58"></a><span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb6-59"><a href="#cb6-59"></a>    draw.rectangle((<span class="dv">0</span>, <span class="dv">0</span>, width, height), outline<span class="op">=</span><span class="dv">0</span>, fill<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb6-60"><a href="#cb6-60"></a></span>
-<span id="cb6-61"><a href="#cb6-61"></a>    <span class="co"># 获取树莓派的信息</span></span>
-<span id="cb6-62"><a href="#cb6-62"></a>    cmd <span class="op">=</span> <span class="st">&quot;hostname -I | cut -d&#39; &#39; -f1&quot;</span></span>
-<span id="cb6-63"><a href="#cb6-63"></a>    IP <span class="op">=</span> <span class="st">&quot;IP: &quot;</span> <span class="op">+</span> subprocess.check_output(cmd, shell<span class="op">=</span><span class="va">True</span>).decode(<span class="st">&quot;utf-8&quot;</span>)</span>
-<span id="cb6-64"><a href="#cb6-64"></a>    cmd <span class="op">=</span> <span class="st">&quot;top -bn1 | grep load | awk &#39;&#123;printf </span><span class="ch">\&quot;</span><span class="st">CPU Load: </span><span class="sc">%.2f</span><span class="ch">\&quot;</span><span class="st">, $(NF-2)&#125;&#39;&quot;</span></span>
-<span id="cb6-65"><a href="#cb6-65"></a>    CPU <span class="op">=</span> subprocess.check_output(cmd, shell<span class="op">=</span><span class="va">True</span>).decode(<span class="st">&quot;utf-8&quot;</span>)</span>
-<span id="cb6-66"><a href="#cb6-66"></a>    cmd <span class="op">=</span> <span class="st">&quot;free -m | awk &#39;NR==2&#123;printf </span><span class="ch">\&quot;</span><span class="st">Mem: </span><span class="sc">%s</span><span class="st">/</span><span class="sc">%s</span><span class="st"> MB  </span><span class="sc">%.2f%%</span><span class="ch">\&quot;</span><span class="st">, $3,$2,$3*100/$2 &#125;&#39;&quot;</span></span>
-<span id="cb6-67"><a href="#cb6-67"></a>    MemUsage <span class="op">=</span> subprocess.check_output(cmd, shell<span class="op">=</span><span class="va">True</span>).decode(<span class="st">&quot;utf-8&quot;</span>)</span>
-<span id="cb6-68"><a href="#cb6-68"></a>    cmd <span class="op">=</span> <span class="st">&#39;df -h | awk </span><span class="ch">\&#39;</span><span class="st">$NF==&quot;/&quot;&#123;printf &quot;Disk: </span><span class="sc">%d</span><span class="st">/</span><span class="sc">%d</span><span class="st"> GB  </span><span class="sc">%s</span><span class="st">&quot;, $3,$2,$5&#125;</span><span class="ch">\&#39;</span><span class="st">&#39;</span></span>
-<span id="cb6-69"><a href="#cb6-69"></a>    Disk <span class="op">=</span> subprocess.check_output(cmd, shell<span class="op">=</span><span class="va">True</span>).decode(<span class="st">&quot;utf-8&quot;</span>)</span>
-<span id="cb6-70"><a href="#cb6-70"></a>    cmd <span class="op">=</span> <span class="st">&quot;cat /sys/class/thermal/thermal_zone0/temp |  awk &#39;&#123;printf </span><span class="ch">\&quot;</span><span class="st">CPU Temp: </span><span class="sc">%.1f</span><span class="st"> C</span><span class="ch">\&quot;</span><span class="st">, $(NF-0) / 1000&#125;&#39;&quot;</span>  <span class="co"># pylint: disable=line-too-long</span></span>
-<span id="cb6-71"><a href="#cb6-71"></a>    Temp <span class="op">=</span> subprocess.check_output(cmd, shell<span class="op">=</span><span class="va">True</span>).decode(<span class="st">&quot;utf-8&quot;</span>)</span>
-<span id="cb6-72"><a href="#cb6-72"></a></span>
-<span id="cb6-73"><a href="#cb6-73"></a>    <span class="co"># 获取传感器（BMP280）的信息</span></span>
-<span id="cb6-74"><a href="#cb6-74"></a>    tmp <span class="op">=</span> <span class="st">&quot;Temp(board): </span><span class="sc">%0.1f</span><span class="st"> C&quot;</span> <span class="op">%</span> bmp280.temperature</span>
-<span id="cb6-75"><a href="#cb6-75"></a>    pres <span class="op">=</span> <span class="st">&quot;Pressure: </span><span class="sc">%0.1f</span><span class="st"> hPa&quot;</span> <span class="op">%</span> bmp280.pressure</span>
-<span id="cb6-76"><a href="#cb6-76"></a>    alti <span class="op">=</span> <span class="st">&quot;Altitude = </span><span class="sc">%0.2f</span><span class="st"> meters&quot;</span> <span class="op">%</span> bmp280.altitude</span>
-<span id="cb6-77"><a href="#cb6-77"></a></span>
-<span id="cb6-78"><a href="#cb6-78"></a>    <span class="co"># 获取服务器信息...诶,被FLoydfish吃了![]~(￣▽￣)~*</span></span>
-<span id="cb6-79"><a href="#cb6-79"></a></span>
-<span id="cb6-80"><a href="#cb6-80"></a>    <span class="co"># Set font to draw</span></span>
-<span id="cb6-81"><a href="#cb6-81"></a>    font <span class="op">=</span> ImageFont.truetype(<span class="st">&quot;/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf&quot;</span>, <span class="dv">14</span>)</span>
-<span id="cb6-82"><a href="#cb6-82"></a></span>
-<span id="cb6-83"><a href="#cb6-83"></a>    </span>
-<span id="cb6-84"><a href="#cb6-84"></a>    y <span class="op">=</span> top</span>
-<span id="cb6-85"><a href="#cb6-85"></a>    draw.text((x, y), <span class="st">&quot;RPI local &quot;</span> <span class="op">+</span> IP, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FFFFFF&quot;</span>)</span>
-<span id="cb6-86"><a href="#cb6-86"></a>    y <span class="op">+=</span> font.getsize(IP)[<span class="dv">1</span>]</span>
-<span id="cb6-87"><a href="#cb6-87"></a>    draw.text((x, y), <span class="st">&quot;RPI&#39;s &quot;</span> <span class="op">+</span> CPU, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FFFF00&quot;</span>)</span>
-<span id="cb6-88"><a href="#cb6-88"></a>    y <span class="op">+=</span> font.getsize(CPU)[<span class="dv">1</span>]</span>
-<span id="cb6-89"><a href="#cb6-89"></a>    draw.text((x, y), <span class="st">&quot;RPI&#39;s &quot;</span> <span class="op">+</span> MemUsage, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#00FF00&quot;</span>)</span>
-<span id="cb6-90"><a href="#cb6-90"></a>    y <span class="op">+=</span> font.getsize(MemUsage)[<span class="dv">1</span>]</span>
-<span id="cb6-91"><a href="#cb6-91"></a>    draw.text((x, y), <span class="st">&quot;RPI&#39;s &quot;</span> <span class="op">+</span> Disk, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#0000FF&quot;</span>)</span>
-<span id="cb6-92"><a href="#cb6-92"></a>    y <span class="op">+=</span> font.getsize(Disk)[<span class="dv">1</span>]</span>
-<span id="cb6-93"><a href="#cb6-93"></a>    draw.text((x, y), <span class="st">&quot;RPI&#39;s &quot;</span> <span class="op">+</span> Temp, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FF00FF&quot;</span>)</span>
-<span id="cb6-94"><a href="#cb6-94"></a></span>
-<span id="cb6-95"><a href="#cb6-95"></a>    <span class="co"># Set font to draw</span></span>
-<span id="cb6-96"><a href="#cb6-96"></a>    font <span class="op">=</span> ImageFont.truetype(<span class="st">&quot;/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf&quot;</span>, <span class="dv">16</span>)</span>
-<span id="cb6-97"><a href="#cb6-97"></a>    y <span class="op">+=</span> <span class="dv">18</span></span>
-<span id="cb6-98"><a href="#cb6-98"></a>    draw.text((x, y), tmp, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FF0000&quot;</span>)</span>
-<span id="cb6-99"><a href="#cb6-99"></a>    y <span class="op">+=</span> <span class="dv">16</span></span>
-<span id="cb6-100"><a href="#cb6-100"></a>    draw.text((x, y), pres, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FF0000&quot;</span>)</span>
-<span id="cb6-101"><a href="#cb6-101"></a>    y <span class="op">+=</span> <span class="dv">16</span></span>
-<span id="cb6-102"><a href="#cb6-102"></a>    draw.text((x, y), alti, font<span class="op">=</span>font, fill<span class="op">=</span><span class="st">&quot;#FF0000&quot;</span>)</span>
-<span id="cb6-103"><a href="#cb6-103"></a>    <span class="co">#y += 16</span></span>
-<span id="cb6-104"><a href="#cb6-104"></a></span>
-<span id="cb6-105"><a href="#cb6-105"></a>    <span class="co"># 显示</span></span>
-<span id="cb6-106"><a href="#cb6-106"></a>    display.image(img, rotation)</span>
-<span id="cb6-107"><a href="#cb6-107"></a>    <span class="co"># 1秒1刷新</span></span>
-<span id="cb6-108"><a href="#cb6-108"></a>    time.sleep(<span class="dv">1</span>)</span></code></pre></div>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> os
+<span class="token keyword">import</span> time
+<span class="token keyword">import</span> subprocess
+<span class="token keyword">import</span> digitalio
+<span class="token keyword">import</span> board
+<span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image<span class="token punctuation">,</span> ImageDraw<span class="token punctuation">,</span> ImageFont
+<span class="token keyword">import</span> adafruit_rgb_display<span class="token punctuation">.</span>ili9341 <span class="token keyword">as</span> ili9341
+<span class="token keyword">from</span> adafruit_rgb_display<span class="token punctuation">.</span>rgb <span class="token keyword">import</span> color565
+<span class="token keyword">import</span> adafruit_bmp280
+
+<span class="token comment"># 注册传感器,这里只用了BMP280,SHT30D没用</span>
+i2c <span class="token operator">=</span> board<span class="token punctuation">.</span>I2C<span class="token punctuation">(</span><span class="token punctuation">)</span>
+bmp280 <span class="token operator">=</span> adafruit_bmp280<span class="token punctuation">.</span>Adafruit_BMP280_I2C<span class="token punctuation">(</span>i2c<span class="token punctuation">)</span>
+bmp280<span class="token punctuation">.</span>sea_level_pressure <span class="token operator">=</span> <span class="token number">1013.25</span>
+
+<span class="token comment"># 屏幕接口配置</span>
+cs_pin <span class="token operator">=</span> digitalio<span class="token punctuation">.</span>DigitalInOut<span class="token punctuation">(</span>board<span class="token punctuation">.</span>CE0<span class="token punctuation">)</span>
+dc_pin <span class="token operator">=</span> digitalio<span class="token punctuation">.</span>DigitalInOut<span class="token punctuation">(</span>board<span class="token punctuation">.</span>D27<span class="token punctuation">)</span>
+reset_pin <span class="token operator">=</span> digitalio<span class="token punctuation">.</span>DigitalInOut<span class="token punctuation">(</span>board<span class="token punctuation">.</span>D22<span class="token punctuation">)</span>
+backlight <span class="token operator">=</span> digitalio<span class="token punctuation">.</span>DigitalInOut<span class="token punctuation">(</span>board<span class="token punctuation">.</span>D17<span class="token punctuation">)</span>
+backlight<span class="token punctuation">.</span>switch_to_output<span class="token punctuation">(</span><span class="token punctuation">)</span>
+backlight<span class="token punctuation">.</span>value <span class="token operator">=</span> <span class="token boolean">True</span>
+
+BAUDRATE <span class="token operator">=</span> <span class="token number">64000000</span>  <span class="token comment"># SPI速率配置,使用PCB的话上到50MHz应该是没问题的,实测也不会花屏啥的</span>
+spi <span class="token operator">=</span> board<span class="token punctuation">.</span>SPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Create the ST7789 display:</span>
+display <span class="token operator">=</span> ili9341<span class="token punctuation">.</span>ILI9341<span class="token punctuation">(</span>
+    spi<span class="token punctuation">,</span>
+    cs<span class="token operator">=</span>cs_pin<span class="token punctuation">,</span>
+    dc<span class="token operator">=</span>dc_pin<span class="token punctuation">,</span>
+    rst<span class="token operator">=</span>reset_pin<span class="token punctuation">,</span>
+    baudrate<span class="token operator">=</span>BAUDRATE<span class="token punctuation">,</span>
+    <span class="token comment">#width=320,</span>
+    <span class="token comment">#height=240,</span>
+    <span class="token comment">#x_offset=0,</span>
+    <span class="token comment">#y_offset=0,</span>
+<span class="token punctuation">)</span>
+
+<span class="token comment"># 这里使用了PIL库新建了个320x240的图像对象</span>
+<span class="token comment"># Create blank image for drawing.</span>
+width <span class="token operator">=</span> <span class="token number">320</span>
+height <span class="token operator">=</span> <span class="token number">240</span>
+img <span class="token operator">=</span> Image<span class="token punctuation">.</span>new<span class="token punctuation">(</span><span class="token string">"RGB"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+rotation <span class="token operator">=</span> <span class="token number">270</span>
+<span class="token comment"># Get drawing object to draw on image.</span>
+draw <span class="token operator">=</span> ImageDraw<span class="token punctuation">.</span>Draw<span class="token punctuation">(</span>img<span class="token punctuation">)</span>
+
+<span class="token comment"># Draw a black filled box to clear the image.</span>
+draw<span class="token punctuation">.</span>rectangle<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">,</span> outline<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+display<span class="token punctuation">.</span>image<span class="token punctuation">(</span>img<span class="token punctuation">,</span> rotation<span class="token punctuation">)</span>
+padding <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span>
+top <span class="token operator">=</span> padding
+bottom <span class="token operator">=</span> height <span class="token operator">-</span> padding
+x <span class="token operator">=</span> <span class="token number">0</span>
+
+<span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+    draw<span class="token punctuation">.</span>rectangle<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> width<span class="token punctuation">,</span> height<span class="token punctuation">)</span><span class="token punctuation">,</span> outline<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 获取树莓派的信息</span>
+    cmd <span class="token operator">=</span> <span class="token string">"hostname -I | cut -d' ' -f1"</span>
+    IP <span class="token operator">=</span> <span class="token string">"IP: "</span> <span class="token operator">+</span> subprocess<span class="token punctuation">.</span>check_output<span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span>
+    cmd <span class="token operator">=</span> <span class="token string">"top -bn1 | grep load | awk '&#123;printf \"CPU Load: %.2f\", $(NF-2)&#125;'"</span>
+    CPU <span class="token operator">=</span> subprocess<span class="token punctuation">.</span>check_output<span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span>
+    cmd <span class="token operator">=</span> <span class="token string">"free -m | awk 'NR==2&#123;printf \"Mem: %s/%s MB  %.2f%%\", $3,$2,$3*100/$2 &#125;'"</span>
+    MemUsage <span class="token operator">=</span> subprocess<span class="token punctuation">.</span>check_output<span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span>
+    cmd <span class="token operator">=</span> <span class="token string">'df -h | awk \'$NF=="/"&#123;printf "Disk: %d/%d GB  %s", $3,$2,$5&#125;\''</span>
+    Disk <span class="token operator">=</span> subprocess<span class="token punctuation">.</span>check_output<span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span>
+    cmd <span class="token operator">=</span> <span class="token string">"cat /sys/class/thermal/thermal_zone0/temp |  awk '&#123;printf \"CPU Temp: %.1f C\", $(NF-0) / 1000&#125;'"</span>  <span class="token comment"># pylint: disable=line-too-long</span>
+    Temp <span class="token operator">=</span> subprocess<span class="token punctuation">.</span>check_output<span class="token punctuation">(</span>cmd<span class="token punctuation">,</span> shell<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 获取传感器（BMP280）的信息</span>
+    tmp <span class="token operator">=</span> <span class="token string">"Temp(board): %0.1f C"</span> <span class="token operator">%</span> bmp280<span class="token punctuation">.</span>temperature
+    pres <span class="token operator">=</span> <span class="token string">"Pressure: %0.1f hPa"</span> <span class="token operator">%</span> bmp280<span class="token punctuation">.</span>pressure
+    alti <span class="token operator">=</span> <span class="token string">"Altitude = %0.2f meters"</span> <span class="token operator">%</span> bmp280<span class="token punctuation">.</span>altitude
+
+    <span class="token comment"># 获取服务器信息...诶,被FLoydfish吃了![]~(￣▽￣)~*</span>
+
+    <span class="token comment"># Set font to draw</span>
+    font <span class="token operator">=</span> ImageFont<span class="token punctuation">.</span>truetype<span class="token punctuation">(</span><span class="token string">"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"</span><span class="token punctuation">,</span> <span class="token number">14</span><span class="token punctuation">)</span>
+
+    
+    y <span class="token operator">=</span> top
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"RPI local "</span> <span class="token operator">+</span> IP<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FFFFFF"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> font<span class="token punctuation">.</span>getsize<span class="token punctuation">(</span>IP<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"RPI's "</span> <span class="token operator">+</span> CPU<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FFFF00"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> font<span class="token punctuation">.</span>getsize<span class="token punctuation">(</span>CPU<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"RPI's "</span> <span class="token operator">+</span> MemUsage<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#00FF00"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> font<span class="token punctuation">.</span>getsize<span class="token punctuation">(</span>MemUsage<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"RPI's "</span> <span class="token operator">+</span> Disk<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#0000FF"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> font<span class="token punctuation">.</span>getsize<span class="token punctuation">(</span>Disk<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"RPI's "</span> <span class="token operator">+</span> Temp<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FF00FF"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># Set font to draw</span>
+    font <span class="token operator">=</span> ImageFont<span class="token punctuation">.</span>truetype<span class="token punctuation">(</span><span class="token string">"/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> <span class="token number">18</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> tmp<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FF0000"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> <span class="token number">16</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> pres<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FF0000"</span><span class="token punctuation">)</span>
+    y <span class="token operator">+=</span> <span class="token number">16</span>
+    draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> alti<span class="token punctuation">,</span> font<span class="token operator">=</span>font<span class="token punctuation">,</span> fill<span class="token operator">=</span><span class="token string">"#FF0000"</span><span class="token punctuation">)</span>
+    <span class="token comment">#y += 16</span>
+
+    <span class="token comment"># 显示</span>
+    display<span class="token punctuation">.</span>image<span class="token punctuation">(</span>img<span class="token punctuation">,</span> rotation<span class="token punctuation">)</span>
+    <span class="token comment"># 1秒1刷新</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="运行效果">运行效果</h1>
 <p>看我使用柔焦滤镜拍出来的——<br />
 （焦锐奶化，毒德大学（bushi））</p>

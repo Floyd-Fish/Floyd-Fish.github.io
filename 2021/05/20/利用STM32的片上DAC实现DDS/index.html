@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gith">
@@ -477,19 +477,19 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <h2 id="生成波形算法">生成波形算法</h2>
 <p>其实很简单,就是算。<br />
 比如以下是一个算正弦的例子</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#define DAC_AMP                         (uint16_t)1600</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#define LUT_MAX_LENGTH                  (uint32_t)4096</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="dt">volatile</span> <span class="dt">uint16_t</span>        dds_lut[LUT_MAX_LENGTH];</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="cf">if</span> (type == SINE_WAVE)</span>
-<span id="cb1-7"><a href="#cb1-7"></a>&#123;</span>
-<span id="cb1-8"><a href="#cb1-8"></a>    <span class="dt">float</span> sin_step = <span class="fl">2.0</span><span class="bu">f</span> * <span class="fl">3.14159</span><span class="bu">f</span> / (<span class="dt">float</span>)(length-<span class="dv">1</span>);</span>
-<span id="cb1-9"><a href="#cb1-9"></a>    <span class="cf">for</span> (<span class="dt">uint16_t</span> i = <span class="dv">0</span>; i &lt; length; i++)</span>
-<span id="cb1-10"><a href="#cb1-10"></a>    &#123;</span>
-<span id="cb1-11"><a href="#cb1-11"></a>        dds_lut[i] = (<span class="dt">uint16_t</span>)(DAC_AMP+(DAC_AMP*sinf(sin_step*(<span class="dt">float</span>)i)));</span>
-<span id="cb1-12"><a href="#cb1-12"></a>    &#125;</span>
-<span id="cb1-13"><a href="#cb1-13"></a>&#125;</span></code></pre></div>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">DAC_AMP</span>							<span class="token expression"><span class="token punctuation">(</span><span class="token class-name">uint16_t</span><span class="token punctuation">)</span><span class="token number">1600</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">LUT_MAX_LENGTH</span>      	        <span class="token expression"><span class="token punctuation">(</span><span class="token class-name">uint32_t</span><span class="token punctuation">)</span><span class="token number">4096</span></span></span>
+
+<span class="token keyword">volatile</span> <span class="token class-name">uint16_t</span>        dds_lut<span class="token punctuation">[</span>LUT_MAX_LENGTH<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>type <span class="token operator">==</span> SINE_WAVE<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token keyword">float</span> sin_step <span class="token operator">=</span> <span class="token number">2.0f</span> <span class="token operator">*</span> <span class="token number">3.14159f</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">(</span>length<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">uint16_t</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#123;</span>
+		dds_lut<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">uint16_t</span><span class="token punctuation">)</span><span class="token punctuation">(</span>DAC_AMP<span class="token operator">+</span><span class="token punctuation">(</span>DAC_AMP<span class="token operator">*</span><span class="token function">sinf</span><span class="token punctuation">(</span>sin_step<span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>方波和三角波更为简单了,详细的请去文章开头的Git仓库看看吧~</p>
 <h1 id="测试">测试!</h1>
 <p>输出200kHz的正弦波</p>
