@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="基础模拟与数字调制技术 本文承接上次的 深入理解DDS(数字频率合成) 一文,继续探讨在通信系统中占据核心地位的 调制（Modulation） 技术。 在网上搜集资料时没找到什么特别好的资料,于是就打算从上次的 [DDS Technical Tutorial] 的 Section 9. Basic Digital Modulator Theory 开始,继续意译,辅助以Wiki百科和各类通信原">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基础模拟与数字调制技术">
+<meta property="og:url" content="https://floydfish.xyz/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="基础模拟与数字调制技术 本文承接上次的 深入理解DDS(数字频率合成) 一文,继续探讨在通信系统中占据核心地位的 调制（Modulation） 技术。 在网上搜集资料时没找到什么特别好的资料,于是就打算从上次的 [DDS Technical Tutorial] 的 Section 9. Basic Digital Modulator Theory 开始,继续意译,辅助以Wiki百科和各类通信原">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am0.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_spec.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_plus0.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_m=1.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am2.png">
+<meta property="article:published_time" content="2022-02-03T17:33:01.000Z">
+<meta property="article:modified_time" content="2022-02-03T17:35:03.064Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="学习笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/1.jpg">
+
+<link rel="canonical" href="https://floydfish.xyz/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>基础模拟与数字调制技术 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">29</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基础模拟与数字调制技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-04 01:33:01 / 修改时间：01:35:03" itemprop="dateCreated datePublished" datetime="2022-02-04T01:33:01+08:00">2022-02-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/" class="post-meta-item leancloud_visitors" data-flag-title="基础模拟与数字调制技术" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/02/04/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="基础模拟与数字调制技术">基础模拟与数字调制技术</h1>
+<p>本文承接上次的 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1790">深入理解DDS(数字频率合成)</a></strong> 一文,继续探讨在通信系统中占据核心地位的 <strong>调制（Modulation）</strong> 技术。</p>
+<p>在网上搜集资料时没找到什么特别好的资料,<del>于是就打算从上次的 <strong>[DDS Technical Tutorial]</strong> 的 <strong>Section 9. Basic Digital Modulator Theory</strong> 开始,继续意译,辅助以Wiki百科和各类通信原理和射频电路参考书籍上的内容来讲解。</del></p>
+<p>sorry,我仔细看了那篇教程后发现其并不是特别适合写这篇文。那么我就从Wiki和各种参考书和教材上搜集资料了。</p>
+<h1 id="为什么要调制">为什么要调制？</h1>
+<p>如果我们想通过电信号传输一些信息，我们可以选择使用导体介质并加载模拟信号或数字信号来完成——前者比如AV电视，后者比如SPI、UART协议等。但这些传输都有局限性: <strong>它们不能传输很远的距离,且一般来说通信频率越高距离越短</strong>。<br />
+那么我们来换一个思路，使用无线通信技术(Wireless Communication)。通过电磁场理论和天线原理我们可以知道，如果要发送一个特定频率的信号，我们需要一个 <strong>物理尺寸与之波长的数量级相当的天线(Antenna)</strong>。如果我们要发送语音信号,一般语音信号的频段为10Hz~20kHz,其对应天线长度约为几十甚至上百千米，显然这不现实。</p>
+<p>如果我们想个办法,将信号的频率大幅提高，提高到MHz甚至GHz数量级,那我们就能制作合适的天线来完成该信号的发射了。理所当然地, <strong>调制(Modulation)</strong> 技术就应运而生了。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/1.jpg" alt="Modulation Types" border="0"/></p>
+</center>
+<span id="more"></span>
+<p>就像我们去很远的地方会乘坐交通工具一样，信息也能乘着 <strong>高频电磁波</strong> 传播到更远的地方~，不过在工程中我们不会说信号上了什么泥头车，我们会说含有信息的信号 <strong>被调制</strong> 到 <strong>载波(Carrier)</strong> 上了。以下是一些术语辨析:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>English</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>基带信号</td>
+<td>Baseband Signal</td>
+<td>我们要传送的信息信号</td>
+</tr>
+<tr class="even">
+<td>载波信号</td>
+<td>Carrier Signal</td>
+<td>带着基带起飞的信号</td>
+</tr>
+<tr class="odd">
+<td>调制</td>
+<td>Modulation</td>
+<td>基带信号 <strong>"登机"</strong> 的过程,在发送端完成</td>
+</tr>
+<tr class="even">
+<td>信道</td>
+<td>Communication Channel</td>
+<td>信号在通信系统中传输的通道,可有线可无线</td>
+</tr>
+<tr class="odd">
+<td>解调</td>
+<td>Demodulation</td>
+<td>基带信号 <strong>"下机"</strong> 的过程,在接收端完成</td>
+</tr>
+</tbody>
+</table>
+<p>其中,基带信号如果是模拟信号,那么我们就称其为 <strong>模拟基带</strong>,数字的就是 <strong>数字基带</strong>。在无线通信系统中我们多半使用模拟载波,所以我们接下来针对模拟载波的调制一一解剖一下。</p>
+<h1 id="一.模拟调制">一.模拟调制</h1>
+<p>模拟调制是最早应用的调制技术。早在20世纪初无线电刚刚问世时，就有工程师成功地利用模拟调制技术实现了远距离无线通信。</p>
+<h2 id="amamtitude-modulation">1.1 AM(Amtitude Modulation)</h2>
+<p>幅度调制顾名思义,就是让载波的幅度跟随基带信号的幅度变化,它在20世纪头二十年间发展，在今天，它仍在多种通信形式中使用；例如用在便携式对讲机、VHF航空无线电、公民波段无线电与电脑的调制解调器中。</p>
+<p>下图展示了调幅信号的完整信号链，从左至右依次为: <strong>模拟基带信号、载波信号、已调信号及其包络线、实际发送的信号波形、接收端接收到的信号波形、接收端接收到的信号的包络线、包络检波(解调)出来的信号</strong>。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am0.png" alt="Standard AM Modulation" border="0"/></p>
+</center>
+<h3 id="数学形式">1.1.1 数学形式</h3>
+<p>载波信号频率为 <span class="math inline">\(f_c\)</span>,幅度为 <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[
+c(t) = A\sin(2\pi f_c t)
+\]</span></p>
+<p>令 <span class="math inline">\(m(t)\)</span> 表示调制波形(基带信号),载波的频率比基带的频率要高得多:</p>
+<p><span class="math display">\[
+m(t) = M·\cos(2\pi f_mt + \phi)
+\]</span></p>
+<p>其中 <span class="math inline">\(M\)</span> 是调制的幅度,我们需要让 <span class="math inline">\(M&lt;1\)</span> 以使 <span class="math inline">\(1+m(t)\)</span> 总是<strong>正数</strong>。若 <span class="math inline">\(M&gt;1\)</span> 则会出现 <strong>过调制</strong>,从传输信号中重构基带信号会导致原始信号的丢失。AM的最终结果就是载波 <span class="math inline">\(c(t)\)</span> 乘以正数 <span class="math inline">\(1+m(t)\)</span> 。</p>
+<p><span class="math display">\[
+y(t) = [1+m(t)]·c(t) \\
+= [1+M·cos(2\pi f_m t + \phi)]·Asin(2\pi f_c t)
+\]</span></p>
+<p>运用积化和差恒等式, <span class="math inline">\(y(t)\)</span> 可以用3个正弦波的和表示:</p>
+<p><span class="math display">\[
+y(t) = A·\sin(2\pi f_ct) + {AM \over 2}[\sin(2\pi(f_c+f_m)t + \phi) + \sin(2\pi(f_c-f_m)t - \phi)]
+\]</span></p>
+<p>因此,调制信号有 <strong>3个组成成分</strong>: - 载波 <span class="math inline">\(c(t)\)</span><br />
+- 频率略高于载波频率的 <strong>上边带(upper-band)</strong><br />
+- 频率略低于载波频率的 <strong>下边带(lower-band)</strong></p>
+<p>其频谱结构如下图所示,请注意我们在上面的推导中仅仅使用了 <strong>单频基带信号</strong> ,因为这样便于看清楚数学表达形式。实际的基带信号的频谱绝不是一个单一值,而是具有一定"宽度"的,经过调制后其上下边带同样是具有一定宽度的,就像图中那样:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_spec.svg" alt="Standard AM Modulation" border="0"/></p>
+上面是单边谱,下面是双边谱,看上面的就行
+</center>
+<p>然而,真正携带信息的只有上下两个边带成分, <strong>载波本身并不携带信息</strong>。所以标准AM调制的频谱利用率和效率并不高。</p>
+<h3 id="调制系数与失真">1.1.2 调制系数与失真</h3>
+<p>在上面的推导式中,M此处与 <strong>调制系数(Modulation Index)</strong> 相同,调制系数表示调制变量在未调制水平附近变化的范围,其定义式为:</p>
+<p><span class="math display">\[
+m = {m(t)的峰值 \over A}={M \over A}
+\]</span></p>
+<p>通常调制系数 <span class="math inline">\(m\)</span> 以百分比作为单位,如果 <span class="math inline">\(m=50\%\)</span>,载波信号的幅度在其未被调制的幅度上(下)变化50%。如下图所示第一种情况。如果 <span class="math inline">\(m=100\%\)</span>,就是第二种情况,这时已调信号的包络线会降到0,也即意味着 <strong>完全调制</strong>。通常为了获取理论上最高的信噪比,我们希望调制系数 <strong>尽可能接近1但是不能超过1</strong>。一旦调制系数超过1,就出现了 <strong>过调制(Over modulation)</strong> 现象(下图第三种情况)。因为包络的负偏移不能小于0,所以会导致接收到的调制信号 <strong>失真(distortion)</strong>,形象地说,是被 "削波"了。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_plus0.svg" alt="Standard AM Modulation" border="0"/></p>
+</center>
+<p>我写了一段python代码,可以生成标准AM调制信号,如果你感兴趣可以看看:<br />
+<pre class="line-numbers language-py" data-language="py"><code class="language-py">import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from cycler import cycler
+
+N &#x3D; 4000			# 采样点4000点
+f_baseband &#x3D; 1e2	# 包络频率100Hz
+f_carrier &#x3D; 1e3		# 载波频率10kHz
+
+# 时间间隔
+t &#x3D; np.linspace(-2&#x2F;f_baseband, 2&#x2F;f_baseband, num&#x3D;N)
+# 生成包络与载波信号
+baseband &#x3D; np.sin(2 * np.pi * t * f_baseband)
+carrier &#x3D; np.sin(2 * np.pi * t * f_carrier)
+# 调制系数m
+m &#x3D; 1.0
+
+# Plot
+fig, axd &#x3D; plt.subplot_mosaic([[&#39;upleft&#39;, &#39;right&#39;],
+							   [&#39;lowleft&#39;, &#39;right&#39;]], layout&#x3D;&#39;constrained&#39;)
+axd[&#39;upleft&#39;].set_title(&#39;baseband signal&#39;)
+axd[&#39;upleft&#39;].plot(t, baseband, &#39;k&#39;)
+
+axd[&#39;lowleft&#39;].set_title(&#39;Carrier signal&#39;)
+axd[&#39;lowleft&#39;].plot(t, carrier, &#39;k&#39;)
+
+axd[&#39;right&#39;].set_title(&#39;Modulated signal&#39;)
+axd[&#39;right&#39;].plot(t, (1+m*baseband)*carrier, &#39;k&#39;)
+axd[&#39;right&#39;].legend()
+# show
+plt.show()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am_m=1.svg" alt="Standard AM Modulation" border="0"/></p>
+</center>
+<p>我还在网上找到一个非常巧妙的标准AM调制电路图,它利用同相放大器和 <strong>FET的近似线性电阻区</strong> 特性,将FET当作一个跟随调制信号幅度动态线性变化的可变电阻,从而改变了同相放大器的增益,实现了标准AM调制。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF/am2.png" alt="Standard AM Modulation" border="0"/></p>
+</center>
+<h3 id="am的优缺点">1.1.3 AM的优缺点</h3>
+<p>调幅是历史上最早发明的调制方式。调幅的优点是 <strong>容易产生及恢复信号(说白了就是便宜!)</strong> 。在发射器中，可以用交换调制器，或是平方率调制器(square-law modulator)来完成调制。在接收器中，可以用包络检波器，或是平方率检波器(square-law detector)来完成解调。也就是说，调幅系统成本十分低廉，这就是为什么AM无线电广播会如此受到欢迎。</p>
+<p>当然便宜的方法多数情况下都有那么些重大缺陷,AM也不例外。AM的缺点有二:</p>
+<ol type="1">
+<li>浪费功率(效率低)<br />
+载波 <span class="math inline">\(c(t)\)</span> 与带有信息的基频信号 <span class="math inline">\(m(t)\)</span> 并不相关。因此，传输载波就会浪费功率，也就是说，在调幅的总功率中，有一部分是真正有被 <span class="math inline">\(m(t)\)</span> 影响，有另一部分是被浪费的。<br />
+</li>
+<li>浪费带宽(频带利用率低)<br />
+AM波的上边带及下边带相互对称于载波频率，所以若我们知道其中一组边带的幅度谱及相位谱，由于对称性，我们就可以知道另外一组。这也表示在信息传输的时候，其实只有一组边带就够了，因此信道也只需要提供等同于基频信号的带宽，这样来看，因为调幅需要的传输带宽是信息带宽的两倍，所以我们可以称它是 <strong>浪费带宽</strong>的。</li>
+</ol>
+<p>那么有没有办法改进捏？当然是有的~<br />
+不过需要付出代价!(Money--,系统复杂度++)</p>
+<h3 id="amの超进化">1.1.4 AMの超进化</h3>
+<p>经典的主流方案有3种:</p>
+<ol type="1">
+<li>双边带抑制载波调制(<strong>DSB-SC,=Double-sided band-Suppressed carrier</strong>) DSB-SC的发射波只由上下边带组成。因为抑制了载波，所以可以节省传输功率，但是信道带宽需求还是跟原来一样，也就是信息带宽的两倍。</li>
+<li>残留边带调制(<strong>VSB, =Residual-Sided band</strong>) VSB调制让一组边带几乎全部通过，而另一组边带几乎全不通过，也就是有少量的残留。所以，VSB的带宽需求，比起信息带宽多了前述的残留边带的宽度。这种方式的调制，很适合用在宽频信号，比如说电视信号，在极低频率处含有显著的成分。又例如说，在电视广播中，很强的载波会跟被调波一起被发送，所以我们能在接收端处用包络检波器来解调信号，因此接收器的设计得以被简化。</li>
+<li>单边带调制(<strong>SSB,=Single-Sided band</strong>) SSB的被调波只由上边带或者是下边带组成，所以，SSB调制的功能是，将调制波的频谱在频域中转移到新的位置。单边带调制适合传送声音频号。这样的调制方法需要的传输功率以及信道带宽都最小，但缺点是实现成本的增加以及系统复杂度的增加(哪种改进都得增加orz)。</li>
+</ol>
+<p>其实每种调制都能深挖一大堆出来...但是我怕文章写太长了，又写成 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/archives/1364">电子入门百科全书</a></strong> 那种量级的...所以一些拓展内容(比如调制电路、解调电路、发射机、接收机电路等)就忽略了~</p>
+<h2 id="fmfrequency-modulation">1.2 FM(Frequency Modulation)</h2>
+<h2 id="pmphase-modulation">1.3 PM(Phase Modulation)</h2>
+<h2 id="对比">1.4 对比</h2>
+<h1 id="二.数字调制">二.数字调制</h1>
+<h2 id="askamtitude-shift-keying">2.1 ASK(Amtitude-Shift Keying)</h2>
+<h2 id="fskfrequency-shift-keying">2.2 FSK(Frequency-Shift Keying)</h2>
+<h2 id="pskphase-shift-keying">2.3 PSK(Phase-Shift Keying)</h2>
+<h1 id="三.特殊信号">三.特殊信号</h1>
+<h2 id="chrip啁啾信号">3.1 Chrip(啁啾)信号</h2>
+<h1 id="四.高阶调制">四.高阶调制</h1>
+<h1 id="reference">Reference</h1>
+<ul>
+<li>射频电路基础-邓军,赵建勋-西安电子科技大学出版社<br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Modulation">Modulation-Wiki</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8C%AF%E5%B9%85%E8%AA%BF%E8%AE%8A">振幅调变-Wiki</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Amplitude_modulation">Amptitude Modulation-Wiki</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://qastack.cn/electronics/74351/am-modulator-mixer-circuit">AM调制器混频器电路-QA Stack</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%A2%91%E7%8E%87%E8%B0%83%E5%88%B6">频率调制-Wiki</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Frequency_modulation">Frequency Modulation-Wiki</a><br />
+</li>
+<li></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div></div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/" rel="prev" title="信号与系统-周期信号的傅里叶级数表示">
+      <i class="fa fa-chevron-left"></i> 信号与系统-周期信号的傅里叶级数表示
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%8B%9F%E4%B8%8E%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6%E6%8A%80%E6%9C%AF"><span class="nav-number">1.</span> <span class="nav-text">基础模拟与数字调制技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%B0%83%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">为什么要调制？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80.%E6%A8%A1%E6%8B%9F%E8%B0%83%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">一.模拟调制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#amamtitude-modulation"><span class="nav-number">3.1.</span> <span class="nav-text">1.1 AM(Amtitude Modulation)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%BD%A2%E5%BC%8F"><span class="nav-number">3.1.1.</span> <span class="nav-text">1.1.1 数学形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%88%B6%E7%B3%BB%E6%95%B0%E4%B8%8E%E5%A4%B1%E7%9C%9F"><span class="nav-number">3.1.2.</span> <span class="nav-text">1.1.2 调制系数与失真</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#am%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="nav-number">3.1.3.</span> <span class="nav-text">1.1.3 AM的优缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#am%E3%81%AE%E8%B6%85%E8%BF%9B%E5%8C%96"><span class="nav-number">3.1.4.</span> <span class="nav-text">1.1.4 AMの超进化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fmfrequency-modulation"><span class="nav-number">3.2.</span> <span class="nav-text">1.2 FM(Frequency Modulation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pmphase-modulation"><span class="nav-number">3.3.</span> <span class="nav-text">1.3 PM(Phase Modulation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">3.4.</span> <span class="nav-text">1.4 对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C.%E6%95%B0%E5%AD%97%E8%B0%83%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">二.数字调制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#askamtitude-shift-keying"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 ASK(Amtitude-Shift Keying)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fskfrequency-shift-keying"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 FSK(Frequency-Shift Keying)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pskphase-shift-keying"><span class="nav-number">4.3.</span> <span class="nav-text">2.3 PSK(Phase-Shift Keying)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89.%E7%89%B9%E6%AE%8A%E4%BF%A1%E5%8F%B7"><span class="nav-number">5.</span> <span class="nav-text">三.特殊信号</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#chrip%E5%95%81%E5%95%BE%E4%BF%A1%E5%8F%B7"><span class="nav-number">5.1.</span> <span class="nav-text">3.1 Chrip(啁啾)信号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B.%E9%AB%98%E9%98%B6%E8%B0%83%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">四.高阶调制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
