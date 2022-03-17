@@ -20,37 +20,29 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="ESP32-sensorKit 填坑记录 ESP32是一系列强大的集成WiFi和BLE的Soc，用它来开发各种与物联网相关的小项目当然是最好不过啦~ 继上一次的EndWorld_Kit，我想添加数据上传到远端服务器这一选项，顺便做个漂亮的GUI(在屏幕上做)，所以想先用ESP32做个devkit试试水。 硬件设计 以前用习惯了AD,突然想试试朋友推荐的开源CAD软件-KiCad,发现KiC">
+  <meta name="description" content="好久不见！ 自打上2篇文章( 微观尽头-精密信号测量:Intro、微观尽头-精密信号测量:理论分析 )发布迄今已有快小半年。半年时间内🐟也一直在学习精密信号测量相关的知识，同时也积累了更多的设计与应用经验。那么，是时候让我们进入下一阶段了！ EmoeMetrology测试 之前我照猫画虎，设计了一块AD7177-2的评估板，经过一些测试后，我发现我的PCB并未能发挥其最佳性能。下面是我的一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ESP32-sensorKit 填坑记录">
-<meta property="og:url" content="https://floydfish.xyz/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="微观尽头——精密信号测量-EmoeMetrology">
+<meta property="og:url" content="https://floydfish.xyz/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="ESP32-sensorKit 填坑记录 ESP32是一系列强大的集成WiFi和BLE的Soc，用它来开发各种与物联网相关的小项目当然是最好不过啦~ 继上一次的EndWorld_Kit，我想添加数据上传到远端服务器这一选项，顺便做个漂亮的GUI(在屏幕上做)，所以想先用ESP32做个devkit试试水。 硬件设计 以前用习惯了AD,突然想试试朋友推荐的开源CAD软件-KiCad,发现KiC">
+<meta property="og:description" content="好久不见！ 自打上2篇文章( 微观尽头-精密信号测量:Intro、微观尽头-精密信号测量:理论分析 )发布迄今已有快小半年。半年时间内🐟也一直在学习精密信号测量相关的知识，同时也积累了更多的设计与应用经验。那么，是时候让我们进入下一阶段了！ EmoeMetrology测试 之前我照猫画虎，设计了一块AD7177-2的评估板，经过一些测试后，我发现我的PCB并未能发挥其最佳性能。下面是我的一">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3Xom3d.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XIbn0.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XI4hQ.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XIfAS.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XIR78.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XI7Xq.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XITcn.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XIXAU.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XoEND.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XIvh4.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XopcR.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XongA.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3XoujI.md.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3Xo8US.png">
-<meta property="og:image" content="https://s2.ax1x.com/2020/03/07/3Xot3j.png">
-<meta property="article:published_time" content="2020-03-06T06:12:32.000Z">
-<meta property="article:modified_time" content="2022-01-30T12:13:55.830Z">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-sinc3.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-noise.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift_2.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ltz1000.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/lm399.jpg">
+<meta property="article:published_time" content="2022-03-17T10:05:49.000Z">
+<meta property="article:modified_time" content="2022-03-17T10:06:34.309Z">
 <meta property="article:author" content="Floyd-Fish">
 <meta property="article:tag" content="电子电路">
-<meta property="article:tag" content="坑">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s2.ax1x.com/2020/03/07/3Xom3d.png">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift.png">
 
-<link rel="canonical" href="https://floydfish.xyz/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/">
+<link rel="canonical" href="https://floydfish.xyz/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/">
 
 
 <script id="page-configurations">
@@ -63,7 +55,7 @@
   };
 </script>
 
-  <title>ESP32-sensorKit 填坑记录 | 月之暗面</title>
+  <title>微观尽头——精密信号测量-EmoeMetrology | 月之暗面</title>
   
 
 
@@ -186,7 +178,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
@@ -199,7 +191,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          ESP32-sensorKit 填坑记录
+          微观尽头——精密信号测量-EmoeMetrology
         </h1>
 
         <div class="post-meta">
@@ -208,16 +200,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-03-06 14:12:32" itemprop="dateCreated datePublished" datetime="2020-03-06T14:12:32+08:00">2020-03-06</time>
+              <time title="创建时间：2022-03-17 18:05:49 / 修改时间：18:06:34" itemprop="dateCreated datePublished" datetime="2022-03-17T18:05:49+08:00">2022-03-17</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 20:13:55" itemprop="dateModified" datetime="2022-01-30T20:13:55+08:00">2022-01-30</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -229,7 +215,7 @@
             </span>
 
           
-            <span id="/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/" class="post-meta-item leancloud_visitors" data-flag-title="ESP32-sensorKit 填坑记录" title="阅读次数">
+            <span id="/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/" class="post-meta-item leancloud_visitors" data-flag-title="微观尽头——精密信号测量-EmoeMetrology" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -251,8 +237,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/06/ESP32-sensorKit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -267,133 +253,93 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="esp32-sensorkit-填坑记录">ESP32-sensorKit 填坑记录</h1>
-<p>ESP32是一系列强大的集成WiFi和BLE的Soc，用它来开发各种与物联网相关的小项目当然是最好不过啦~<br />
-继上一次的EndWorld_Kit，我想添加数据上传到远端服务器这一选项，顺便做个漂亮的GUI(在屏幕上做)，所以想先用ESP32做个devkit试试水。</p>
-<h1 id="硬件设计">硬件设计</h1>
-<p>以前用习惯了AD,突然想试试朋友推荐的开源CAD软件-KiCad,发现KiCad还是很强大的。。可能刚开始用有些操作和快捷键不习惯(小声bb:用AD的时候也没习惯过),用了一天时间边熟悉边画schematic,算是完成了大部分电路图的绘制~</p>
+        <p>好久不见！</p>
+<p>自打上2篇文章( <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-signal-chain-design-intro/">微观尽头-精密信号测量:Intro</a></strong>、<strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/emoe-metrology-design/">微观尽头-精密信号测量:理论分析</a></strong> )发布迄今已有快小半年。半年时间内🐟也一直在学习精密信号测量相关的知识，同时也积累了更多的设计与应用经验。那么，是时候让我们进入下一阶段了！</p>
+<h1 id="emoemetrology测试">EmoeMetrology测试</h1>
+<p>之前我照猫画虎，设计了一块AD7177-2的评估板，经过一些测试后，我发现我的PCB并未能发挥其最佳性能。下面是我的一些测试数据：</p>
+<p>输入接上一节锂电池，使用 <code>SINC3</code> 滤波器，同时对其 <code>Sigma-Delta</code> 调制器的抽取率进行编程,使其达到理论上最低的噪声、最高有效分辨率(27.6位),同时也是最低数据速率的工作状态。<br />
+每1秒向电脑回传一次数据，采集了十几分钟，得到了如下的曲线:</p>
 <center>
-<img src="https://s2.ax1x.com/2020/03/07/3Xom3d.png" alt="3Xom3d.png" border="0" />
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift.png" alt="Temperature Drift" border="0"/></p>
 </center>
-<span id="more"></span>
-<h2 id="schematic">Schematic</h2>
-<center>
-<img src="https://s2.ax1x.com/2020/03/07/3XIbn0.png" alt="3XIbn0.png" border="0" />
-</center>
-<p>快画完的时候截了个图√<br />
-大致分为几个modules:</p>
+<p>可以观察到在曲线的开始段，读数幅度有较大的波动起伏，总体呈现下降趋势。在曲线中间段，读数稳定了一段时间，然后又开始有略微起伏波动。</p>
+<!--center-->
+<h2 id="原因分析">原因分析</h2>
+<p>我想到的可能的原因如下:</p>
 <ul>
-<li>电源管理<br />
+<li>EMI/RFI干扰<br />
 </li>
-<li>USB-UART<br />
+<li>高频噪声<br />
 </li>
-<li>RGB<br />
+<li>低频噪声(1/f噪声)<br />
 </li>
-<li>BMP280(温度+气压)<br />
+<li>基准电压源<br />
 </li>
-<li>MPU6050(3-axis<br />
-gyroscope, 3-axis accelerometer)</li>
+<li>PCB热设计问题</li>
 </ul>
-我觉得做这个坑最大的是电源...因为要设计锂电池供电+USB充电，我一直纠结于插上USB时供电来源到底是电池还是USB...看TP5400的框图看不太出来，不过也只能试一试了<br />
-
+<p>首先我们可以排除高频噪声影响的可能性;AD7177-2自带的SINC3滤波器频域响应滚降性能优异,具有宽陷波频率,对高频噪声的衰减是非常可观的。</p>
 <center>
-<img src="https://s2.ax1x.com/2020/03/07/3XI4hQ.png" alt="3XI4hQ.png" border="0" />
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-sinc3.png" alt="AD7177 SINC3 Filter" border="0"/></p>
 </center>
-<h3 id="坑1">坑1</h3>
-<blockquote>
-<p>当我画完了电路图，心满意足地开始PCB Layout时,我发现I2C的SDA wire被设定成了IO0,而IO0在下崽程序的时候要用到。<br />
-我怕他会出什么奇怪的bug,于是不得不改原理图把I2C的引脚指派到别的GPIO上去....</p>
-</blockquote>
-<h3 id="坑2">坑2</h3>
-<blockquote>
-<p>查SPI的文档的时候,我发现ESP32的SPI0和SPI1已经被分配给soc内部的FLASH了...<br />
-(那你干嘛还把引脚引出来忽悠我啊呸！)</p>
-</blockquote>
+<p>我对其编程的输出速率达到了其最低值,这时的噪声水平理论上只有 <strong>0.21uVpp</strong>。而根据测试数据的读数跳动来看，跳动值普遍在上万Codes之上，并不符合这一噪声特性。</p>
 <center>
-<a target="_blank" rel="noopener" href="https://imgchr.com/i/3XIfAS"><img src="https://s2.ax1x.com/2020/03/07/3XIfAS.md.png" alt="3XIfAS.png" border="0" /></a> <a target="_blank" rel="noopener" href="https://imgchr.com/i/3XIR78"><img src="https://s2.ax1x.com/2020/03/07/3XIR78.md.png" alt="3XIR78.png" border="0" /></a> <img src="https://s2.ax1x.com/2020/03/07/3XI7Xq.png" alt="3XI7Xq.png" border="0" />
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-noise.png" alt="AD7177 SINC3 Noise Performance" border="0"/></p>
 </center>
-<p>从上图这个<strong>IO MUX Table</strong>中我终于找到了SPI引脚的对应GPIO dst...</p>
-<p>哭泣.jpg<br />
-不说了俺去改schematic了...</p>
-<h2 id="pcb">PCB</h2>
-<p>画PCB时，KiCad的操作和AD确实区别很大...我边画边熟悉,最终发现如果全手动布线的话,AD确实操作起来方便一些(因为它支持批量操作等等特性)</p>
-<p>KiCad的工作流程(workflow)和AD也有很大的区别,KiCad大致是这样的:</p>
-<ol type="1">
-<li>绘制原理图</li>
-<li>原理图批注</li>
-<li>电气规则检查,初步检测原理图中出现的电气规则错误,可能因为元件模型的问题出现奇奇怪怪的bug(比如我并联2个1117的输出,它会提示error,实际上是没问题的)<br />
-</li>
-<li>给元件分配封装,如果封装库里没有的要自己画</li>
-<li>生成网表</li>
-<li>编辑符号字段,如果要编辑丝印段的话可以在这里统一编辑</li>
-<li>生成物料清单(BOM)</li>
-<li>运行PcbNew设计PCB</li>
-</ol>
-<p>你憋说,害挺好用的。因为这8个操作图标在KiCad的界面上按照顺序排成一排。。<br />
-执行完上面一系列操作之后,我们打开了PCB文件<br />
-首先给PCB画好边框,40x60mm，大概跟银行卡差不多大小...?</p>
-<blockquote>
-<p>刚刚导入PCBNew时,大致排列了一下元件的样子</p>
-</blockquote>
+<p>于是我开始怀疑基准电压源的布局设计问题，但是我拿着5位半万用表戳上去的时候，也没有观察到明显的读数跳动。。。pass。</p>
+<p>EMI/RFI问题，我直接给变压器串接了一个艾默生通信电源拆机下来的EMI滤波器，也没有观察到明显的改善迹象。。pass。</p>
+<p>低频噪声问题,我为此还在这半年期间专门制作了 <strong>噪声放大器(Noise Amplifier)</strong>,做的还算不错，虽然我做完之后就兴冲冲地去测量别的东西了，反倒忘了测这板子23333</p>
+<p>不过我最严重怀疑的是最后一个问题是—— <strong>PCB热噪声问题</strong>。经过测试,PCB工作约10分钟后,LDO部分有明显的温升,达到了约40-50°C。而模拟前端电路部分也达到了30-40°C左右，并且这部分的温升也传播到了ADC和基准电压源部分,造成了其工作环境温度发生明显变化。如果从这个角度来看的话，输出读数曲线的前部分与这个过程是非常吻合的——刚开始工作时,PCB大部分温度与室温相等，随着工作时间积累,元器件发热量也逐渐积累并在PCB上传播蔓延，最后达到一个相对稳定的状态。</p>
 <center>
-<a target="_blank" rel="noopener" href="https://imgchr.com/i/3XITcn"><img src="https://s2.ax1x.com/2020/03/07/3XITcn.md.png" alt="3XITcn.png" border="0" /></a>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift_2.png" alt="Temperature Drift" border="0"/></p>
 </center>
-<h3 id="坑3">坑3</h3>
-<p>其实不是坑，是我太菜了不会合理规划板子布局(orz),画到最后发现我想预留的一排8pin拓展接口(以后接DLC用的)画不下了...<br />
-一是板子没空间了，二是我觉得现在的走线密度有点过高了...就算我用尽各种奇淫技巧挤出了放排针的空间，我觉得也布不成线...</p>
-<blockquote>
-<p>快要布完的时候...发现某排针放不下了...<br />
-最后我的解决方法是-----删了它)</p>
-</blockquote>
-<center>
-<img src="https://s2.ax1x.com/2020/03/07/3XIXAU.png" alt="3XIXAU.png" border="0" />
-</center>
-<blockquote>
-<p>绘制完全的完全体<br />
-底面还没有覆铜</p>
-</blockquote>
-<p>感觉好丑是怎么回事(((((</p>
-<center>
-<img src="https://s2.ax1x.com/2020/03/07/3XoEND.png" alt="3XoEND.png" border="0" />
-</center>
-<h2 id="光线追踪">光线追踪！</h2>
-<p>KiCad有个有趣的功能,在查看3维PCB时可以使用光线追踪渲染PCB~<br />
-我试了一下,感觉还不错...(要是我会画3D封装就好了orz(我好菜啊.jpg))</p>
-<h3 id="未开启光追的渲染图">未开启光追的渲染图</h3>
-<center>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/3XIvh4"><img src="https://s2.ax1x.com/2020/03/07/3XIvh4.md.png" alt="3XIvh4.png" border="0" /></a></p>
-<a target="_blank" rel="noopener" href="https://imgchr.com/i/3XopcR"><img src="https://s2.ax1x.com/2020/03/07/3XopcR.md.png" alt="3XopcR.png" border="0" /></a>
-</center>
-<h3 id="rtx-on">RTX ON！</h3>
-<p>我并没有RTX(555555)</p>
-<center>
-<p><img src="https://s2.ax1x.com/2020/03/07/3XongA.png" alt="3XongA.png" border="0" /></p>
-<a target="_blank" rel="noopener" href="https://imgchr.com/i/3XoujI"><img src="https://s2.ax1x.com/2020/03/07/3XoujI.md.png" alt="3XoujI.png" border="0" /></a>
-</center>
-<h4 id="这是kicad自带的导出功能导出的png">这是KiCad自带的导出功能导出的PNG</h4>
-<center>
-<p><img src="https://s2.ax1x.com/2020/03/07/3Xo8US.png" alt="3Xo8US.png" border="0" /></p>
-<img src="https://s2.ax1x.com/2020/03/07/3Xot3j.png" alt="3Xot3j.png" border="0" />
-</center>
-<p>不得不说这个效果就很棒。AD好像都没有光追渲染功能。。<br />
-不过也有奇怪的缺点,我发现它使用CPU进行渲染操作...<br />
-我的i5-8300H渲染一帧需要 <strong>8</strong> 秒(我想换台式机了.jpg)</p>
-<h2 id="未完待续">未完待续</h2>
-<p>挖坑才刚刚开始呢...<br />
-疫情原因，在家里啥也没，买啥都买不到(俺家湖北),所以我只能先yy一下。<br />
-接下来的工作大概有:</p>
+<p>而至于后面的跳动，我猜测是空气流动与空气湿度变化引起的温度波动所致。<br />
+(测试时我的板子裸露在空气中，并没有做隔热、恒温等措施)</p>
+<h2 id="但是...">但是...</h2>
+<p>虽然工作不是那么的稳定，但是...<strong>它真的很牛逼啊！</strong> 稳定的时候，读数<strong>连1count都不跳动</strong>(Fullscale = 2^32 = 4294967296 Counts)，这......多少有些离谱哦~</p>
+<p>这至少说明了我的前端电路工作是正常的:)<br />
+所以，后续的改进设计思路也非常清晰了:</p>
 <ul>
-<li>ESP32 ToolChain配置(已完成)<br />
+<li>可以将板子做大一些，隔绝电源部分发热的影响;<br />
 </li>
-<li>ESP32 C SDK编程(看API参考看得头大.jpg)<br />
+<li>将模拟前端和ADC、基准源放置在同一个恒温腔室内,工作时对其进行加热并恒温在一个高于室温的值(大约40-45°C左右吧),即使电路其他部分有稍微的温升，对信号链上的关键器件也不会造成影响;<br />
 </li>
-<li>买元件,买个热风枪,俺的锡膏在学校。<br />
+<li>将数字部分单独做一PCB,而不采用现行的一体化设计。ADC和模拟前端仅留出SPI通信接口和MUX控制接口,同时可以考虑使用隔离器进行模数隔离;<br />
 </li>
-<li>焊板子,调试电路(主要是电源)<br />
-</li>
-<li>等我把helloworld烧进ESP32,我就成功了一半了!</li>
+<li>模块化设计,将基准电压源做成单独的小PCB板,并设计一通用接口,这样可以方便后续更换更高精度、更低温漂、更好的长稳特性的电压基准源(比如LTC6655、LM399、LTZ1000)。</li>
 </ul>
-<h1 id="to-be-continued...">To be Continued...</h1>
+<h1 id="嘶哈嘶哈来自群友的爱">嘶哈嘶哈(来自群友的爱)</h1>
+<p>非常感谢TT酱的赞助,送给我们几片 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/LTZ1000.pdf">LTZ1000</a></strong> 和 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/199399fc.pdf">LM399A</a></strong> 来支持我们的折腾(。・∀・)ノ</p>
+<p>可以去<a target="_blank" rel="noopener" href="https://space.bilibili.com/24434095/?spm_id_from=333.999.0.0">TT酱的b站</a>逛逛，TT超帅的!!）</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ltz1000.jpg" alt="Ultra Precision Voltage Reference LTZ1000" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/lm399.jpg" alt="Precision Voltage Reference LM399" border="0"/></p>
+</center>
+<h1 id="如何设计精密基准源">如何设计精密基准源</h1>
+<p>打开LTZ1000的数据手册，在 <strong>Application Infomation</strong> 章节里,有LT注明的设计注意事项;总结如下就是:</p>
+<ul>
+<li><strong>规避 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E7%83%AD%E7%94%B5%E5%81%B6">热电偶</a> (Seebeck)效应</strong> (核心)<br />
+简单来说就是谨慎设计布局,保持LTZ1000的引脚与PCB连接处的热均衡,避免产生温差。<br />
+</li>
+<li>避免空气流动带来的 <strong>Drift(漂移)</strong><br />
+空气流会导致基准的温度浮动,从而导致输出电压发生Drift。由空气引起的drift在输出端观察,非常像低频1/f噪声(进一步验证了我之前的推测...)。所以设计密闭腔体和恒温室是比较好的选择。<br />
+</li>
+<li>避免 <strong>不相干</strong> 的热源干扰<br />
+当然,任何热源干扰都会影响精密电路的工作点。所以需要尽量隔绝这些影响,还是恒温腔室~ 同时,LTZ1000的布线宽度与长度需要尽可能达到热均衡,最小化温差。<br />
+</li>
+<li>精密电阻选择<br />
+当然的,设置工作点和外部运放增益的 <strong>精密电阻</strong> 也是至关重要的。在这里主要关心电阻的温度系数(Temp Coefficients),因为电阻的温漂也会带来热电偶效应。Vishay的精密薄膜电阻是最佳选择。(当然,非常贵)</li>
+<li>设计小PCB板,同时注意发热丝布线 在小PCB板上安装LTZ1000、电阻和运放,同时注意布线:加热丝电流不能流过基准负边的地(Q1的发射极),如果这样布线,公共地路径的存在会让加热丝电流的变化引起基准电压源产生误差。推荐 <strong>单点低阻抗接地</strong>方法。</li>
+</ul>
+<h1 id="do-it">Do it!</h1>
+<p>现在又一波疫情爆发,导致很多快递都无法运达。所以我现在暂时不能放开手脚大干一场...所以暂时等待吧-</p>
+<p>刚好这段时间可以好好休息休息，摸摸鱼 <del>(打死)</del><br />
+等我搞完了再来发文:)</p>
+<h1 id="拓展阅读">拓展阅读</h1>
+<p>在做噪声放大器时,我主要参考的是如下两篇 Application Note。</p>
+<p>AN-124是模拟电路大师 <strong>Jim Williams</strong>为测量Linear Technology生产的超低噪声基准电压源——LTC6655的噪声而设计的噪声放大电路,可称为精密小信号设计的典范。</p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an124f.pdf">AN-124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</a></p>
+<p>而AN-159是后来者 Todd Owen和Amit Patel参考AN-124,为了测量几款超低噪声(0.8uVrms)的LDO和其超高的PSRR而设计的噪声放大电路。</p>
+<p><a target="_blank" rel="noopener" href="https://www.analog.com/en/app-notes/an-159.html">AN-159:Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</a></p>
 
     </div>
 
@@ -424,7 +370,8 @@ gyroscope, 3-axis accelerometer)</li>
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
-              <a href="/tags/%E5%9D%91/" rel="tag"># 坑</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+              <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag"># 学习笔记</a>
           </div>
 
         
@@ -433,13 +380,10 @@ gyroscope, 3-axis accelerometer)</li>
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/03/02/%E6%9C%AB%E4%B8%96%E7%94%9F%E5%AD%98Instrument/" rel="prev" title="End-world Kit">
-      <i class="fa fa-chevron-left"></i> End-world Kit
+    <a href="/2022/03/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2022-03-02/" rel="prev" title="生活随笔-2022-03-02">
+      <i class="fa fa-chevron-left"></i> 生活随笔-2022-03-02
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" rel="next" title="EVMeter-理论篇">
-      EVMeter-理论篇 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -499,7 +443,7 @@ gyroscope, 3-axis accelerometer)</li>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#esp32-sensorkit-%E5%A1%AB%E5%9D%91%E8%AE%B0%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">ESP32-sensorKit 填坑记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">硬件设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#schematic"><span class="nav-number">2.1.</span> <span class="nav-text">Schematic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%911"><span class="nav-number">2.1.1.</span> <span class="nav-text">坑1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%912"><span class="nav-number">2.1.2.</span> <span class="nav-text">坑2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pcb"><span class="nav-number">2.2.</span> <span class="nav-text">PCB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9D%913"><span class="nav-number">2.2.1.</span> <span class="nav-text">坑3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%89%E7%BA%BF%E8%BF%BD%E8%B8%AA"><span class="nav-number">2.3.</span> <span class="nav-text">光线追踪！</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E5%BC%80%E5%90%AF%E5%85%89%E8%BF%BD%E7%9A%84%E6%B8%B2%E6%9F%93%E5%9B%BE"><span class="nav-number">2.3.1.</span> <span class="nav-text">未开启光追的渲染图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rtx-on"><span class="nav-number">2.3.2.</span> <span class="nav-text">RTX ON！</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%99%E6%98%AFkicad%E8%87%AA%E5%B8%A6%E7%9A%84%E5%AF%BC%E5%87%BA%E5%8A%9F%E8%83%BD%E5%AF%BC%E5%87%BA%E7%9A%84png"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">这是KiCad自带的导出功能导出的PNG</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E5%AE%8C%E5%BE%85%E7%BB%AD"><span class="nav-number">2.4.</span> <span class="nav-text">未完待续</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#to-be-continued..."><span class="nav-number">3.</span> <span class="nav-text">To be Continued...</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#emoemetrology%E6%B5%8B%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">EmoeMetrology测试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">原因分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%86%E6%98%AF..."><span class="nav-number">1.2.</span> <span class="nav-text">但是...</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%98%B6%E5%93%88%E5%98%B6%E5%93%88%E6%9D%A5%E8%87%AA%E7%BE%A4%E5%8F%8B%E7%9A%84%E7%88%B1"><span class="nav-number">2.</span> <span class="nav-text">嘶哈嘶哈(来自群友的爱)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E7%B2%BE%E5%AF%86%E5%9F%BA%E5%87%86%E6%BA%90"><span class="nav-number">3.</span> <span class="nav-text">如何设计精密基准源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#do-it"><span class="nav-number">4.</span> <span class="nav-text">Do it!</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E9%98%85%E8%AF%BB"><span class="nav-number">5.</span> <span class="nav-text">拓展阅读</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
