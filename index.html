@@ -188,10 +188,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-03-17 18:05:49 / 修改时间：18:06:34" itemprop="dateCreated datePublished" datetime="2022-03-17T18:05:49+08:00">2022-03-17</time>
+              <time title="创建时间：2022-03-17 18:05:49" itemprop="dateCreated datePublished" datetime="2022-03-17T18:05:49+08:00">2022-03-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-18 10:09:52" itemprop="dateModified" datetime="2022-03-18T10:09:52+08:00">2022-03-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -244,84 +250,14 @@
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift.png" alt="Temperature Drift" border="0"/></p>
 </center>
 <p>可以观察到在曲线的开始段，读数幅度有较大的波动起伏，总体呈现下降趋势。在曲线中间段，读数稳定了一段时间，然后又开始有略微起伏波动。</p>
-<!--center-->
-<h2 id="原因分析">原因分析</h2>
-<p>我想到的可能的原因如下:</p>
-<ul>
-<li>EMI/RFI干扰<br />
-</li>
-<li>高频噪声<br />
-</li>
-<li>低频噪声(1/f噪声)<br />
-</li>
-<li>基准电压源<br />
-</li>
-<li>PCB热设计问题</li>
-</ul>
-<p>首先我们可以排除高频噪声影响的可能性;AD7177-2自带的SINC3滤波器频域响应滚降性能优异,具有宽陷波频率,对高频噪声的衰减是非常可观的。</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-sinc3.png" alt="AD7177 SINC3 Filter" border="0"/></p>
-</center>
-<p>我对其编程的输出速率达到了其最低值,这时的噪声水平理论上只有 <strong>0.21uVpp</strong>。而根据测试数据的读数跳动来看，跳动值普遍在上万Codes之上，并不符合这一噪声特性。</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ad7177-noise.png" alt="AD7177 SINC3 Noise Performance" border="0"/></p>
-</center>
-<p>于是我开始怀疑基准电压源的布局设计问题，但是我拿着5位半万用表戳上去的时候，也没有观察到明显的读数跳动。。。pass。</p>
-<p>EMI/RFI问题，我直接给变压器串接了一个艾默生通信电源拆机下来的EMI滤波器，也没有观察到明显的改善迹象。。pass。</p>
-<p>低频噪声问题,我为此还在这半年期间专门制作了 <strong>噪声放大器(Noise Amplifier)</strong>,做的还算不错，虽然我做完之后就兴冲冲地去测量别的东西了，反倒忘了测这板子23333</p>
-<p>不过我最严重怀疑的是最后一个问题是—— <strong>PCB热噪声问题</strong>。经过测试,PCB工作约10分钟后,LDO部分有明显的温升,达到了约40-50°C。而模拟前端电路部分也达到了30-40°C左右，并且这部分的温升也传播到了ADC和基准电压源部分,造成了其工作环境温度发生明显变化。如果从这个角度来看的话，输出读数曲线的前部分与这个过程是非常吻合的——刚开始工作时,PCB大部分温度与室温相等，随着工作时间积累,元器件发热量也逐渐积累并在PCB上传播蔓延，最后达到一个相对稳定的状态。</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/drift_2.png" alt="Temperature Drift" border="0"/></p>
-</center>
-<p>而至于后面的跳动，我猜测是空气流动与空气湿度变化引起的温度波动所致。<br />
-(测试时我的板子裸露在空气中，并没有做隔热、恒温等措施)</p>
-<h2 id="但是...">但是...</h2>
-<p>虽然工作不是那么的稳定，但是...<strong>它真的很牛逼啊！</strong> 稳定的时候，读数<strong>连1count都不跳动</strong>(Fullscale = 2^32 = 4294967296 Counts)，这......多少有些离谱哦~</p>
-<p>这至少说明了我的前端电路工作是正常的:)<br />
-所以，后续的改进设计思路也非常清晰了:</p>
-<ul>
-<li>可以将板子做大一些，隔绝电源部分发热的影响;<br />
-</li>
-<li>将模拟前端和ADC、基准源放置在同一个恒温腔室内,工作时对其进行加热并恒温在一个高于室温的值(大约40-45°C左右吧),即使电路其他部分有稍微的温升，对信号链上的关键器件也不会造成影响;<br />
-</li>
-<li>将数字部分单独做一PCB,而不采用现行的一体化设计。ADC和模拟前端仅留出SPI通信接口和MUX控制接口,同时可以考虑使用隔离器进行模数隔离;<br />
-</li>
-<li>模块化设计,将基准电压源做成单独的小PCB板,并设计一通用接口,这样可以方便后续更换更高精度、更低温漂、更好的长稳特性的电压基准源(比如LTC6655、LM399、LTZ1000)。</li>
-</ul>
-<h1 id="嘶哈嘶哈来自群友的爱">嘶哈嘶哈(来自群友的爱)</h1>
-<p>非常感谢TT酱的赞助,送给我们几片 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/LTZ1000.pdf">LTZ1000</a></strong> 和 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/199399fc.pdf">LM399A</a></strong> 来支持我们的折腾(。・∀・)ノ</p>
-<p>可以去<a target="_blank" rel="noopener" href="https://space.bilibili.com/24434095/?spm_id_from=333.999.0.0">TT酱的b站</a>逛逛，TT超帅的!!）</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/ltz1000.jpg" alt="Ultra Precision Voltage Reference LTZ1000" border="0"/></p>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/lm399.jpg" alt="Precision Voltage Reference LM399" border="0"/></p>
-</center>
-<h1 id="如何设计精密基准源">如何设计精密基准源</h1>
-<p>打开LTZ1000的数据手册，在 <strong>Application Infomation</strong> 章节里,有LT注明的设计注意事项;总结如下就是:</p>
-<ul>
-<li><strong>规避 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E7%83%AD%E7%94%B5%E5%81%B6">热电偶</a> (Seebeck)效应</strong> (核心)<br />
-简单来说就是谨慎设计布局,保持LTZ1000的引脚与PCB连接处的热均衡,避免产生温差。<br />
-</li>
-<li>避免空气流动带来的 <strong>Drift(漂移)</strong><br />
-空气流会导致基准的温度浮动,从而导致输出电压发生Drift。由空气引起的drift在输出端观察,非常像低频1/f噪声(进一步验证了我之前的推测...)。所以设计密闭腔体和恒温室是比较好的选择。<br />
-</li>
-<li>避免 <strong>不相干</strong> 的热源干扰<br />
-当然,任何热源干扰都会影响精密电路的工作点。所以需要尽量隔绝这些影响,还是恒温腔室~ 同时,LTZ1000的布线宽度与长度需要尽可能达到热均衡,最小化温差。<br />
-</li>
-<li>精密电阻选择<br />
-当然的,设置工作点和外部运放增益的 <strong>精密电阻</strong> 也是至关重要的。在这里主要关心电阻的温度系数(Temp Coefficients),因为电阻的温漂也会带来热电偶效应。Vishay的精密薄膜电阻是最佳选择。(当然,非常贵)</li>
-<li>设计小PCB板,同时注意发热丝布线 在小PCB板上安装LTZ1000、电阻和运放,同时注意布线:加热丝电流不能流过基准负边的地(Q1的发射极),如果这样布线,公共地路径的存在会让加热丝电流的变化引起基准电压源产生误差。推荐 <strong>单点低阻抗接地</strong>方法。</li>
-</ul>
-<h1 id="do-it">Do it!</h1>
-<p>现在又一波疫情爆发,导致很多快递都无法运达。所以我现在暂时不能放开手脚大干一场...所以暂时等待吧-</p>
-<p>刚好这段时间可以好好休息休息，摸摸鱼 <del>(打死)</del><br />
-等我搞完了再来发文:)</p>
-<h1 id="拓展阅读">拓展阅读</h1>
-<p>在做噪声放大器时,我主要参考的是如下两篇 Application Note。</p>
-<p>AN-124是模拟电路大师 <strong>Jim Williams</strong>为测量Linear Technology生产的超低噪声基准电压源——LTC6655的噪声而设计的噪声放大电路,可称为精密小信号设计的典范。</p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an124f.pdf">AN-124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</a></p>
-<p>而AN-159是后来者 Todd Owen和Amit Patel参考AN-124,为了测量几款超低噪声(0.8uVrms)的LDO和其超高的PSRR而设计的噪声放大电路。</p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/en/app-notes/an-159.html">AN-159:Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
