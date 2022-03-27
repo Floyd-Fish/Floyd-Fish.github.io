@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="噪声放大器(Noise Amplifier)构建指南 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;    在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="噪声放大器构建指南">
+<meta property="og:url" content="https://floydfish.xyz/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="噪声放大器(Noise Amplifier)构建指南 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;    在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an159_box_osc.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/jim.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-124_sch.JPG">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-124_box.JPG">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-83_sch.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lt1028_datasheet.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-159_sch.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-159_sch_detail.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/shielding_box.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/shielding_arch.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_3.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_4.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/NoiseAMP_V1.0.svg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_3.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_4.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_5.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_6.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/50r_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/short_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k_zoomed.jpg">
+<meta property="article:published_time" content="2022-03-27T06:51:54.000Z">
+<meta property="article:modified_time" content="2022-03-27T06:52:30.373Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg">
+
+<link rel="canonical" href="https://floydfish.xyz/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>噪声放大器构建指南 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">32</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          噪声放大器构建指南
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-27 14:51:54 / 修改时间：14:52:30" itemprop="dateCreated datePublished" datetime="2022-03-27T14:51:54+08:00">2022-03-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="噪声放大器构建指南" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>噪声放大器(Noise Amplifier)构建指南</p>
+<p>=================</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg" alt="宇宙中传来的神秘噪声" border="0"/></p>
+</center>
+<p>在精密模拟信号链中，我们肯定不希望 <strong>噪声(Noise)</strong> 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。</p>
+<p>在开关电源(DC-DC)中,我们通常会测试其输出的 <strong>纹波(Ripple)</strong>,而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的。</p>
+<h1 id="一.示波器的极限">一.示波器的极限</h1>
+<p>然而，示波器是有极限的,因为通用示波器(我瞎编的名词)为了达到高带宽，通常需要选择采样率较高的ADC(GSa以上)，而这意味着ADC的分辨率不高(8至12位居多,少数16位顶天了)。而ADC的分辨率就直接决定了它所能量化的模拟信号的大小极限——低于ADC LSB的信号都无法被准确量化，全部淹没在滚滚红尘(指示波器前端底噪+ADC底噪)中......</p>
+<p>当然，你也可以选择高位数的ADC去搭建专用的采样系统。这种产品当然是有的咯，比如音频谐波分析设备,有高达32-bit分辨率的ADC和上百kSa的采样速度(对就是咱熟悉的Hi-Fi)。这样的系统的SFDR(无杂散动态范围)可达到100dB以上，但是其最高只能采集几十kHz的信号,奈奎斯特和香农两位大佬也为这种方法判了死刑...(指奈奎斯特采样定理)。</p>
+<h1 id="二.另辟蹊径">二.另辟蹊径</h1>
+<p>这时候有人可能就要问了,那些模拟芯片大厂的芯片数据手册里那些噪声数据是怎么测出来的呢？</p>
+<p>人类肉眼看不见树叶上的细胞，但是借助 <strong>显微镜</strong> 这一工具我们便可洞察生命的奥秘。同样的，对于我们难以接触到的微弱噪声，我们可以 <code>放大之</code> ！ 放大之后的信号，达到了示波器的测量范围内，我们就可以安心地将它送入示波器，观察它的时域波形了。同样的，我们也可以将其喂给频谱仪，看看它的频域特性。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an159_box_osc.jpg" alt="AN-159 Test Connection" border="0"/></p>
+<p>这个饼干盒很有毛子的味...万年风雪！</p>
+</center>
+<h2 id="放多大">2.1-放多大？</h2>
+<p>通常,对于10mVpp的信号,我们无需放大，我手边几个示波器的底噪水平通常在500uVrms~1mVrms之间(咱也没钱接触更贵的,有木有老板借一台玩玩😇),所以我们划定这样一个范围: 噪声rms值小于10mVrms的，都需要放大。而对于更小的信号,比如uV、甚至nV级别的信号,我们可能需要极高的放大倍数才能将它们放大至示波器的观测窗口内。</p>
+<h2 id="放大器的挑战">2.2-放大器的挑战</h2>
+<p>当然，这一路上总不可能一帆风顺。使用放大电路来放大噪声的一个致命问题是: <strong>放大器自身的输入噪声也将跟随信号链被放大</strong>。如果我要测量的噪声水平是1uVrms，而我的放大器输入本底噪声水平为5uVrms，放大器放大倍数为10000倍，那么在输出端我们能观测到60mVrms的输出信号。很显然我们要极力规避这种情况出现。放大器过大的底噪将让我们的测量结果不可靠。</p>
+<p>所以第一个挑战是，需要极低噪声的前端放大级，并且得保证其噪声水平远低于我们想要测量的最小信号。</p>
+<p>第二个挑战是,日益复杂的电磁环境会让我们的电路 <strong>夜不能寐</strong>。在周围空间中充满着无线电波和电磁干扰的时代，我们不得不考虑采取特殊的屏蔽措施来隔绝这些电磁干扰。你可能又要问了,我见你平时做电路也妹用这种屏蔽结构啊？——那是因为我平时做的电路对uV级别的高频感应、耦合噪声并不敏感，而噪声放大器不允许哪怕一丁点的感应、耦合噪声进入电路中。</p>
+<p>第三个挑战是，超级纯净的供电电源(这一环倒是简单些)。因为构建放大器的电路并不能完全抑制电源轨上的纹波和噪声，所以任何形式的开关电源都是不可行的。最好的办法是用 <strong>电池</strong>。后续我们详细展开。</p>
+<p>第四个，也是最重要的之一，是谨慎选择构成电路的元器件、PCB Layout、以及屏蔽结构的搭建。</p>
+<p>总之，这是一项不那么容易的工作。想要达到最佳效果，需要极其谨慎地对待任何一个环节。</p>
+<h1 id="三.资料准备">三.资料准备</h1>
+<p>主要分为ADI(Linear Technology)的应用指南、模拟对话、技术文章，以及一些相关专业书籍和参考文献;</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an83f.pdf">AN-83:Performance Verification of Low Noise,Low Dropout Regulators</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an124f.pdf">AN-124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/en/app-notes/an-159.html">AN-159:Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/41727248an_347.pdf">AN-347:Shielding and Guarding</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://dcc.ligo.org/public/0002/T0900200/001/current_noise.pdf">LIGO:Resistor Current Noise Measurements</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.maximintegrated.com/en/design/technical-documents/app-notes/6/6206.html?__cf_chl_captcha_tk__=pmd_ubV5VJCDAFo5ohth46FEZaZeyc4tVQbD9RaF6BrGH_o-1635168698-0-gqNtZGzNA2WjcnBszQu9">AN-6206(MAXIM, 现在也变成ADI的了...):SIMPLE, EFFECTIVE METHOD AND CIRCUIT TO MEASURE VERY-LOW 1/F VOLTAGE REFERENCE NOISE (&lt; 1mVP-P, 0.1HZ TO 10HZ)</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">[魔法电路]-电路中的噪声</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/training-seminars/tutorials/MT-048.pdf">MT-048:Op Amp Noise Relationships: 1/f Noise, RMS Noise, and Equivalent Noise Bandwidth</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="http://www.mu-metal.com/uploads/5/4/5/0/54501895/mu-2_mumetal_brochure.pdf">Mu-Metal Brochure</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.kjmagnetics.com/blog.asp?p=shielding-materials">K&amp;J Magnetics: Shielding Materials</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/low-noise-inamp-nanovolt-sensitivity.html">Analog Dialogue:无烦恼，高增益：构建具有纳伏级灵敏度的低噪声仪表放大器</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/raqs/raq-issue-138.html">Analog Dialogue:该噪声会让您夜不能眠</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/studentzone/studentzone-june-2017.html">Analog Dialogue:对电阻使用的经验法则说不</a></li>
+</ul>
+<p>那么让我们开始这项激动人心的工作。</p>
+<h1 id="四.jim-williams的工作-an124">四.Jim Williams的工作-AN124</h1>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/jim.jpg" alt="Jim Williams" border="0"/></p>
+<p>Jim Williams是一位具有传奇色彩的模拟电路工程师,永远缅怀。</p>
+</center>
+<p>2009年7月，Jim Williams发表了 <strong>Application Note 124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</strong>，文章的副标题是 <strong>"Quantifying Silence"</strong> (量化寂静)，有股诗人的气息🤔</p>
+<p>这篇笔记中，为了测量 <strong>LTC6655</strong> 精密基准电压源芯片的输出噪声,Jim搭建了一个 0.1Hz至10Hz 的噪声放大器,精确地测量了LTC6655的输出电压噪声为775nVpp。以下是Jim的电路图。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-124_sch.JPG" alt="AN-124 Schematic" border="0"/></p>
+</center>
+<h2 id="设计思路">4.1-设计思路</h2>
+<p>我们来看看Jim是怎么设计这种精密小信号放大电路的:</p>
+<ol type="1">
+<li>使用1300uF的液态钽电容(经过特殊挑选出的具有极低漏电流种类)和极低噪声的1.2k电阻器构成0.1Hz的高通网络,用于隔绝DC及交流信号耦合;耦合线路完全屏蔽以隔绝任何可能的电磁干扰。<br />
+</li>
+<li>使用 <strong>噪声极低</strong> 的JFET作为输入级,运放A1负责稳定Q1和Q2的直流工作点,JFET和A2构成了具有10000倍电压增益的复合超低噪声放大器。(增益由100k电阻和10Ω电阻设定)。<br />
+</li>
+<li>整个低噪声放大前端被放置于金属屏蔽罩中，并且使用干电池供电,因为干电池具有极低的噪声(uV水平)。</li>
+</ol>
+<p>虚线框以外的电路是后级信号处理。噪声信号经过10000倍放大之后，已经不惧怕微弱的电磁干扰信号了，所以无需做屏蔽处理，进而可以转为常规放大器、滤波器设计思路。我们重点关注虚线框内的部分。</p>
+<center>
+<p>整个低噪声放大电路被放置于金属屏蔽腔内。利用"法拉第笼"效应屏蔽外界电磁干扰信号</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-124_box.JPG" alt="AN-124 Shielding Box" border="0"/></p>
+</center>
+<p>因为对于电压基准源，主要关心它的低频噪声,也就是 <strong>1/f噪声</strong>,所以Jim设计这个放大器时仅仅只提取了0.1Hz到10Hz范围内的噪声进行放大处理。做好屏蔽、挑选合适的元器件、应用适当的布线技术，这样一个低频噪声放大器就出炉了~</p>
+<h2 id="更高带宽">4.2-更高带宽</h2>
+<p>随着技术进步，更牛逼的新器件如雨后春笋般诞生。其中就有LT生产的几款 <strong>超高PSRR(120dB)、极低噪声(0.8uV)的低压差线性稳压器(LDO)</strong> —— LT3042&amp;LT30453094等型号LDO。</p>
+<p>为了测量这些LDO的噪声水平和在宽频率范围内的超高PSRR,Jim之前为低频测量所涉及的噪声放大器已不再适用,需要新的高带宽噪声放大器才能满足我们的需求。</p>
+<h1 id="五.20uvrms宽带噪声测量-an83">五.20uVrms宽带噪声测量-AN83</h1>
+<p>在2000年,Jim和Todd Owen攥写了 <strong>Application Note 83:Performance Verification of Low Noise,Low Dropout Regulators</strong>，副标题是 <strong>"Silence of the Amps"</strong>(电流之静)。</p>
+<center>
+<p>AN-83电路结构及电路图</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-83_sch.jpg" alt="AN-83 Schematic" border="0"/></p>
+</center>
+<p>这个电路使用的LT1028是极低噪声高速运算放大器,使用2个LT1028单元构建了1000倍电压增益放大器，每级增益约30多倍，具体参数如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lt1028_datasheet.jpg" alt="LT1028 Datasheet" border="0"/></p>
+</center>
+<p>其GBW为50MHz，那么对于100k的信号来说30多倍电压增益肥肠合适。但对于更高带宽(比如MHz)，这个电路仍然具有局限性。并且，这个电路的设计目的是测量20uVrms的噪声，电路的本底噪声(Noise Floor)为4uVpp(0.5uVrms)，本底噪声贡献的测量误差不大，所以可以满足测量需求。</p>
+<p>但来到0.8uVrms的领域，0.5uVrms的本底噪声就不可接受了。</p>
+<h1 id="六.0.8uvrms宽带噪声测量-an159">六.0.8uVrms宽带噪声测量-AN159</h1>
+<p>为了测量0.8uVrms的噪声，我们需要噪声放大器的输入级拥有更低的输入噪声。<br />
+Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</strong>，副标题是 <strong>"The quest for quiet"</strong>(寻求宁静)。</p>
+<p>要测量小于1uVrms的噪声是一项 <strong>挑战</strong>。<br />
+假设在10Hz到100kHz的频带内噪声是1uVrms，这等效为 3.16nV/√Hz 的噪声密度(假设为白噪声)，这个水平等效于一个 <strong>625Ω电阻</strong> 的热噪声！要在这个电压水平下测量噪声并达到5%的精度,噪声放大器的输入噪声必须达到 1nV/√Hz 的水平。如果要达到1%的测量精度,噪声放大器的输入噪声甚至要达到 <code>450pV/√Hz</code> 的水平。</p>
+<h2 id="设计考量">6.1-设计考量</h2>
+<p>在我们对噪声放大器的本底噪声应该是多少心里有数了之后,我们要想想——需要测什么？</p>
+<p>通常我们会测量10Hz到100kHz的宽带噪声，这个频段包含了音频频带,以及射频传输的基带数据边带。在锁相环(PLL)和高精确度仪表电路中,我们需要测量1MHz及以上的噪声水平。所以我们需要超越之前的所有工作，将测量的界限拓展至MHz。</p>
+<p>如何提取特定带宽内的信号呢？当然是用滤波器咯。但是滤波器并不能保证对于不想要的信号有100%的衰减，所以我们可以选用高阶的butterworth滤波器，这样即可以保证通带平坦度，也可以使滤波器的频率特性尽可能地接近完全截断的"砖墙式"响应。(通带至阻带的快速衰减)。</p>
+<p>当然，滤波器的等效噪声带宽也是我们需要考虑的:2阶低通ButterWorth滤波器的等效噪声带宽是 1.11fH，带来的误差过大;4阶低通ButterWorth滤波器的等效噪声带宽是1.026fH，约给最终结果带来1.3%的误差，可以接受。当然，更高阶的Filter会使误差进一步减小，但是增加的器件和设计成本不合算。4阶滤波器的误差与输入参考噪声引入的误差相耦合，表明在5%以内的测量要求放大器的输入参考噪声贡献不超过1%的最大误差。</p>
+<p>同样地，增益大小也是我们需要仔细斟酌的。如果增益太低,测量仪器(示波器、频谱仪)的本底噪声将混入输出结果，误差就起飞了，而且输出信号如果小于仪器的底噪，那根本看不到结果。。。综合考量之后，选择了80dB的电压增益值，也就是10000(10k)倍。0.8uVrms的噪声信号经由这个电路放大后，输出将达到8mVrms。</p>
+<h2 id="系统架构电路图">6.2-系统架构&amp;电路图</h2>
+<p>经过一番设计与调查，我们可以得出这样一个新一代噪声放大器的系统框图:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-159_sch.svg" alt="AN-159 Schematic" border="0"/></p>
+</center>
+<p>第一级为0.5Hz高通滤波器，同时发挥了隔直流的作用。<br />
+第二级为超低噪声的前放,增益设定为25。这一级需要使用特殊器件来实现。<br />
+第三级是5Hz高通滤波器，同样也能隔直流，所以前放的直流误差无关紧要。<br />
+下一级又是一个增益单元,增益为20,但是这里不再对噪声有过高的要求,因为此时输入噪声已经被放大了25倍,这一级的噪声只要不太离谱,所贡献的总误差就不会太大。<br />
+在经过10Hz的2阶SK高通滤波器后,又是一个20倍增益的增益单元。经过这一级的放大后,电路总增益达到了80dB(25x20x20=10000)。<br />
+然后对应地使用缓冲器和滤波器,提取出我们感兴趣的信号频段,作为不同的输出。</p>
+<p>具体的电路图如下所示:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-159_sch_detail.svg" alt="AN-159 Schematic" border="0"/></p>
+</center>
+<p>输入级的RC值 <strong>必须</strong> 谨慎选择。这里用的是680uF和499Ω电阻的组合(0.5Hz高通)。电阻值必须很低，不然输入级的偏置电流会导致过大的DC误差，致使前放饱和。但如果电阻值太小，为了实现0.5Hz的高通滤波器，电容值相应地就得变大，太大的电容也难以接受。小电阻也会让这个RC滤波器成为待测设备(LDO)的频率补偿网络的一部分，改变测量的结果。</p>
+<h3 id="critical-stage">6.2.1-Critical Stage！</h3>
+<p>该电路的输入级要求非常严格。它需要在提供 <strong>高带宽(MHz级别)</strong> 下的 <strong>高增益(G=25)</strong> 的同时保持 <strong>极低的输入噪声(450pV/√Hz)</strong>。常规的运算放大器已经不能满足设计要求,即使是地球上最低噪声的运算放大器——AD797(0.9nV/√Hz，GBW=50MHz)都不能满足这个需求。</p>
+<p>幸运的是，还是有解决办法的。根据Jim Williams之前的工作(AN-124, 775nV那篇),使用一对精确匹配的差分晶体管对来驱动运放的输入，既可以实现高带宽下的高增益，又能保持极低的输入噪声水准。以大约80的增益运行差分对意味着晶体管的噪声占主导地位，所以运算放大器的噪声不是主要因素。</p>
+<p>超低噪声输入级由2对 <strong>THAT300</strong> 匹配晶体管并联组成(降低输入噪声,原因见下)，跟随一个LT1818组成总增益为25的低噪放大级。<strong>THAT300</strong>是4个被封装在SO-14封装内的精密匹配晶体管,其Vbe差别在500uV内，输入噪声典型值为 800pV/√Hz。因为需要较高的增益带宽积,选择LT1818作为放大器。</p>
+<p>将多个输入单元并联可以有效降低本底噪声。放大器电路并联时，噪声水平会随并联数量下降，N级并联可使噪声降低 √N 倍。2对晶体管对并联可将噪声降低至800pV/√Hz,然后通过将4个完整的输入级并联在一起,进一步将输入噪声降低2倍，达到400pV/√Hz。</p>
+<p>紧跟着的是330uF和100Ω电阻的串联，可以移除前级放大器中产生的任何直流失调误差。同时他也提供了5Hz的高通滤波，有助于建立整个系统的频带响应。所有的4个输入级并联相加，输入下一级20倍固定增益放大级。由于微弱噪声已经被放大25倍，次级放大器的噪声所带来的影响就不是那么重要了。</p>
+<p>10Hz 二阶高通滤波器是一个简单的单位增益 Sallen-Key 结构滤波器。同样的，这一级也有着交流耦合，能够消除任何直流误差带来的影响。信号放大链中的最后一级是一个简单的反相放大器。因为前面的元器件都存在或多或少的误差,所以这一级采用了可变增益设计，可以用电位器微调这一级的增益，范围是15-25。在这一级过后，信号分为3路，分别送入单位增益缓冲器、1MHz截止频率4阶ButterWorth滤波器、100kHz截止频率4阶ButterWorth滤波器，分别提供10Hz-宽带输出、10Hz-1MHz带限输出、10Hz-100kHz带限输出。</p>
+<h3 id="选择合适的元器件">6.2.2-选择合适的元器件</h3>
+<p>对于任何电路，选择合适的元器件都是至关重要的。在超低噪声测量领域，更是如此。在噪声放大器的设计中，低噪声输入级是最为重要的，它直接决定了整个电路的底噪水平、测量精度和性能。当解决了输入级后，设计后级电路可谓 <strong>"如释重负"</strong>。输入级的RC滤波器元件选择更是重中之重。</p>
+<p>电阻的选择没有什么争议，因为要确保极低1/f噪声水平，所以需要选用金属膜电阻。电容则显得更为重要。在Jim之前的AN-124中，为了确保极低1/f噪声，使用了一个液态钽电容，并且经过人工挑选，找出了泄漏电流最低的一个。当测量频率下降至0.1Hz时，这些特性至关重要。但是对于10Hz到宽带噪声，我们可以选择一些成本稍低些(便宜多了，液态钽电容我搜了一圈，都买不到...)的钽电容。但是有一点，输入耦合电容绝对不能使用 <strong>多层陶瓷电容</strong>，因为它们本身具有 <strong>压电陶瓷效应</strong>，若电路板有些许震动，电容内部将会产生额外的噪声。虽然这些噪声不大,但对于噪声放大器来说却是致命的存在。另外，陶瓷电容的电压效应(容量随着电容两端的电压发生变化)将会改变RC滤波器的截止频率，从而导致测量带宽误差，这也是我们不希望看到的。钽电容或铝电解电容非常便宜(相对的),而且没有明显的压电陶瓷效应和电压效应。更昂贵的电容比如聚对苯二甲酸乙二酯薄膜电容也可以考虑，但是这种电容不好买而且非常贵，所以打咩打咩。</p>
+<p>所以，陶瓷电容pass，液态钽pass，聚对苯二甲酸乙二酯薄膜电容pass，剩下钽电容和铝电解电容。虽然钽和铝电解电容相比之下有更高的噪声水平，但它们不对机械振动敏感，容值不随偏压变化，所以它们是低成本下的最佳选择。在此我们选择标准钽电容，并且使用多个钽电容并联，一是可以拥有更高的耐压，二是可以达到需要的容量(毕竟还挺大的，680uF)，并且多个并联也可以利用统计平均(跟之前的运放单元并联降噪原理一样)来降低电容带来的噪声。</p>
+<p>同样的，在前放和第二级放大器之间的耦合也基于同样的原因，选择了钽电容作为耦合电容。即使输入噪声已经被放大过了，但陶瓷电容的压电效应还是会产生显著的噪声从而导致误差，所以不用陶瓷电容。</p>
+<p>当然，输出级的电容选择就比较随意了，可以选择低成本的贴片陶瓷电容，同时输出信号几乎没有直流偏置，所以陶瓷电容的容值接近我们的期望值。在第一级放大器中300pF的补偿电容、滤波器中的电容都需要选用C0G或NP0材质，亦或是稳定性更高的聚对苯二甲酸乙二酯薄膜电容，因为采用这些电介质的电容几乎没有压电效应和直流偏压导致的容值变化,同时温度稳定性也更好。</p>
+<p>整个电路的电源也是至关重要的。因为电路中所有的有源器件都不具备无限的电源抑制比(PSRR)，所以电源轨上的任何噪声都会耦合进电路并带来测量误差。在AN-159里，使用了碱性干电池作为电源，因为碱性干电池具有极低的噪声并且避免了在整个设备中可能存在地环路(可能会影响电路正常工作)。</p>
+<h3 id="实际电路的限制">6.2.3-实际电路的限制</h3>
+<p>考虑到噪声放大器的增益是如此之高(80dB，10000倍)，我们必须估算它可接受的输入范围是多少。 首先考虑输出级运放的输出能力，LT1365并不能轨到轨输出，如果采用±4.5V电压为电路供电，它能输出的电压摆幅约为±3.5V，意味着输入信号超过350uVpp就会导致输出饱和。设想最坏的情况，假设波峰因数为10的高斯白噪声，仅仅70uVrms的该噪声就会让输出达到最大。</p>
+<p>钽电容的正确偏压也是必须要考虑且在实际使用时要遵守的。对于输入隔直电容，晶体管几乎工作在地点位，所以如果待测试的源是正电源，那么需要将输入耦合钽电容的正极连接到待测源正极。相对的，如果测量负电源，则需要反接。对于前放后面的隔直&amp;滤波电容，需要将电容负极连接到前放的输出级。因为晶体管的基极电流流过499Ω电阻，导致基极电位为负(虽然程度很小)，但经过25倍放大后，仍是很可观的负偏压。</p>
+<h2 id="建造屏蔽盒">6.3-建造屏蔽盒</h2>
+<p>下图展示了AN-159所使用的屏蔽盒结构。核心的噪声放大器板子和6节碱性干电池被一起包裹在最内层的 <strong>坡莫合金</strong> 外壳中。坡莫合金具有高磁导率，可以有效屏蔽极低频磁场(比如工频)。在坡莫合金外，包裹了2OZ厚的双面覆铜板做成的屏蔽壳，金属铜具有高电导率，能有效屏蔽射频干扰。最外层是一个铁罐(饼干盒改造的)，铁具有电导性同时具有磁导性，可以作为最外层的磁屏蔽屏障。总共3层屏蔽壳，每个屏蔽壳之间留些间隙用于衰减磁场。更详细的屏蔽材料信息请参阅 <strong>附录1-磁屏蔽材料</strong></p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/shielding_box.jpg" alt="Cookie Shielding Box" border="0"/></p>
+<p>美味的Cookie Box.</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/shielding_arch.svg" alt="Cookie Shielding Box" border="0"/></p>
+<p>屏蔽盒的结构详解。</p>
+</center>
+<p>请注意上述屏蔽盒的结构图左右两端BNC的连接处说明:</p>
+<ul>
+<li>将输入同轴线的屏蔽层连接到BNC的外壳，并连接到金属屏蔽外壳上。<br />
+</li>
+<li><strong>不要将输出同轴线的屏蔽层</strong> 连接到BNC的外壳。</li>
+</ul>
+<h3 id="为什么要这样连接">6.3.1-为什么要这样连接？</h3>
+<p>为了理解其中的原因，我们需要理解容性耦合噪声的产生机理。</p>
+<center>
+<p>AN-347: Grounding and Shielding</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_3.jpg" alt="Capacitance Coupling Noise" border="0"/></p>
+</center>
+<p>如果噪声由电场产生,那么一个封闭导体可以屏蔽外界的任何电荷产生的电场，外部电势无法影响封闭导体表面包裹起来的空间。</p>
+<p>一个有效的电场屏蔽罩需要连接到由屏蔽罩包裹起来的电路的电势参考点，不过这个电势参考点不是任何时候都是电路中的 <strong>GND</strong>。如果被保护起来的信号的参考点是 GND，那么屏蔽罩也要连接到GND。但如果信号不是以地为电势参考点的，而屏蔽罩连到了GND，那么屏蔽罩是无效的。</p>
+<p>信号线的屏蔽层应该连接到该信号的参考电势点。如果系统中有多段屏蔽，那么屏蔽层需要逐级连接起来。如下图所示:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_1.jpg" alt="Connect to reference potential" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_2.jpg" alt="Adjoining segments Connect together" border="0"/></p>
+</center>
+<p>但是绝对不能将屏蔽层的两端分别接到不同的地上。即使在电气结构上这两个地是导通的，但地上2点之间的电阻并不为0，地上的电流会在2个不同的接地点产生电势差，从而导致屏蔽层的两端有电势差，形成屏蔽层内的电流，称为 <strong>"Shield Current"</strong>。这个电流将通过磁耦合效应在被保护的线缆上产生噪声。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-347_4.jpg" alt="Adjoining segments Connect together" border="0"/></p>
+</center>
+<p>所以，噪声放大器的输入同轴线屏蔽层需要连接到屏蔽结构的外壳上，而输出屏蔽层绝不能连接到外壳上。除开可能的噪声外，如果将输出屏蔽层连接至外壳上，极有可能产生我们不希望的地环路，甚至会引起高倍增益放大电路的自激振荡。</p>
+<h3 id="额外的注意事项">6.3.2-额外的注意事项</h3>
+<p>吃完美味的Cookie之后，我们要把它拿来作为屏蔽壳，但是别忘了将饼干盒的边缘上的绝缘漆层刮掉，并拿砂纸好好地打磨一下。这样可以保证盒子的盒身与顶盖有良好的电气接触，保证屏蔽的效果。同时在盒子上开孔的时候，记得将BNC外壳与盒身接触的地方的漆刮掉，保证BNC接头的外壳与饼干盒的金属部分有良好的接触。</p>
+<p>即使我们做了如此完备周全的屏蔽结构设计，测量时还是不能掉以轻心。如果输入线过长(超过10cm)，不完善的屏蔽层极有可能导致输入噪声变大，从而造成巨大的误差。推荐的连接是在待测电路板上使用SMA连接器，通过转接头直接接入噪声放大器的输入，杜绝任何未经屏蔽的连接线。同时我们如果需要做最精密的测量时，我们需要一个几乎没有电磁干扰源的实验场地。但一般的测量在普通环境是可以实现的，除非你作死抱着这东西跑到发电站或是通信基站旁边去测(应该没人这么憨...)</p>
+<h1 id="七.build-our-own-noiseamplifier">七.Build Our Own NoiseAmplifier</h1>
+<p>有了以上3篇应用手册的铺垫，做一个噪声放大器似乎并没有想象中的那么困难了。但是考虑到国情与市场情况，以及前几篇手册的年代，我们若想1：1地复刻AN-159的电路还是有些困难的。</p>
+<p>首先，前放中的核心器件——<strong>THAT300</strong>匹配晶体管,在国内不好买到。<br />
+其次，几款运算放大器买新的也挺贵的。有的型号甚至缺货、停产。<br />
+看来我们得对这个电路进行一些 <strong>"本土化、现代化"</strong> 改造了。</p>
+<h2 id="rev1.0">REV1.0</h2>
+<p>在淘宝某拆机店,我们买到了ADI现在还在生产的匹配晶体管阵列,<code>MAT04</code>,用于取代THAT300。但THAT300的输入噪声为0.8nV/√Hz,而MAT04的典型值是2.5nV/√Hz。看来得牺牲一(很)些(多)性能了。</p>
+<p>运放的话，我选了拆机店里能买到的<code>AD8056</code>作为前放和中间的滤波级,后级的高倍放大改用了轨到轨输出的ADA4895-1。输出级2个滤波器用了2片ADA4851-2，具有高增益带宽积同时具备轨到轨输出能力。</p>
+<p>总的电路图长这样，架构上与AN-159完全一致。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/NoiseAMP_V1.0.svg" alt="Noise Amplifier REV1.0 Schematic" border="0"/></p>
+</center>
+<p>最后做出来是这个效果:</p>
+<center>
+<p>装在覆铜板屏蔽壳中的PCB，覆铜板外壳内侧贴附了 1J85坡莫合金 贴膜。 <img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_1.jpg" alt="Noise Amplifier REV1.0 PCB" border="0"/></p>
+<p>输出端的同轴线线芯与BNC母座芯连接，屏蔽层与外壳不连接。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_2.jpg" alt="Noise Amplifier REV1.0 Output Connection" border="0"/></p>
+<p>输入端的同轴线线芯与BNC母座芯连接，屏蔽层与BNC外壳(整个屏蔽结构)连接。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_3.jpg" alt="Noise Amplifier REV1.0 Input Connection" border="0"/></p>
+<p>安装好电路板后，扣上18650电池仓。通过覆铜板外壳上的钮子开关控制电源。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_4.jpg" alt="Noise Amplifier REV1.0 Battery Pack" border="0"/></p>
+<p>全部组装完成，将覆铜板盖上，拧上螺丝以保证封闭壳体与良好电气接触。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_5.jpg" alt="Noise Amplifier REV1.0 Copper Box" border="0"/></p>
+<p>最外层饼干盒上开3个BNC座的孔，刮掉孔周围的漆，保证良好电气接触。3个孔作为输出，连接到示波器用于观侧输出波形。同样的，饼干盒与盖子接触的部分也需要刮掉漆。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_6.jpg" alt="Noise Amplifier REV1.0 Cookie box" border="0"/></p>
+</center>
+<p>组装完成后，便可试试它的威力了。 经过测试，输入用50欧SMA负载头堵上，10Hz到100kHz的输出幅度约为842uVrms。而如果直接将其短接,10Hz到100kHz输出幅度约为743uVrms，下降约100uVrms,折合到输入端，估算一50欧电阻在室温下产生的带限白噪声(10Hz至100kHz)约为40nVrms(?),不知道我的估算对不对。</p>
+<p>同时，也可以得出这个噪声放大器的底噪水平,约为55nVrms。(示波器输入短接可观测到500uVrms的底噪，混入噪声放大器底噪放大后的输出,平方和开根号,得到743uVrms)。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/50r_100k.jpg" alt="50 Ohms Input Noise" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/short_100k.jpg" alt="Shorted Input Noise" border="0"/></p>
+</center>
+<p>然后再让我们测测LM399的输出噪声。<br />
+前几天TT酱送来的LM399,我用洞洞板做了个测试板,将其连接到噪声放大器的输入,注意我的连接方式哦~</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399.jpg" alt="LM399 Connection" border="0"/></p>
+<p>将时基拉到500ms/div，观测到约17.6mVrms的带限噪声，折合约1.76uVrms。LM399手册中标注其10Hz到10kHz带限噪声最大为50uVrms，典型值为7uVrms，我有点怀疑...</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k.jpg" alt="LM399 Output Noise 100k" border="0"/></p>
+<p>如果将时基拉小，极低频噪声采不到了，噪声水平下降至9.19mVrms。。。</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k_zoomed.jpg" alt="LM399 Output Noise" border="0"/></p>
+</center>
+<h2 id="rev2.0">REV2.0</h2>
+<p>做完第一版之后,我仍然不满足。<br />
+第一点是,为了保险起见我没敢更改AN-159奠定的架构,即利用低噪声的晶体管作为输入级驱动运算放大器输入。然而人家用的晶体管噪声水平比我低好多倍...所以导致我的这一版本底噪很大。(虽然用起来也很好用诶)</p>
+<p>第二点是,一层层的屏蔽结构导致整个放大器的体积庞大，而且想要给18650充电还得把盖子掀了，取出螺丝，再把电池抠出来充电...我有将整个仪器小型化的想法,同时增加充电功能。</p>
+<p>为此,我开始筹划第二版的计划。<br />
+首先我们需要注意的一点是, <strong>2022年,已经有能够满足我们需求的运算放大器面世了</strong>，虽然其噪声水平仍然高于某些晶体管与场效应管,但通过统计平均这一手段,我们有可能在一定的范围内挑战极限。</p>
+<p>// 施工ing</p>
+<h1 id="附录1-磁屏蔽材料">附录1-磁屏蔽材料</h1>
+<h1 id="附录2-">附录2-</h1>
+<h1 id="后记">后记</h1>
+<p>说是后记，其实也只是我个人的一点感想。</p>
+<h2 id="part1">Part1</h2>
+<p>翻看《模拟电路设计手册-晋级应用指南》一书时,Jim Williams的前言中的一段话深深触动了我。</p>
+<blockquote>
+<p>第一篇文章的攥写耗时近两个月，随后才慢慢变得容易起来。随着实验技巧的不断积累，我找到了更有效的写作方法，从而使书稿充分适应了功能的增加和修改。很快，基本上每两周左右我就能完成一篇书稿。在肾上腺素、焊锡、铅笔、纸张和披萨饼的支持下，干劲十足。<br />
+在随后的一年中，生活基本变成每周七天没日没夜不停地奔波于公司和家庭实验室之间，不断重复着面包板实验和书稿攥写。我的日常饮食对于心脏病专家来说简直就是噩梦。我不记得在家里吃过晚餐，冰箱中没有食物，存放的都是用于示波器照相机的精选宝丽来胶卷。如此疯狂的工作撕毁了正常社会生活的任何伪装。在旧金山的晚宴上，表面上倾听着女伴对其工作难度的抱怨，心里却在默算复合放大器中的最佳斩波器-通道分频点。这种疯狂的生活一直持续了一年左右，取得的成果就是从1983年6约到1987年11月撰写的35篇长篇文章。<br />
+现在我仍然在写作，不过远没有当初那么疯狂。如今，当实验室的年轻人向我抱怨不太会写技术文章时，我努力表现成并没有慢慢变成吝啬鬼的样子。我想几近25年前的疯狂与泪水是造成如今缺乏感情的主要原因。现代的年轻人，手握完整的产品目录，却不明白它们究竟拥有些什么。<br />
+——Jim Williams<br />
+科技研究员<br />
+凌力尔特公司</p>
+</blockquote>
+<p>我也有过如此疯狂的时刻，但那时的我远没有Jim这样深厚的功底，所谓的折腾在现在看来只是瞎玩而已。<br />
+"疯狂"看似疯狂，其实内心也是十分宁静。无人打搅，心如止水，聚精会神。回想了一下当初的感受，对于个人而言是十分愉悦的。但对于旁人来说可能觉得我中了邪一样。<br />
+无论做什么，全心全意地投入到一件事当中去——这种经历确实是十分难得的。即使现在的我试图找回这种感觉，试图抛弃一切"正常社会生活的任何伪装"，我再也难以做到了。<br />
+我不知道在剩下的漫长又短暂的人生中，还有没有这样疯狂的机遇，再次遇到时，我又会怎样选择？融入社会生活太久之后，反而失去了不顾一切摆脱它的勇气。</p>
+<p>时代在发展，世界在变化，人也是。我想我应该可以找到一个微妙的平衡点，比如我现在的状态;努力且认真地填坑，填完坑跟鸽子们去大吃特吃，吃完回来聊聊天，打两把斗地主(笑)，然后继续完成自己的工作。我很享受这样的工作状态，唯一的遗憾是这种生活转瞬即逝:再有不到3个月我就要毕业，离开这个存有我4年的迷茫与唏嘘、激情与热血的学校，离开我所熟悉的实验室和朋友们，走向未知的领域。</p>
+<p>过去总是梦想着成为什么人，但现在我只想成为自己。<br />
+"人生的第一个观众,也是唯一一个观众,就是自己"。</p>
+<h2 id="part2">Part2</h2>
+<p>似乎我在精密测量的道路上越走越远了。<br />
+当深入一个领域时，才会发现人类迄今为止所积累的科学技术与工程经验是如此...震撼人心。人类的知识会传承，所以可以让后来人(比如菜鸡我)站在前人的肩膀上远眺未来。<br />
+我被激光干涉引力波天文台(LIGO)的精密测量与信号调理方案深深震撼,对欧洲核子研究中心(CERN)的高光度强子对撞机心驰神往,为每一个人类探索未知、挑战自我的科学工程心潮澎湃。刘慈欣在《朝闻道》中写道:</p>
+<blockquote>
+<p>"这个原始人仰望星空的时间超过了预警阈值，已对宇宙表现出了充分的好奇。至此为止，已在不同的低点观察到了10例这样的超限事件，符合报警条件。"<br />
+"如果我没记错的话，你前面说过，只有当有能力产生创世能级能量过程的文明出现时,预警系统才会报警。"<br />
+"你们看到的不正是这样一个文明吗？"</p>
+</blockquote>
+<p>我们总是会思考生存的意义，思考为什么活着，但往往以失败告终。可能生活本来就无意义，活着的意义就是活着，追求自己想要的事物，不经意间邂逅生命中的佳人。对于我来说，可能往人类突破极限的方向一瞥，就是我生存的意义吧。毕竟我菜到并不能直接参与那些exciting的工作，只能远远地望一眼，给开拓者端茶送水，也是不错的生活。</p>
+<hr />
+<p>以上是中二<del>少年</del>青年的中二发言，烦请无视。(唉我怎么都奔三了。)</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thanks for your support!</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="Floyd-Fish 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Floyd-Fish 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/17/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-EmoeMetrology/" rel="prev" title="微观尽头——精密信号测量-EmoeMetrology">
+      <i class="fa fa-chevron-left"></i> 微观尽头——精密信号测量-EmoeMetrology
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80.%E7%A4%BA%E6%B3%A2%E5%99%A8%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">1.</span> <span class="nav-text">一.示波器的极限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C.%E5%8F%A6%E8%BE%9F%E8%B9%8A%E5%BE%84"><span class="nav-number">2.</span> <span class="nav-text">二.另辟蹊径</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%9A%E5%A4%A7"><span class="nav-number">2.1.</span> <span class="nav-text">2.1-放多大？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%A7%E5%99%A8%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.2.</span> <span class="nav-text">2.2-放大器的挑战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89.%E8%B5%84%E6%96%99%E5%87%86%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">三.资料准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B.jim-williams%E7%9A%84%E5%B7%A5%E4%BD%9C-an124"><span class="nav-number">4.</span> <span class="nav-text">四.Jim Williams的工作-AN124</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1-设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E9%AB%98%E5%B8%A6%E5%AE%BD"><span class="nav-number">4.2.</span> <span class="nav-text">4.2-更高带宽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94.20uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an83"><span class="nav-number">5.</span> <span class="nav-text">五.20uVrms宽带噪声测量-AN83</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD.0.8uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an159"><span class="nav-number">6.</span> <span class="nav-text">六.0.8uVrms宽带噪声测量-AN159</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E8%80%83%E9%87%8F"><span class="nav-number">6.1.</span> <span class="nav-text">6.1-设计考量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E7%94%B5%E8%B7%AF%E5%9B%BE"><span class="nav-number">6.2.</span> <span class="nav-text">6.2-系统架构&amp;电路图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#critical-stage"><span class="nav-number">6.2.1.</span> <span class="nav-text">6.2.1-Critical Stage！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E5%85%83%E5%99%A8%E4%BB%B6"><span class="nav-number">6.2.2.</span> <span class="nav-text">6.2.2-选择合适的元器件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E7%94%B5%E8%B7%AF%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.2.3.</span> <span class="nav-text">6.2.3-实际电路的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E5%B1%8F%E8%94%BD%E7%9B%92"><span class="nav-number">6.3.</span> <span class="nav-text">6.3-建造屏蔽盒</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.3.1.</span> <span class="nav-text">6.3.1-为什么要这样连接？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.3.2.</span> <span class="nav-text">6.3.2-额外的注意事项</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83.build-our-own-noiseamplifier"><span class="nav-number">7.</span> <span class="nav-text">七.Build Our Own NoiseAmplifier</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rev1.0"><span class="nav-number">7.1.</span> <span class="nav-text">REV1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rev2.0"><span class="nav-number">7.2.</span> <span class="nav-text">REV2.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%951-%E7%A3%81%E5%B1%8F%E8%94%BD%E6%9D%90%E6%96%99"><span class="nav-number">8.</span> <span class="nav-text">附录1-磁屏蔽材料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%952-"><span class="nav-number">9.</span> <span class="nav-text">附录2-</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">10.</span> <span class="nav-text">后记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#part1"><span class="nav-number">10.1.</span> <span class="nav-text">Part1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part2"><span class="nav-number">10.2.</span> <span class="nav-text">Part2</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://badboy2002.xyz/" title="https:&#x2F;&#x2F;badboy2002.xyz&#x2F;" rel="noopener" target="_blank">Badboy's Blog</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
