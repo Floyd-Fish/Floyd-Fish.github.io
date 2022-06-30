@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="噪声放大器(Noise Amplifier)构建指南    在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的">
+  <meta name="description" content="在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的。 一.示波器的极限 然而，示波器是有极限的,因为通">
 <meta property="og:type" content="article">
 <meta property="og:title" content="噪声放大器构建指南">
 <meta property="og:url" content="https://floydfish.xyz/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="噪声放大器(Noise Amplifier)构建指南    在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的">
+<meta property="og:description" content="在精密模拟信号链中，我们肯定不希望 噪声(Noise) 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。 在开关电源(DC-DC)中,我们通常会测试其输出的 纹波(Ripple),而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的。 一.示波器的极限 然而，示波器是有极限的,因为通">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an159_box_osc.jpg">
@@ -49,13 +49,49 @@
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_4.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_5.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_6.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/50r_100k.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/short_100k.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k_zoomed.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/opa2211.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/opa2211_noise_analyze.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_8ops_sch.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_8ops_input_noise.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/noninverting_8ops_sch.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/noninverting_8ops_input_noise.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_input_impedance_drops_gain.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb_3d_1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb_3d_2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_1.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_3.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_4.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_5.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/verification_diagram.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/50mVpp_input_5Vpp_output_shielded.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/50mVpp_input_5Vpp_output.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/verification_diagram_2.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_test.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_test_xy.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_100k_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_100k_200k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_1M_1M.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_1M_2M.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_wb_3M.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/off_noise_floor_shielded.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/off_noise_floor_without_shield.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/lt_noise_floor.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_1M.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_wideband.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_wideband_hand_close.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_100k.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_1M.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_wb.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/current_noise_ligo.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sma_wire.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_sma_wire_floating_10ms.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_coaxial_wire.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_common_wire.jpg">
 <meta property="article:published_time" content="2022-03-27T06:51:54.000Z">
-<meta property="article:modified_time" content="2022-04-08T09:34:34.805Z">
+<meta property="article:modified_time" content="2022-06-07T13:56:16.256Z">
 <meta property="article:author" content="Floyd-Fish">
 <meta property="article:tag" content="电子电路">
 <meta name="twitter:card" content="summary">
@@ -164,7 +200,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">34</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">35</span></a>
 
   </li>
   </ul>
@@ -227,7 +263,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-04-08 17:34:34" itemprop="dateModified" datetime="2022-04-08T17:34:34+08:00">2022-04-08</time>
+                <time title="修改时间：2022-06-07 21:56:16" itemprop="dateModified" datetime="2022-06-07T21:56:16+08:00">2022-06-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,8 +314,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>噪声放大器(Noise Amplifier)构建指南</p>
-<center>
+        <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg" alt="宇宙中传来的神秘噪声" border="0"/></p>
 </center>
 <p>在精密模拟信号链中，我们肯定不希望 <strong>噪声(Noise)</strong> 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。</p>
@@ -287,6 +322,7 @@
 <h1 id="一.示波器的极限">一.示波器的极限</h1>
 <p>然而，示波器是有极限的,因为通用示波器(我瞎编的名词)为了达到高带宽，通常需要选择采样率较高的ADC(GSa以上)，而这意味着ADC的分辨率不高(8至12位居多,少数16位顶天了)。而ADC的分辨率就直接决定了它所能量化的模拟信号的大小极限——低于ADC LSB的信号都无法被准确量化，全部淹没在滚滚红尘(指示波器前端底噪+ADC底噪)中......</p>
 <p>当然，你也可以选择高位数的ADC去搭建专用的采样系统。这种产品当然是有的咯，比如音频谐波分析设备,有高达32-bit分辨率的ADC和上百kSa的采样速度(对就是咱熟悉的Hi-Fi)。这样的系统的SFDR(无杂散动态范围)可达到100dB以上，但是其最高只能采集几十kHz的信号,奈奎斯特和香农两位大佬也为这种方法判了死刑...(指奈奎斯特采样定理)。</p>
+<span id="more"></span>
 <h1 id="二.另辟蹊径">二.另辟蹊径</h1>
 <p>这时候有人可能就要问了,那些模拟芯片大厂的芯片数据手册里那些噪声数据是怎么测出来的呢？</p>
 <p>人类肉眼看不见树叶上的细胞，但是借助 <strong>显微镜</strong> 这一工具我们便可洞察生命的奥秘。同样的，对于我们难以接触到的微弱噪声，我们可以 <code>放大之</code> ！ 放大之后的信号，达到了示波器的测量范围内，我们就可以安心地将它送入示波器，观察它的时域波形了。同样的，我们也可以将其喂给频谱仪，看看它的频域特性。</p>
@@ -294,11 +330,10 @@
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an159_box_osc.jpg" alt="AN-159 Test Connection" border="0"/></p>
 <p>这个饼干盒很有毛子的味...万年风雪！</p>
 </center>
-<span id="more"></span>
 <h2 id="放多大">2.1-放多大？</h2>
 <p>通常,对于10mVpp的信号,我们无需放大，我手边几个示波器的底噪水平通常在500uVrms~1mVrms之间(咱也没钱接触更贵的,有木有老板借一台玩玩😇),所以我们划定这样一个范围: 噪声rms值小于10mVrms的，都需要放大。而对于更小的信号,比如uV、甚至nV级别的信号,我们可能需要极高的放大倍数才能将它们放大至示波器的观测窗口内。</p>
 <h2 id="放大器的挑战">2.2-放大器的挑战</h2>
-<p>当然，这一路上总不可能一帆风顺。使用放大电路来放大噪声的一个致命问题是: <strong>放大器自身的输入噪声也将跟随信号链被放大</strong>。如果我要测量的噪声水平是1uVrms，而我的放大器输入本底噪声水平为5uVrms，放大器放大倍数为10000倍，那么在输出端我们能观测到60mVrms的输出信号。很显然我们要极力规避这种情况出现。放大器过大的底噪将让我们的测量结果不可靠。</p>
+<p>当然，这一路上总不可能一帆风顺。使用放大电路来放大噪声的一个致命问题是: <strong>放大器自身的输入噪声也将跟随信号链被放大</strong>。如果我要测量的噪声水平是1uVrms，而我的放大器输入本底噪声水平为5uVrms，放大器放大倍数为10000倍，那么在输出端我们能观测到 <span class="math inline">\(10000\sqrt{1^2 + 5^2}=50.99 mVrms\)</span> 的输出信号。很显然我们要极力规避这种情况出现。放大器过大的底噪将让我们的测量结果不可靠。</p>
 <p>所以第一个挑战是，需要极低噪声的前端放大级，并且得保证其噪声水平远低于我们想要测量的最小信号。</p>
 <p>第二个挑战是,日益复杂的电磁环境会让我们的电路 <strong>夜不能寐</strong>。在周围空间中充满着无线电波和电磁干扰的时代，我们不得不考虑采取特殊的屏蔽措施来隔绝这些电磁干扰。你可能又要问了,我见你平时做电路也妹用这种屏蔽结构啊？——那是因为我平时做的电路对uV级别的高频感应、耦合噪声并不敏感，而噪声放大器不允许哪怕一丁点的感应、耦合噪声进入电路中。</p>
 <p>第三个挑战是，超级纯净的供电电源(这一环倒是简单些)。因为构建放大器的电路并不能完全抑制电源轨上的纹波和噪声，所以任何形式的开关电源都是不可行的。最好的办法是用 <strong>电池</strong>。后续我们详细展开。</p>
@@ -330,7 +365,9 @@
 </li>
 <li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/raqs/raq-issue-138.html">Analog Dialogue:该噪声会让您夜不能眠</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/studentzone/studentzone-june-2017.html">Analog Dialogue:对电阻使用的经验法则说不</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/studentzone/studentzone-june-2017.html">Analog Dialogue:对电阻使用的经验法则说不</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/low-noise-inamp-nanovolt-sensitivity.html">无烦恼,高增益:构建具有纳伏级灵敏度的低噪声仪表放大器</a></li>
 </ul>
 <p>那么让我们开始这项激动人心的工作。</p>
 <h1 id="四.jim-williams的工作-an124">四.Jim Williams的工作-AN124</h1>
@@ -418,7 +455,7 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
 <p>考虑到噪声放大器的增益是如此之高(80dB，10000倍)，我们必须估算它可接受的输入范围是多少。 首先考虑输出级运放的输出能力，LT1365并不能轨到轨输出，如果采用±4.5V电压为电路供电，它能输出的电压摆幅约为±3.5V，意味着输入信号超过350uVpp就会导致输出饱和。设想最坏的情况，假设波峰因数为10的高斯白噪声，仅仅70uVrms的该噪声就会让输出达到最大。</p>
 <p>钽电容的正确偏压也是必须要考虑且在实际使用时要遵守的。对于输入隔直电容，晶体管几乎工作在地点位，所以如果待测试的源是正电源，那么需要将输入耦合钽电容的正极连接到待测源正极。相对的，如果测量负电源，则需要反接。对于前放后面的隔直&amp;滤波电容，需要将电容负极连接到前放的输出级。因为晶体管的基极电流流过499Ω电阻，导致基极电位为负(虽然程度很小)，但经过25倍放大后，仍是很可观的负偏压。</p>
 <h2 id="建造屏蔽盒">6.3-建造屏蔽盒</h2>
-<p>下图展示了AN-159所使用的屏蔽盒结构。核心的噪声放大器板子和6节碱性干电池被一起包裹在最内层的 <strong>坡莫合金</strong> 外壳中。坡莫合金具有高磁导率，可以有效屏蔽极低频磁场(比如工频)。在坡莫合金外，包裹了2OZ厚的双面覆铜板做成的屏蔽壳，金属铜具有高电导率，能有效屏蔽射频干扰。最外层是一个铁罐(饼干盒改造的)，铁具有电导性同时具有磁导性，可以作为最外层的磁屏蔽屏障。总共3层屏蔽壳，每个屏蔽壳之间留些间隙用于衰减磁场。更详细的屏蔽材料信息请参阅 <strong>附录1-磁屏蔽材料</strong></p>
+<p>下图展示了AN-159所使用的屏蔽盒结构。核心的噪声放大器板子和6节碱性干电池被一起包裹在最内层的 <strong>坡莫合金</strong> 外壳中。坡莫合金具有高磁导率，可以有效屏蔽<strong>极低频磁场(比如工频)</strong>。在坡莫合金外，包裹了2OZ厚的双面覆铜板做成的屏蔽壳，金属铜具有高电导率，能有效屏蔽<strong>射频干扰</strong>。最外层是一个铁罐(饼干盒改造的)，铁具有电导性同时具有磁导性，可以作为最外层的磁屏蔽屏障。总共3层屏蔽壳，每个屏蔽壳之间留些间隙用于衰减磁场。更详细的屏蔽材料信息请参阅 <strong>附录1-磁屏蔽材料</strong></p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/shielding_box.jpg" alt="Cookie Shielding Box" border="0"/></p>
 <p>美味的Cookie Box.</p>
@@ -451,7 +488,7 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
 <p>所以，噪声放大器的输入同轴线屏蔽层需要连接到屏蔽结构的外壳上，而输出屏蔽层绝不能连接到外壳上。除开可能的噪声外，如果将输出屏蔽层连接至外壳上，极有可能产生我们不希望的地环路，甚至会引起高倍增益放大电路的自激振荡。</p>
 <h3 id="额外的注意事项">6.3.2-额外的注意事项</h3>
 <p>吃完美味的Cookie之后，我们要把它拿来作为屏蔽壳，但是别忘了将饼干盒的边缘上的绝缘漆层刮掉，并拿砂纸好好地打磨一下。这样可以保证盒子的盒身与顶盖有良好的电气接触，保证屏蔽的效果。同时在盒子上开孔的时候，记得将BNC外壳与盒身接触的地方的漆刮掉，保证BNC接头的外壳与饼干盒的金属部分有良好的接触。</p>
-<p>即使我们做了如此完备周全的屏蔽结构设计，测量时还是不能掉以轻心。如果输入线过长(超过10cm)，不完善的屏蔽层极有可能导致输入噪声变大，从而造成巨大的误差。推荐的连接是在待测电路板上使用SMA连接器，通过转接头直接接入噪声放大器的输入，杜绝任何未经屏蔽的连接线。同时我们如果需要做最精密的测量时，我们需要一个几乎没有电磁干扰源的实验场地。但一般的测量在普通环境是可以实现的，除非你作死抱着这东西跑到发电站或是通信基站旁边去测(应该没人这么憨...)</p>
+<p>即使我们做了如此完备周全的屏蔽结构设计，测量时还是不能掉以轻心。如果输入线过长(超过10cm)，不完善的屏蔽层极有可能导致输入噪声变大，从而造成巨大的误差。推荐的连接是在待测电路板上使用SMA或者BNC连接器，通过转接头直接接入噪声放大器的输入，杜绝任何未经屏蔽的连接线。同时我们如果需要做最精密的测量时，我们需要一个几乎没有电磁干扰源的实验场地。但一般的测量在普通环境是可以实现的，除非你作死抱着这东西跑到发电站或是通信基站旁边去测(应该没人这么憨...)</p>
 <h1 id="七.build-our-own-noiseamplifier">七.Build Our Own NoiseAmplifier</h1>
 <p>有了以上3篇应用手册的铺垫，做一个噪声放大器似乎并没有想象中的那么困难了。但是考虑到国情与市场情况，以及前几篇手册的年代，我们若想1：1地复刻AN-159的电路还是有些困难的。</p>
 <p>首先，前放中的核心器件——<strong>THAT300</strong>匹配晶体管,在国内不好买到。<br />
@@ -478,30 +515,328 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
 <p>最外层饼干盒上开3个BNC座的孔，刮掉孔周围的漆，保证良好电气接触。3个孔作为输出，连接到示波器用于观侧输出波形。同样的，饼干盒与盖子接触的部分也需要刮掉漆。</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v1.0_6.jpg" alt="Noise Amplifier REV1.0 Cookie box" border="0"/></p>
 </center>
-<p>组装完成后，便可试试它的威力了。 经过测试，输入用50欧SMA负载头堵上，10Hz到100kHz的输出幅度约为842uVrms。而如果直接将其短接,10Hz到100kHz输出幅度约为743uVrms，下降约100uVrms,折合到输入端，估算一50欧电阻在室温下产生的带限白噪声(10Hz至100kHz)约为40nVrms(?),不知道我的估算对不对。</p>
-<p>同时，也可以得出这个噪声放大器的底噪水平,约为55nVrms。(示波器输入短接可观测到500uVrms的底噪，混入噪声放大器底噪放大后的输出,平方和开根号,得到743uVrms)。</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/50r_100k.jpg" alt="50 Ohms Input Noise" border="0"/></p>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/short_100k.jpg" alt="Shorted Input Noise" border="0"/></p>
-</center>
-<p>然后再让我们测测LM399的输出噪声。<br />
-前几天TT酱送来的LM399,我用洞洞板做了个测试板,将其连接到噪声放大器的输入,注意我的连接方式哦~</p>
-<center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399.jpg" alt="LM399 Connection" border="0"/></p>
-<p>将时基拉到500ms/div，观测到约17.6mVrms的带限噪声，折合约1.76uVrms。LM399手册中标注其10Hz到10kHz带限噪声最大为50uVrms，典型值为7uVrms，我有点怀疑...</p>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k.jpg" alt="LM399 Output Noise 100k" border="0"/></p>
-<p>如果将时基拉小，极低频噪声采不到了，噪声水平下降至9.19mVrms。。。</p>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/lm399_100k_zoomed.jpg" alt="LM399 Output Noise" border="0"/></p>
-</center>
+<p>但是很遗憾,第一版的设计没什么严重的原则性问题,只是我买到的拆机芯片坏了(最后的输出滤波器级),导致最后无法进行测量。。</p>
 <h2 id="rev2.0">REV2.0</h2>
 <p>做完第一版之后,我仍然不满足。<br />
-第一点是,为了保险起见我没敢更改AN-159奠定的架构,即利用低噪声的晶体管作为输入级驱动运算放大器输入。然而人家用的晶体管噪声水平比我低好多倍...所以导致我的这一版本底噪很大。(虽然用起来也很好用诶)</p>
+第一点是,为了保险起见我没敢更改AN-159奠定的架构,即利用低噪声的晶体管作为输入级驱动运算放大器输入。然而人家用的晶体管噪声水平比我低好多倍...所以导致我的这一版本底噪很大。</p>
 <p>第二点是,一层层的屏蔽结构导致整个放大器的体积庞大，而且想要给18650充电还得把盖子掀了，取出螺丝，再把电池抠出来充电...我有将整个仪器小型化的想法,同时增加充电功能。</p>
 <p>为此,我开始筹划第二版的计划。<br />
 首先我们需要注意的一点是, <strong>2022年,已经有能够满足我们需求的运算放大器面世了</strong>，虽然其噪声水平仍然高于某些晶体管与场效应管,但通过统计平均这一手段,我们有可能在一定的范围内挑战极限。</p>
-<p>// 施工ing</p>
+<h3 id="critical-stage-前端低噪放大器选择">Critical Stage-前端低噪放大器选择</h3>
+<p>在任何模拟放大信号链中,对于输入级(第一级)的要求都是颇为严苛的,对于NAMP(NoiseAMP)更是如此。因为第一级的放大器的噪声水平直接决定了整个仪器的底噪。第一版的设计使用了低噪声匹配晶体管作为输入级,在最小化输入噪声的同时保持了电路的高带宽特性。如果要使用运算放大器器件去代替这一输入级,对于运算放大器就提出了近乎是挑剔的要求:<strong>在保持高增益带宽积的同时具有极低的输入电压噪声和电流噪声,同时能够在低电压工作,输入输出尽量轨到轨。</strong></p>
+<p>有没有这样的运放呢?2022年的今天,有的。Ti的 <strong>OPA2211-EP</strong> 就具有如此恐怖的性能。我想了一下,它用在这里的唯一缺点可能就是贵了。。。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/opa2211.jpg" alt="OPA2211-EP" border="0"/></p>
+</center>
+<p>当然,除了TI的OPA2211-EP外,ADI的专用仪表放大器 <strong>AD8428</strong> 同样也是绝佳的选择,但是它过于昂贵了,且买不到拆机片,遂无奈放弃。</p>
+<p>最后,我将运算放大器和前端输入级的运放全部更换成了OPA2211-EP,以此来设计新一版的NAMP。</p>
+<h3 id="运算放大器噪声分析">运算放大器噪声分析</h3>
+<p>在OPA2211的数据手册中,我们可以在Section-8.2找到典型应用-噪声分析。作为一款极低噪声运放,数据手册中给出了噪声分析的例子,非常合理。基本的放大器结构有同相和反相两种,它们分别对应的输出噪声表达式有所不同。我们可以看看它们的数学形式:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/opa2211_noise_analyze.jpg" alt="OPA2211 Noise Analyze" border="0"/></p>
+</center>
+<p>简单来说,输出电压中包含的噪声由几个部分分别贡献,并应用叠加原理将他们代数和相加。</p>
+<ul>
+<li>运算放大器自身的输入电压噪声乘以增益G<br />
+</li>
+<li>2个反馈电阻R1和R2的热噪声(约翰逊－奈奎斯特噪声)<br />
+</li>
+<li>输入电流噪声作用到反馈电阻R2上产生的电压噪声<br />
+</li>
+<li>输入信号源内阻Rs的热噪声</li>
+</ul>
+<p>这是2个表达式所包含的公共部分,而同相放大器结构中还要算上输入电流噪声在输入信号源阻抗上产生的电压噪声,并且该电压噪声会被放大,还得乘以增益G。</p>
+<p>看起来,反相放大器结构更适合作为噪声放大器的输入级~因为它不存在输入电流噪声在输入信号源阻抗上产生的电压噪声。我们可以使用Ti自家的仿真软件TINA来跑一跑仿真,看看它们各自的表现。</p>
+<p>首先在Ti官网下载OPA2211的Tina Spice模型,然后导入Tina,搭建8单元并联反相放大器电路图如下(太高了,没有全部截下来),注意设置信号源阻抗为50欧。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_8ops_sch.jpg" alt="inverting input sch" border="0"/></p>
+</center>
+<p>然后在<code>分析</code>选项中选择<code>噪声分析</code>,设定起始频率1Hz,终止频率5MHz,采样数5000,S/N信号振幅1,图表处都勾上,然后润,得到结果如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_8ops_input_noise.jpg" alt="inverting input noise" border="0"/></p>
+</center>
+<p>继续搭建8单元同相放大器,然后再运行噪声分析,电路图和结果如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/noninverting_8ops_sch.jpg" alt="noninverting input sch" border="0"/></p>
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/noninverting_8ops_input_noise.jpg" alt="noninverting input noise" border="0"/>
+</center>
+<p>通过仿真结果,我们作对比表如下:</p>
+<table>
+<thead>
+<tr class="header">
+<th>放大器结构</th>
+<th>低频噪声(1Hz处)</th>
+<th>宽带噪声</th>
+<th>1/f转折频率</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>同相</td>
+<td>9.19nV/√Hz</td>
+<td>699pV/√Hz</td>
+<td>约70Hz左右</td>
+</tr>
+<tr class="even">
+<td>反相</td>
+<td>1.18nV/√Hz</td>
+<td>567pV/√Hz</td>
+<td>约100Hz左右</td>
+</tr>
+</tbody>
+</table>
+<p>显然,反相放大器结构的表现更优。但是反相放大器有个问题就是,它的输入阻抗就是输入电阻51欧。不过我们要测量的噪声源一般都是低阻抗输出源,所以问题不是很大。</p>
+<p>不过为了保险起见,我还是仿真了一下交流传输特性。当输入源阻抗设置为0欧时,得到的输入高通滤波器(那一级RC)的截止频率漂到了约35Hz处,本应该在10Hz的。。这倒不是什么大问题,增益不drop就行了。但是当把源阻抗设置成50欧时,预料之中的现象出现了:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/tina_sim/inverting_input_impedance_drops_gain.jpg" alt="inverting input noise" border="0"/></p>
+</center>
+<p>该电路的增益直接drop到了<strong>6.82dB</strong>,原先本应该是25.88dB(约19倍多电压增益)左右的。因为该单元反相放大器输入阻抗为51欧,又是8通道并联,导致总输入阻抗进一步降低,结果可想而知。</p>
+<p>因为我们要测量的噪声源不一定都具有低输出阻抗,所以我还是决定放弃使用噪声性能更优异的反相放大器结构。。。(忍痛割爱了属于是。)相比之下,使用匹配三极管对作为输入级好像不存在这个问题orz</p>
+<h2 id="new-design-船新设计">New Design-船新设计</h2>
+<p>其实并没什么新意。只不过是把输入级换成纯运放,并把后级所有运算放大器都换成了OPA2211-EP。电路图很简单,就不放啦。</p>
+<p>PCB画出来长这样,左边输入,右边3个输出,全部使用ipex天线座子,当然最后组装的时候是直接焊了线头上去。输入端的电容处放了Guarding Ring,用以收集可能存在的PCB上的漏电流。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb.jpg" alt="NoiseAMP_V2.3 PCB" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb_3d_1.jpg" alt="NoiseAMP_V2.3 PCB 3D" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_pcb_3d_2.jpg" alt="NoiseAMP_V2.3 PCB 3D" border="0"/></p>
+</center>
+<p>然后我还做了个电池板,用来为NoiseAMP供电,板上安装了2块14500锂电池(满电电压4.2v),用IP2325作为2s充电控制器(5V输入,升压至8.4V充电),由于充电回路和放电回路的参考地不同,所以设计了2个单刀双掷开关用来切换电池的工作模式。</p>
+<p>最后把电路组装好,扔进新的屏蔽盒里,然后在外壳上开孔、贴上标识标签、固定好机械元件。船新的噪声放大器就出炉了~</p>
+<center>
+<p>初步的增益调整与测试</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_1.jpg" alt="NoiseAMP_V2.3" border="0"/></p>
+<p>装进屏蔽盒中,理线。上面的尼龙活动夹真好用,可以把配套的测试线和转接器一起放进内部固定住</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_2.jpg" alt="NoiseAMP_V2.3" border="0"/></p>
+<p>在word里简单设计了几个贴纸,打出来然后拿剪刀剪,感觉像回到了小学美术课剪纸...</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_3.jpg" alt="NoiseAMP_V2.3" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_4.jpg" alt="NoiseAMP_V2.3" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/na_v2.3_5.jpg" alt="NoiseAMP_V2.3" border="0"/></p>
+</center>
+<h1 id="校准验证测量">校准、验证、测量</h1>
+<p>组装完毕后,我们还不能进行测量。首先,我们得进行校准工作。</p>
+<h2 id="校准-calibration">校准-Calibration</h2>
+<p>校准工作主要是校准噪声放大器的放大倍数。我们根据电路的参数,搭建测试框图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/verification_diagram.jpg" alt="Calibration Diagram" border="0"/></p>
+</center>
+<p>由于一般的信号源无法输出uV级别的信号,所以我们需要通过外部衰减器来得到我们的输入测试信号。<br />
+设置信号源输出阻抗50欧姆,输出10kHz、50mVpp的正弦信号,经过一个100倍电压衰减的衰减器(我拿了一个1M电阻和10k电阻分压器,直接搭棚焊在2个SMA座子上,非常好用),得到一个10kHz、0.5mVpp的正弦信号。将衰减后的信号送入噪声放大器,在10Hz~100kHz输出档位观测其输出信号的峰峰值,如果输出信号峰峰值不为5Vpp,则增益就需要调整。最初我测量到的增益约为3600左右,离我们的设计目标10000倍相去甚远(好吧按dB来看的话也差不太多...),于是我将输入级后的反相放大器反馈电阻微调至360欧,后调节后级可变增益级的电位器,将整个放大器增益调至了10000倍。</p>
+<p>同时我们还可以验证一个有趣的现象,下图中图1是将屏蔽盒(饼干盒)的盖子紧密地盖上去时测得的输出,而图2是将屏蔽盒的盖子取下来测得的输出,可以明显看到信号中夹杂着某种干扰,尽管干扰十分微弱,但经过10000倍放大后,对输出信号造成的影响还是非常可观的。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/50mVpp_input_5Vpp_output_shielded.jpg" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/50mVpp_input_5Vpp_output.jpg" border="0"/></p>
+</center>
+<h2 id="验证-verification">验证-Verification</h2>
+<p>校准了增益之后,我们来验证3个输出档位的频域响应是否符合我们的预期。由于我没有网络分析仪,不能直接得出噪声放大器的幅频特性响应曲线,所以我用了一点小技巧,使用信号源和示波器来间接完成了这项工作。</p>
+<h3 id="丐版幅频特性测试">丐版幅频特性测试</h3>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/verification_diagram_2.jpg" border="0"/></p>
+</center>
+<p>其中,调整示波器的时基模式为X-Y模式,X输入为行扫描信号,由信号源CH1的锯齿波输出提供,Y输入接到噪声放大器的输出,而噪声放大器的输入接到信号源CH2的扫频输出,CH1锯齿波的同步信号用于触发扫频,实现起始点同步。这样就可以构建出一个丐版波德图测试仪。。。</p>
+<center>
+<p>锯齿波与扫频信号的起始点同步</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_test.jpg" border="0"/></p>
+<p>开启X-Y时基模式,可得到简陋的波德图</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_test_xy.jpg" border="0"/></p>
+</center>
+<h3 id="带宽测试">带宽测试</h3>
+<p>首先测试10Hz-100kHz档的幅频响应是否符合预期。设置扫频信号起始频率10Hz,终止频率100kHz,观察示波器XY绘图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_100k_100k.jpg" border="0"/></p>
+</center>
+<p>可以看出,在接近100k时,增益有所下降,虽然我们很难读出其精确值,但判断-3dB点还是没问题的。不过保险起见,我们还是要稍微提高一些频率,看看其带外衰减如何。将扫频终止频率提高到200kHz,观测到XY绘图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_100k_200k.jpg" border="0"/></p>
+</center>
+<p>到这里我们就可以放下悬着的心了——,这个100k截止频率的低通滤波器看起来工作得很不错。</p>
+<p>然后我们测试1MHz档的幅频响应。设置扫频到1MHz,观察示波器输出XY绘图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_1M_1M.jpg" border="0"/></p>
+</center>
+<p>嗯,波形变化更为平滑了,不错。提升扫频频率到2MHz,XY图长这样:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_1M_2M.jpg" border="0"/></p>
+</center>
+<p>安心洗爹。</p>
+<p>然后测试宽带输出,直接将扫频频率提升到3MHz,观察XY绘图如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sweep_wb_3M.jpg" border="0"/></p>
+</center>
+<p>可以大致读出,带宽约为...2.几MHz吧,到3MHz以上的信号,受限于运算放大器的增益带宽积(G=100,GBW=80MHz),我估算了一下有效带宽勉强能到5MHz,总之是非常不戳的。</p>
+<h3 id="底噪验证与探索">底噪验证与探索</h3>
+<p>在校准完增益、验证完带宽后,我们还需要测试噪声放大器的<strong>底噪</strong>。某种意义上来说,这是最为重要的参数了^_^。我们进行以下测试,一是为了验证我们的噪声放大器的底噪水平,二是探索在测量中会有哪些误差源。</p>
+<ul>
+<li>关机,加上屏蔽盒盖子输出端噪声<br />
+</li>
+<li>关机,去掉屏蔽盒盖子输出端噪声<br />
+</li>
+<li>输入短接-100kHz带限噪声<br />
+</li>
+<li>输入短接-1MHz带限噪声<br />
+</li>
+<li>输入短接-宽带带限噪声<br />
+</li>
+<li>输入50欧SMA负载帽-100kHz带限噪声<br />
+</li>
+<li>输入50欧SMA负载帽-1MHz带限噪声<br />
+</li>
+<li>输入50欧SMA负载帽-宽带噪声<br />
+</li>
+<li>输入接一截线浮空,输出端噪声<br />
+</li>
+<li>输入接一截SMA转鳄鱼夹线,手靠近同轴线,输出端噪声<br />
+</li>
+<li>输入接一截SMA转鳄鱼夹线,手靠未屏蔽的部分线,输出端噪声</li>
+</ul>
+<p>哈吉马路由——</p>
+<h4 id="关机状态下输出端噪声">关机状态下输出端噪声</h4>
+<p>将电源短开,输出接到示波器上,观察输出端噪声。虽然电路是没有通电的,但这并不意味着电路中不会耦合进噪声信号。First of all,将屏蔽盖好好地盖上,看看输出噪声(时基1ms/div):</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/off_noise_floor_shielded.jpg" border="0"/></p>
+</center>
+<p>然后将屏蔽盖取下来,再看看输出噪声:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/off_noise_floor_without_shield.jpg" border="0"/></p>
+</center>
+<p>嗯,影响显而易见了。加上屏蔽盒盖,输出端的噪声水平大致就是示波器的底噪水平多一些(示波器底噪约500uVrms)。而取下屏蔽盒盖,输出端的噪声水平直接飙升至约2mVrms,数值上翻了4倍,并且可以看到明显的50Hz工频干扰(突起来的那一坨刺)。我手头没有频谱,很难详细分析这些噪声的频域特性。但反观盖上盖子的情况,似乎也有一些些50Hz的特征。。我藉此猜想,可能是因为我的坡莫合金屏蔽层不连续。AN-159中使用的是实心坡莫合金板材,加工成了一个完全密封的盒子,而我是使用了1J85坡莫合金贴纸,贴附在覆铜板屏蔽盒的内侧,存在很多小缝隙并不能有效屏蔽。</p>
+<h4 id="输入短接底噪测试">输入短接底噪测试</h4>
+<p>测试完关机状态下的噪声,我们似乎对耦合进我们的噪声放大器的噪声水平有了点ACD数(<del>并没有</del>)。那么我们来测测输入短接的底噪吧——</p>
+<p>在测试前,我们先放一张AN-159中得到的测试结果图,不过请注意,这张图的纵坐标(电压坐标)是转换过的,将它乘以10000倍就是在示波器上得到的波形了,200nV乘以10000是2mV/div。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/lt_noise_floor.jpg" border="0"/></p>
+</center>
+<p>输入短接,在100kHz、1MHz、WideBand 三个输出端分别观测到噪声水平如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_100k.jpg" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_1M.jpg" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_wideband.jpg" border="0"/></p>
+</center>
+<p>然后,如果用爪爪摸一摸输入端的SMA芯子(对地短路了的),即使输入对地短路了,还是会有工频干扰(没错,就是我身上的！)耦合进信号链中。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_shorted_wideband_hand_close.jpg" border="0"/></p>
+</center>
+<p>然后作一个总结表如下:</p>
+<table>
+<thead>
+<tr class="header">
+<th>测试条件</th>
+<th>噪声峰峰值(Vpp)</th>
+<th>噪声真有效值(RMS)</th>
+<th>折合到输入端的噪声真有效值(RMS)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AN-159的100kHz带限噪声</td>
+<td>估计为10mVpp</td>
+<td>估计为2.15mVrms</td>
+<td>估计为215 <strong>nVrms</strong></td>
+</tr>
+<tr class="even">
+<td>我的100kHz带限噪声</td>
+<td>19.6mVpp</td>
+<td>4.23mVrms</td>
+<td>423 <strong>nVrms</strong></td>
+</tr>
+<tr class="odd">
+<td>我的1MHz带限噪声</td>
+<td>63.6mVpp</td>
+<td>19.0mVrms</td>
+<td>1.9 uVrms</td>
+</tr>
+<tr class="even">
+<td>我的宽带噪声</td>
+<td>226mVpp</td>
+<td>78.1mVrms</td>
+<td>7.81 uVrms</td>
+</tr>
+<tr class="odd">
+<td>爪子摸输入的宽带噪声</td>
+<td>422mVpp</td>
+<td>110mVrms</td>
+<td>11.0 uVrms</td>
+</tr>
+</tbody>
+</table>
+<p>不过,示波器的测量结果不一定可靠。因为其rms算法并不能测量到真实的rms值,只能计算出采样样本波形的rms(并且可能对于这种波形,误差还不小)。如果要精准测量rms值,需要使用专用的RMS表(基于热-能量转换的rms电路)。不过很遗憾呐，我手里又没有。</p>
+<p>但是还是可以从峰峰值看出差异,并且做一个大致的估算:即我的噪声放大器的底噪大约是AN-159中的2倍大小左右。</p>
+<h4 id="输入接50欧sma负载帽">输入接50欧SMA负载帽</h4>
+<p>测试了底噪之后,我们便可以做些好玩的东西了——<br />
+我们可以来验证一下 <strong>约翰逊-奈奎斯特噪声</strong>,也就是<strong>热噪声</strong>。</p>
+<p>对于给定带宽,热噪声电压可表示为:</p>
+<p><span class="math display">\[
+V_n = {\sqrt {V_n^2} \sqrt {\Delta f}} = \sqrt{4K_BTR\Delta f}
+\]</span></p>
+<p>对于50欧电阻,在100kHz、1MHz、5MHz的带宽内,热噪声值大致如下:</p>
+<p><span class="math display">\[
+V_{n1} = 290.7nV_{rms}  \cdots 100kHz   \\
+V_{n2} = 919.24nV_{rms} \cdots 1MHz     \\
+V_{n3} = 2.055uV_{rms}  \cdots 5MHz
+\]</span></p>
+<p>然后我们在输入端接上50欧阻抗的SMA假负载(堵头),测量这个假负载上产生的噪声。</p>
+<center>
+<p>100kHz带宽</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_100k.jpg" border="0"/></p>
+<p>1MHz带宽</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_1M.jpg" border="0"/></p>
+<p>宽带</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_50ohms_wb.jpg" border="0"/></p>
+</center>
+<p>嗯,很遗憾,我们测到的结果似乎并不符合我们的预期。比如对于100kHz带宽,50欧电阻产生的热噪声理论中就取300nVrms吧,与噪声放大器的底噪423nVrms叠加,平方和开根号得到的输入噪声理论值约为500nVrms,而我们测量结果显示其输入噪声约为800nVrms!</p>
+<p>其实这并不意外。因为约翰逊-奈奎斯特噪声计算公式计算出的结果只是材料中的热噪声,而器件的总噪声不仅仅只有热噪声独自贡献,还有别的因素同样会为该器件贡献一定量的噪声。而这些噪声的量大小是取决于电阻器的阻值、材料、制作工艺等等因素的。比如这是LIGO对不同品牌的同阻值电阻器的<strong>电流噪声</strong>做的测试,最底下黑色实心线是该阻值下的电阻器的热噪声。结果表明,不同材料和制造工艺的电阻器的噪声水平有时候甚至能差出2个数量级。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/current_noise_ligo.jpg" border="0"/></p>
+</center>
+<h4 id="输入接一段线">输入接一段线</h4>
+<p>增加这一组测试的目的是演示一个测试问题:如果输入线过长或未经良好屏蔽,可能会引起巨量的测试误差。如果使用未经屏蔽的线去连接待测电路,那么这一段线就会像一截 <strong>天线(Antenna)</strong> 一样,吸收环境中的电磁波,包括从极低频(工频50/60Hz)到射频频段的所有电磁波,从而将环境中的电磁信号耦合进噪声放大器的输入端。</p>
+<p>首先,我们将一截长度约20cm(同轴线10cm,未屏蔽段10cm)的SMA转鳄鱼夹线接到输入端上,并且让2个夹子悬空,彼此不接触,在输出端测到噪声信号如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/sma_wire.jpg" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/input_sma_wire_floating_10ms.jpg" border="0"/></p>
+</center>
+<p>可以看到非常明显的工频特征(频率50Hz),并且输出信号中含有高频噪声,但工频占主导地位。</p>
+<p>然后我们将输入2个鳄鱼夹夹上(贴贴),与最开始测试的输入短接是等效的电路,不过我们那时用的是SMA座子直接短接,这次多了一截线。同时,<strong>我们用爪子握住同轴线那一段</strong>,在输出端测到噪声信号如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_coaxial_wire.jpg" border="0"/></p>
+</center>
+<p>可以看到,相较于用SMA连接器直接短接的测试结果,噪声似乎大了一点点(4.2mVrms vs 6.64mVrms),但是看不出很明显的被干扰的情况。那么我们现在 <strong>用爪子握住未经屏蔽的那一段</strong>,在输出端测到的噪声信号如下:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_common_wire.jpg" border="0"/></p>
+</center>
+<p>ohh,that's bad.我们可以看到输出信号中含有非常明显的工频尖峰,并且明显混入了工频的各次谐波...导致底噪水平直接飙升至原来的5倍左右！</p>
+<p>通过这组对照实验,我想我们对输入连接方式的重要性有了深刻的认知...最好的连接方法是在待测电路上使用同轴连接器,直接接入到噪声放大器的输出,这样整条信号链路都是经过良好屏蔽的,这样可以将外界干扰对测量的影响降至最低。</p>
+<h2 id="测量-measurements">测量-Measurements</h2>
+<p>To be continued.</p>
 <h1 id="附录1-磁屏蔽材料">附录1-磁屏蔽材料</h1>
-<h1 id="附录2-">附录2-</h1>
+<h1 id="附录2-参考资料">附录2-参考资料</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an83f.pdf">AN-83:Performance Verification of Low Noise,Low Dropout Regulators</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/an124f.pdf">AN-124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/en/app-notes/an-159.html">AN-159:Measuring 2nV/√Hz Noise and 120dB Supply Rejection on Linear Regulators</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/application-notes/41727248an_347.pdf">AN-347:Shielding and Guarding</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://dcc.ligo.org/public/0002/T0900200/001/current_noise.pdf">LIGO:Resistor Current Noise Measurements</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.maximintegrated.com/en/design/technical-documents/app-notes/6/6206.html?__cf_chl_captcha_tk__=pmd_ubV5VJCDAFo5ohth46FEZaZeyc4tVQbD9RaF6BrGH_o-1635168698-0-gqNtZGzNA2WjcnBszQu9">AN-6206(MAXIM, 现在也变成ADI的了...):SIMPLE, EFFECTIVE METHOD AND CIRCUIT TO MEASURE VERY-LOW 1/F VOLTAGE REFERENCE NOISE (&lt; 1mVP-P, 0.1HZ TO 10HZ)</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">[魔法电路]-电路中的噪声</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/training-seminars/tutorials/MT-048.pdf">MT-048:Op Amp Noise Relationships: 1/f Noise, RMS Noise, and Equivalent Noise Bandwidth</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="http://www.mu-metal.com/uploads/5/4/5/0/54501895/mu-2_mumetal_brochure.pdf">Mu-Metal Brochure</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.kjmagnetics.com/blog.asp?p=shielding-materials">K&amp;J Magnetics: Shielding Materials</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/low-noise-inamp-nanovolt-sensitivity.html">Analog Dialogue:无烦恼，高增益：构建具有纳伏级灵敏度的低噪声仪表放大器</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/raqs/raq-issue-138.html">Analog Dialogue:该噪声会让您夜不能眠</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/studentzone/studentzone-june-2017.html">Analog Dialogue:对电阻使用的经验法则说不</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/low-noise-inamp-nanovolt-sensitivity.html">无烦恼,高增益:构建具有纳伏级灵敏度的低噪声仪表放大器</a></li>
+</ul>
 <h1 id="后记">后记</h1>
 <p>说是后记，其实也只是我个人的一点感想。</p>
 <h2 id="part1">Part1</h2>
@@ -637,7 +972,7 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80.%E7%A4%BA%E6%B3%A2%E5%99%A8%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">1.</span> <span class="nav-text">一.示波器的极限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C.%E5%8F%A6%E8%BE%9F%E8%B9%8A%E5%BE%84"><span class="nav-number">2.</span> <span class="nav-text">二.另辟蹊径</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%9A%E5%A4%A7"><span class="nav-number">2.1.</span> <span class="nav-text">2.1-放多大？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%A7%E5%99%A8%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.2.</span> <span class="nav-text">2.2-放大器的挑战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89.%E8%B5%84%E6%96%99%E5%87%86%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">三.资料准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B.jim-williams%E7%9A%84%E5%B7%A5%E4%BD%9C-an124"><span class="nav-number">4.</span> <span class="nav-text">四.Jim Williams的工作-AN124</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1-设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E9%AB%98%E5%B8%A6%E5%AE%BD"><span class="nav-number">4.2.</span> <span class="nav-text">4.2-更高带宽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94.20uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an83"><span class="nav-number">5.</span> <span class="nav-text">五.20uVrms宽带噪声测量-AN83</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD.0.8uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an159"><span class="nav-number">6.</span> <span class="nav-text">六.0.8uVrms宽带噪声测量-AN159</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E8%80%83%E9%87%8F"><span class="nav-number">6.1.</span> <span class="nav-text">6.1-设计考量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E7%94%B5%E8%B7%AF%E5%9B%BE"><span class="nav-number">6.2.</span> <span class="nav-text">6.2-系统架构&amp;电路图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#critical-stage"><span class="nav-number">6.2.1.</span> <span class="nav-text">6.2.1-Critical Stage！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E5%85%83%E5%99%A8%E4%BB%B6"><span class="nav-number">6.2.2.</span> <span class="nav-text">6.2.2-选择合适的元器件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E7%94%B5%E8%B7%AF%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.2.3.</span> <span class="nav-text">6.2.3-实际电路的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E5%B1%8F%E8%94%BD%E7%9B%92"><span class="nav-number">6.3.</span> <span class="nav-text">6.3-建造屏蔽盒</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.3.1.</span> <span class="nav-text">6.3.1-为什么要这样连接？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.3.2.</span> <span class="nav-text">6.3.2-额外的注意事项</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83.build-our-own-noiseamplifier"><span class="nav-number">7.</span> <span class="nav-text">七.Build Our Own NoiseAmplifier</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rev1.0"><span class="nav-number">7.1.</span> <span class="nav-text">REV1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rev2.0"><span class="nav-number">7.2.</span> <span class="nav-text">REV2.0</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%951-%E7%A3%81%E5%B1%8F%E8%94%BD%E6%9D%90%E6%96%99"><span class="nav-number">8.</span> <span class="nav-text">附录1-磁屏蔽材料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%952-"><span class="nav-number">9.</span> <span class="nav-text">附录2-</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">10.</span> <span class="nav-text">后记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#part1"><span class="nav-number">10.1.</span> <span class="nav-text">Part1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part2"><span class="nav-number">10.2.</span> <span class="nav-text">Part2</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80.%E7%A4%BA%E6%B3%A2%E5%99%A8%E7%9A%84%E6%9E%81%E9%99%90"><span class="nav-number">1.</span> <span class="nav-text">一.示波器的极限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C.%E5%8F%A6%E8%BE%9F%E8%B9%8A%E5%BE%84"><span class="nav-number">2.</span> <span class="nav-text">二.另辟蹊径</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%9A%E5%A4%A7"><span class="nav-number">2.1.</span> <span class="nav-text">2.1-放多大？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%BE%E5%A4%A7%E5%99%A8%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">2.2.</span> <span class="nav-text">2.2-放大器的挑战</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89.%E8%B5%84%E6%96%99%E5%87%86%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">三.资料准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B.jim-williams%E7%9A%84%E5%B7%A5%E4%BD%9C-an124"><span class="nav-number">4.</span> <span class="nav-text">四.Jim Williams的工作-AN124</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">4.1.</span> <span class="nav-text">4.1-设计思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E9%AB%98%E5%B8%A6%E5%AE%BD"><span class="nav-number">4.2.</span> <span class="nav-text">4.2-更高带宽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94.20uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an83"><span class="nav-number">5.</span> <span class="nav-text">五.20uVrms宽带噪声测量-AN83</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD.0.8uvrms%E5%AE%BD%E5%B8%A6%E5%99%AA%E5%A3%B0%E6%B5%8B%E9%87%8F-an159"><span class="nav-number">6.</span> <span class="nav-text">六.0.8uVrms宽带噪声测量-AN159</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E8%80%83%E9%87%8F"><span class="nav-number">6.1.</span> <span class="nav-text">6.1-设计考量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E7%94%B5%E8%B7%AF%E5%9B%BE"><span class="nav-number">6.2.</span> <span class="nav-text">6.2-系统架构&amp;电路图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#critical-stage"><span class="nav-number">6.2.1.</span> <span class="nav-text">6.2.1-Critical Stage！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E5%90%88%E9%80%82%E7%9A%84%E5%85%83%E5%99%A8%E4%BB%B6"><span class="nav-number">6.2.2.</span> <span class="nav-text">6.2.2-选择合适的元器件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E7%94%B5%E8%B7%AF%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.2.3.</span> <span class="nav-text">6.2.3-实际电路的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E5%B1%8F%E8%94%BD%E7%9B%92"><span class="nav-number">6.3.</span> <span class="nav-text">6.3-建造屏蔽盒</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%99%E6%A0%B7%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.3.1.</span> <span class="nav-text">6.3.1-为什么要这样连接？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">6.3.2.</span> <span class="nav-text">6.3.2-额外的注意事项</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83.build-our-own-noiseamplifier"><span class="nav-number">7.</span> <span class="nav-text">七.Build Our Own NoiseAmplifier</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rev1.0"><span class="nav-number">7.1.</span> <span class="nav-text">REV1.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rev2.0"><span class="nav-number">7.2.</span> <span class="nav-text">REV2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#critical-stage-%E5%89%8D%E7%AB%AF%E4%BD%8E%E5%99%AA%E6%94%BE%E5%A4%A7%E5%99%A8%E9%80%89%E6%8B%A9"><span class="nav-number">7.2.1.</span> <span class="nav-text">Critical Stage-前端低噪放大器选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90"><span class="nav-number">7.2.2.</span> <span class="nav-text">运算放大器噪声分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#new-design-%E8%88%B9%E6%96%B0%E8%AE%BE%E8%AE%A1"><span class="nav-number">7.3.</span> <span class="nav-text">New Design-船新设计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%A1%E5%87%86%E9%AA%8C%E8%AF%81%E6%B5%8B%E9%87%8F"><span class="nav-number">8.</span> <span class="nav-text">校准、验证、测量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%A1%E5%87%86-calibration"><span class="nav-number">8.1.</span> <span class="nav-text">校准-Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81-verification"><span class="nav-number">8.2.</span> <span class="nav-text">验证-Verification</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%90%E7%89%88%E5%B9%85%E9%A2%91%E7%89%B9%E6%80%A7%E6%B5%8B%E8%AF%95"><span class="nav-number">8.2.1.</span> <span class="nav-text">丐版幅频特性测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6%E5%AE%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">8.2.2.</span> <span class="nav-text">带宽测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%95%E5%99%AA%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%8E%A2%E7%B4%A2"><span class="nav-number">8.2.3.</span> <span class="nav-text">底噪验证与探索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E6%9C%BA%E7%8A%B6%E6%80%81%E4%B8%8B%E8%BE%93%E5%87%BA%E7%AB%AF%E5%99%AA%E5%A3%B0"><span class="nav-number">8.2.3.1.</span> <span class="nav-text">关机状态下输出端噪声</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E7%9F%AD%E6%8E%A5%E5%BA%95%E5%99%AA%E6%B5%8B%E8%AF%95"><span class="nav-number">8.2.3.2.</span> <span class="nav-text">输入短接底噪测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%8E%A550%E6%AC%A7sma%E8%B4%9F%E8%BD%BD%E5%B8%BD"><span class="nav-number">8.2.3.3.</span> <span class="nav-text">输入接50欧SMA负载帽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%8E%A5%E4%B8%80%E6%AE%B5%E7%BA%BF"><span class="nav-number">8.2.3.4.</span> <span class="nav-text">输入接一段线</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E9%87%8F-measurements"><span class="nav-number">8.3.</span> <span class="nav-text">测量-Measurements</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%951-%E7%A3%81%E5%B1%8F%E8%94%BD%E6%9D%90%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">附录1-磁屏蔽材料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%99%84%E5%BD%952-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">10.</span> <span class="nav-text">附录2-参考资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">11.</span> <span class="nav-text">后记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#part1"><span class="nav-number">11.1.</span> <span class="nav-text">Part1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#part2"><span class="nav-number">11.2.</span> <span class="nav-text">Part2</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -653,7 +988,7 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -818,6 +1153,59 @@ Todd Owen和Amit Patel为此攥写了 <strong>Application Note 159:Measuring 2nV
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
