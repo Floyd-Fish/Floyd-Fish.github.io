@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截铜">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCB设计基础-退耦技术">
+<meta property="og:url" content="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截铜">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/copper_wire.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_parastic.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/murata_c.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/inductance_adi.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/capacitance_adi.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_real.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_bode.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_1.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_2.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/lc_adi.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/ferrite_bead.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/noise_amp_pcb.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/noise_amp_3d.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_2.png">
+<meta property="article:published_time" content="2022-08-13T18:48:25.000Z">
+<meta property="article:modified_time" content="2022-08-13T18:54:24.026Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/copper_wire.jpg">
+
+<link rel="canonical" href="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PCB设计基础-退耦技术 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">37</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PCB设计基础-退耦技术
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-14 02:48:25 / 修改时间：02:54:24" itemprop="dateCreated datePublished" datetime="2022-08-14T02:48:25+08:00">2022-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/" class="post-meta-item leancloud_visitors" data-flag-title="PCB设计基础-退耦技术" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在上一篇文章 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/pcb_design_basic_common_sense/">PCB设计基础-常识篇</a></strong> 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——<strong>退耦技术</strong>。</p>
+<p>无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。</p>
+<h1 id="导线不是导线">导线不是导线</h1>
+<p>看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。</p>
+<p>拿起一截铜线，它在你眼里有哪些参数呢？</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/copper_wire.jpg" border="0"/></p>
+</center>
+<p>我相信你第一个想到的是它的 <strong>电阻</strong>。没错，我也是这么想的。但是这是对于直流信号来说的最主要的参数。但对于交变电流，它的身份一下子复杂了几个维度。</p>
+<span id="more"></span>
+<h2 id="寄生参数">寄生参数</h2>
+<p><strong>寄生参数(Parastic elements)</strong> 是一个电子元器件所拥有的除自身本应有的参数之外的参数，而这个寄生参数通常是我们 <strong>不想要的</strong>。比如一个电阻器，我们只希望它拥有电阻这一个属性，然而在真实世界中它同样会具有电感值和电容值，而多出来的电感&amp;电容值就是寄生参数。</p>
+<center>
+<p>一个贴片封装的1206陶瓷电容，同时具有寄生电感、寄生电容和等效串联电阻(ESR)参数<br />
+(选自信号完整性与电源完整性分析-Eric Bogatin) <img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_parastic.png" border="0"/></p>
+</center>
+<p>通常来说，我们的电路如果工作在较低频率段或者直流，这些寄生参数所带来的影响可以忽略不计，但一旦来到 <strong>高速及射频(300kHz数量级以上)</strong> 的领域，我们电路的性能往往由这些寄生参数所决定。</p>
+<p>举个例子，我们去 <strong><a target="_blank" rel="noopener" href="https://www.murata.com/zh-cn">村田(Murata)的官网</a></strong> 找到SimSurfing选型工具，然后随便点开一个电容的 <strong>阻抗-频率特性</strong> 图表，可以看到在低频区域(约250kHz以下)该电容呈现了电容的特性——频率越高，阻抗越小，而在该转折点之后，反倒呈现了电感的特性——频率越高，阻抗越大。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/murata_c.png" border="0"/></p>
+</center>
+<p>是不是有些违反常识？为什么会这样呢，当然是寄生参数在起作用咯。这个陶瓷电容的所有寄生参数等效出来的电路实质上是一个RLC谐振电路，阻抗-频率图表的转折频率点就是该等效谐振电路的谐振频率点，在该点前后，这颗电容所呈现的电气特性完全不一样。</p>
+<p>不只是电容，电阻、电感、甚至一截平平无奇的铜导线都有这样的寄生参数。还要补充一个小知识——</p>
+<blockquote>
+<p>集成电路的封装进步不仅仅是为了缩小集成电路的体积，以提高PCB空间利用率。早期的直插封装(如双列直插-PDIP)所引出的引脚实际上有着不小的寄生参数，在早期的低速电路中还不会形成太严重的影响，然而在高速电路中，这些PDIP封装的芯片再也难以使用。所以半导体厂商逐渐开始使用寄生参数更小的贴片封装，如SOIC、QFN、WSON、BGA、LFCSP等。所以你现在看到的高速运算放大器、FPGA等器件，基本没有直插封装的了。</p>
+</blockquote>
+<p>怎么样，看完这些后，平日你眼里平平无奇的电阻电容电感是不是变得有些陌生且恐怖呢;)</p>
+<p>顺便,用洞洞板和杜邦线做高速电路的朋友们,你们做的电路性能怎么样呢🤔</p>
+<h2 id="pcb导线trace的寄生参数">PCB导线(Trace)的寄生参数</h2>
+<p>在这里我不作详细的数学&amp;物理推导了(其实是我不会)，直接给出ADI的PPT上的结论:</p>
+<h3 id="导线的寄生电感">导线的寄生电感</h3>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/inductance_adi.png" border="0"/></p>
+</center>
+<p>我重写一下就是:</p>
+<p><span class="math display">\[
+寄生电感= 0.0002 * L[\ln{ 2L \over (W+H)} + 0.2235({W+H \over L})+0.5] (uH)
+\]</span></p>
+<h3 id="导线焊盘的寄生电容">导线、焊盘的寄生电容</h3>
+<p>别忘了，<strong>任何两个彼此绝缘的导体之间都可以看作一个电容</strong>。对于PCB上的走线、焊盘都是如此。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/capacitance_adi.png" border="0"/></p>
+</center>
+<p>重写一下这个估算公式:</p>
+<p><span class="math display">\[
+电容C = {kA\over 11.3d} = {0.00885\Epsilon_r A \over d} (pF)
+\]</span></p>
+<p>尤其要注意布设在地平面上的PCB走线，由于跟地平面正对的面积非常大，寄生电容也会非常大，在高频电路中这可不是什么好事情.jpg</p>
+<h2 id="一定程度上减小寄生参数的方法">一定程度上减小寄生参数的方法</h2>
+<p>对于寄生电感，有如下三种方法:</p>
+<ul>
+<li>在PCB中设计一层完整地平面,可以减小走线的寄生电感;<br />
+</li>
+<li><strong>尽量走短线</strong>,将线长缩短一半,寄生电感减小44%;</li>
+<li>增加线宽,不过收效甚微。加倍线宽只能减小11%的寄生电感。</li>
+</ul>
+<p>而对于寄生电容，有些矛盾的点:</p>
+<ul>
+<li>增加板厚度(或增加铜层之间的距离);<br />
+</li>
+<li>减小PCB焊盘的面积和导线宽度(减小正对面积);<br />
+</li>
+<li>移除关键导线正对的地平面(这就与寄生电感相悖了)。</li>
+</ul>
+<p>而在设计时,需要根据具体的应用和需求来做决定。</p>
+<h1 id="去耦decoupling">去耦(decoupling)</h1>
+<p>如果电源引脚上存在纹波或噪声，大多数IC的性能将会有所下降:数字IC的噪声裕量会降低、时钟抖动可能会增加，如果纹波较为严重，甚至会达到不能正常工作的程度。而模拟IC(运算放大器等)则是会在输出中直接耦合了电源纹波或噪声。🐟之前写的 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong> 中对于这一块有详细的介绍。</p>
+<p>退耦，又称 <strong>去耦(decoupling)</strong> ，意思是 <code>去除电源轨上的耦合噪声</code>。用于去耦的电容就被称作 <strong>去耦电容(decoupling capacitor)</strong>。本文的重点就要讲解如何去耦~</p>
+<p>顺便，<strong>几乎所有的IC的参考设计中</strong> 都会添加去耦电容。至少🐟看了这么多数据手册，无论是opa、adc/dac、mcu、FPGA、flash、...，它们的reference design的电路图中无一例外地在电源轨上添加了去耦电容。</p>
+<h2 id="纹波噪声从何而来">纹波&amp;噪声从何而来？</h2>
+<p>我们来设想一个数模混合系统。在这个电路中,3.3V电源轨上接了一个工作频率160MHz的单片机，同时还接了一个低压运算放大器,用于调理某个传感器的信号,并将调理好的信号送入ADC进行采样。</p>
+<p>通常我们的直觉是,用电器消耗的电流是恒定的——即从上电那一刻，电源输出的电流就不再变化。然而仅仅是美好的幻想。单片机在空闲时消耗的电流和执行计算任务或操作外设时消耗的电流有很大的差别。而工作在160MHz主频下的单片机的电源是时刻变化的:<strong>可能上一微秒需要1mA电流，下一微秒就会需要5mA。</strong>。而不断快速变化的电流就会在电源轨的导线(具有电阻和电感)上产生不断变化的电压，也就产生了高频 <strong>纹波(Ripple)</strong>。你可以拿示波器看看高速数字器件的电源轨，很dirty的。</p>
+<h2 id="电容类型">电容类型</h2>
+<p>我们首先来看一个实际电容的更为复杂的等效电路。它有寄生和等效参数如下:</p>
+<ul>
+<li>Rp - 绝缘电阻(泄漏电阻)<br />
+</li>
+<li>Rs - 等效串联电阻(Equivalent Series Resistor, ESR)<br />
+</li>
+<li>L - 等效串联电感(Equivalent Series L, ESL)<br />
+</li>
+<li>RDA- 电介质吸收(Dielectric Absorption, DA)现象模型</li>
+</ul>
+<p>在采样保持放大器等精密应用中,电介质吸收现象会造成显著误差,需要加以考虑,而在去耦应用中一般可以不考虑。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_real.png" border="0"/></p>
+</center>
+<p>再来看一张之前看过的、喜闻乐见的图。该图显示了5种不同类型的电容器的阻抗-频率曲线。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_bode.png" border="0"/></p>
+</center>
+<p>这些阻抗-频率曲线的 <strong>谷处</strong> 的宽度、位置和凹凸程度都取决于电容的各项寄生参数。虽然不同电容的曲线不同，但都有着同样的规律——即低频区域由ESR主导，高频区域由ESL主导，转折点由自谐振频率决定。<br />
+铝电解电容具有较高的ESR，所以阻抗曲线随着频率从0慢慢升高,逐渐趋近于一个较大的值(约几百mΩ)，而陶瓷电容的ESR较小,所以能降低到更低的值。下表是部分不同类型的电容的特性对比:</p>
+<table>
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 27%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>电容类型</th>
+<th>优点</th>
+<th>缺点</th>
+<th>应用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>高频铝电解电容</td>
+<td>高性价比、大容值、高耐压</td>
+<td>温升磨损严重、较高的ESR</td>
+<td>消费电子、工业</td>
+</tr>
+<tr class="even">
+<td>固态钽电容</td>
+<td>高容积比、低温下稳定、无磨损</td>
+<td>反压会boom、贵贵、耐压不高</td>
+<td>军工、高可靠性应用</td>
+</tr>
+<tr class="odd">
+<td>铝聚合物、特殊聚合物、PosCap、Os-con</td>
+<td>低ESR、阻抗温度稳定、相对小体积</td>
+<td>105°C以上容值快速降低、相对高成本</td>
+<td>最新技术、CPU核心电压稳压器</td>
+</tr>
+<tr class="even">
+<td>陶瓷</td>
+<td>最低ESR、ESL,耐受高纹波电流、X7R介质能在宽温度范围内工作</td>
+<td>容值与耐压不可兼得、压电陶瓷效应、偏压效应</td>
+<td>高频去耦、有能力工作至1GHz</td>
+</tr>
+<tr class="odd">
+<td>薄膜电容(聚酯纤维、特氟龙、聚丙烯、聚苯乙烯等)</td>
+<td>大体积高Q值、无磨损、耐受高电压</td>
+<td>容值与耐压不可兼得、贴片封装少见、高成本</td>
+<td>高压、大电流应用、交流应用、音频应用</td>
+</tr>
+</tbody>
+</table>
+<h2 id="去耦电容选择">去耦电容选择</h2>
+<ol type="1">
+<li>铝电解电容</li>
+</ol>
+<p>多数去耦应用中不建议使用"通用型铝电解电容"，但 <strong>高频型铝电解电容</strong> 被设计成可以在数百kHz的频率下处理高频脉冲电流，且具有低损耗特性，在某些场景下高频铝电解可以媲美固态钽电容，但通用铝电解电容不推荐。</p>
+<ol start="2" type="1">
+<li>钽电容</li>
+</ol>
+<p>固态钽电容的耐压一般低于50V，容值低于500uF，对于相同的尺寸，固态钽电容比铝电解电容具有更高的电容体积比，且具有更高的频率范围和更低的ESR。也更贵(小声)。对于浪涌和纹波电流滤波去耦应用需要谨慎对待(怕超耐压boom了)</p>
+<ol start="3" type="1">
+<li>陶瓷电容</li>
+</ol>
+<p>陶瓷电容，或多层陶瓷(MLCC)具有尺寸紧凑和低损耗特性，通常是数MHz以上的首选电容材料。但是陶瓷电容分为多种介质种类，不同介质的MLCC电气性能相差很大。下表是一些常见类型的陶瓷电容对比:</p>
+<table>
+<thead>
+<tr class="header">
+<th>材质</th>
+<th>容量范围</th>
+<th>特性</th>
+<th>温度稳定性</th>
+<th>应用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>NP0(C0G)</td>
+<td>多数0.5pF至10nF</td>
+<td>容量稳定、介质损耗小，稳定性高</td>
+<td>极佳</td>
+<td>高频耦合电容、有源滤波器、振荡器</td>
+</tr>
+<tr class="even">
+<td>X7R</td>
+<td>330pF至0.1uF</td>
+<td>同体积下容量更大、温度稳定</td>
+<td>较好，±15%</td>
+<td>要求不高的消费电子PCB</td>
+</tr>
+<tr class="odd">
+<td>Z5U</td>
+<td>10nF至0.47uF</td>
+<td>容积率高、容量不稳定、小尺寸低成本、低ESL和ESR,良好的频率响应</td>
+<td>不是很好</td>
+<td>去耦电容</td>
+</tr>
+<tr class="even">
+<td>Y5V</td>
+<td>10nF至4.7uF以上</td>
+<td>高介电常数(容量大)、有温度限制</td>
+<td>不是很好</td>
+<td>高密度PCB</td>
+</tr>
+</tbody>
+</table>
+<ol start="4" type="1">
+<li>薄膜型电容</li>
+</ol>
+<p>薄膜型电容一般要使用绕线和长引脚，这将极大增加ESL，因此不太适合用于电源去耦场合。相对的，薄膜型电容更适合用于音频场合。</p>
+<h3 id="电容去耦技术小结">电容去耦技术小结</h3>
+<p>多层陶瓷(MLCC)表面贴装电容的极低电感设计可提供近乎最佳的高频&amp;射频旁路，因此在10MHz或更高频率下的去耦电容多数会选择使用MLCC。封装体积更小的陶瓷芯片电容工作频率范围 <strong>可达1GHz</strong>。对于高频应用中的这些及其他电容，可通过选择自谐振频率高于最高工作频率的电容，确保去耦电容的有效性。</p>
+<p>当然，一般推荐的做法是—— <strong>使用一个大容量(10uF-100uF)的电解电容并联若干小容量的陶瓷电容</strong> 来完成去耦。去耦电容的原理和使用方法如下:</p>
+<ul>
+<li>大电容的作用是充当IC的动态电荷库,在芯片的输出功率动态变化时,电容就近给芯片提供能量,无需从远端的电源获取。<br />
+</li>
+<li>小容量陶瓷电容的作用是将电源轨上的&amp;器件产生的高频纹波或噪声对地短路<br />
+</li>
+<li>去耦电容应该尽可能靠近芯片,同时具有最短的回流路径,这对PCB布局布线提出了要求<br />
+</li>
+<li>Impotant: <strong>所有的去耦电容都应该使用尽可能短的连接线连接到一块低阻抗地平面，以最小化引线电感</strong>(同时可满足最短回流路径)</li>
+</ul>
+<p>下图展示了电容去耦的正确布线技术。左图中,电容一端紧靠着IC的正电源引脚,另一端通过过孔直接接入PCB下方的完整地平面,这样就可以实现最短的去耦路径。而右图中,去耦电容的另一端通过一段导线连接到IC的GND引脚，看似是较短路径，实则这一段导线的ESL和ESR远不如完整地平面的小。并且，这样连接同时还形成了一个闭合的环路，这将使得该电源环路更容易被其他电路干扰，同时更容易导致各种信号完整性问题。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_1.png" border="0"/></p>
+</center>
+<p>同时还有一张实物对比图。注意该PCB下方是有完整地平面的。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_2.png" border="0"/></p>
+</center>
+<h2 id="劲更大的lc去耦与磁珠">劲更大的LC去耦与磁珠</h2>
+<p>同样的，在🐟之前写的 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong> 中已经详细地介绍了无源LC滤波器在电源去耦中的应用。当时我使用LC滤波器的目的是为了滤除在LDO输出端由上级开关电源产生的纹波,其实也相当于去耦，不过去耦一般是相对于负载来说的，而电源芯片一般就叫滤波了~</p>
+<h3 id="磁珠与电感的区别">磁珠与电感的区别</h3>
+<p>之前的文章中提到了,使用LC滤波器会导致该电路有谐振点。如果选择元件不恰当，反而会增强目标频段的纹波和噪声。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/lc_adi.png" border="0"/></p>
+</center>
+<p>正常走线的寄生电感也会和电容产生谐振点。例如一个0.1uF的电容和具有1nH ESL的走线将在16MHz左右产生谐振。单纯地使用LC来完成去耦,可能会出现谐振增强的现象。具体增强与否与电路Q值有关，如果在电感后串入一个小电阻,可以有效降低Q值，避免这种增强现象。</p>
+<p>当然这个小电阻需要尽可能地小，以降低电阻的压降。也可以使用铁氧体磁珠来代替小电阻完成这一工作，磁珠的直流导通电阻接近于0。铁氧体磁珠在谐振频率下主要呈现为阻性，所以使用磁珠也会降低电路的有效Q值。典型铁氧体磁珠的阻抗-频率曲线如下图所示:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/ferrite_bead.png" border="0"/></p>
+</center>
+<h1 id="实战">实战</h1>
+<p>🐟之前画的NoiseAMP_V2.3的板子就很适合作为栗子。<br />
+绿不拉几的这张图是PCB设计图,绿色的部分是PCB背面的完整地平面，中间偏右下的大方块就是运算放大器,黑色箭头指出的4个元件分别是正负电源的去耦电容。</p>
+<p>运算放大器下方的区域做挖空处理，以减小运算放大器敏感线路的寄生电容。我这里其实偷了个懒。PCB正面(红色的铜区)应该覆铜后打孔的，我懒得覆了就直接拉了2根线打过孔下去...这种是不对的！(虽然用着没什么问题，但是不建议这么用)</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/noise_amp_pcb.png" border="0"/></p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/noise_amp_3d.png" border="0"/></p>
+</center>
+<p>还是看看远方的ADI吧家人们。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_2.png" border="0"/></p>
+</center>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thanks for your support!</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="Floyd-Fish 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Floyd-Fish 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/" rel="prev" title="PCB设计基础-常识篇">
+      <i class="fa fa-chevron-left"></i> PCB设计基础-常识篇
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E7%BA%BF%E4%B8%8D%E6%98%AF%E5%AF%BC%E7%BA%BF"><span class="nav-number">1.</span> <span class="nav-text">导线不是导线</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%84%E7%94%9F%E5%8F%82%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">寄生参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pcb%E5%AF%BC%E7%BA%BFtrace%E7%9A%84%E5%AF%84%E7%94%9F%E5%8F%82%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">PCB导线(Trace)的寄生参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E7%BA%BF%E7%9A%84%E5%AF%84%E7%94%9F%E7%94%B5%E6%84%9F"><span class="nav-number">1.2.1.</span> <span class="nav-text">导线的寄生电感</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E7%BA%BF%E7%84%8A%E7%9B%98%E7%9A%84%E5%AF%84%E7%94%9F%E7%94%B5%E5%AE%B9"><span class="nav-number">1.2.2.</span> <span class="nav-text">导线、焊盘的寄生电容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E5%AE%9A%E7%A8%8B%E5%BA%A6%E4%B8%8A%E5%87%8F%E5%B0%8F%E5%AF%84%E7%94%9F%E5%8F%82%E6%95%B0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">一定程度上减小寄生参数的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%BB%E8%80%A6decoupling"><span class="nav-number">2.</span> <span class="nav-text">去耦(decoupling)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%B9%E6%B3%A2%E5%99%AA%E5%A3%B0%E4%BB%8E%E4%BD%95%E8%80%8C%E6%9D%A5"><span class="nav-number">2.1.</span> <span class="nav-text">纹波&amp;噪声从何而来？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.2.</span> <span class="nav-text">电容类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%BB%E8%80%A6%E7%94%B5%E5%AE%B9%E9%80%89%E6%8B%A9"><span class="nav-number">2.3.</span> <span class="nav-text">去耦电容选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%AE%B9%E5%8E%BB%E8%80%A6%E6%8A%80%E6%9C%AF%E5%B0%8F%E7%BB%93"><span class="nav-number">2.3.1.</span> <span class="nav-text">电容去耦技术小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%B2%E6%9B%B4%E5%A4%A7%E7%9A%84lc%E5%8E%BB%E8%80%A6%E4%B8%8E%E7%A3%81%E7%8F%A0"><span class="nav-number">2.4.</span> <span class="nav-text">劲更大的LC去耦与磁珠</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%8F%A0%E4%B8%8E%E7%94%B5%E6%84%9F%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.4.1.</span> <span class="nav-text">磁珠与电感的区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">3.</span> <span class="nav-text">实战</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://badboy2002.xyz/" title="https:&#x2F;&#x2F;badboy2002.xyz&#x2F;" rel="noopener" target="_blank">Badboy's Blog</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

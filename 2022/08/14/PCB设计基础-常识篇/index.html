@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的PCB。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PCB设计基础-常识篇">
+<meta property="og:url" content="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/index.html">
+<meta property="og:site_name" content="月之暗面">
+<meta property="og:description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的PCB。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/8layer_pcb.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/jlc_pcb2.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/2layer_pcb.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/vias.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/through_hole.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/smt.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/jlc_pcb1.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/purple_mask.jpg">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/teardrops.png">
+<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/pcb_design_flow.png">
+<meta property="article:published_time" content="2022-08-13T18:46:19.000Z">
+<meta property="article:modified_time" content="2022-08-13T18:52:40.274Z">
+<meta property="article:author" content="Floyd-Fish">
+<meta property="article:tag" content="电子电路">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/8layer_pcb.png">
+
+<link rel="canonical" href="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PCB设计基础-常识篇 | 月之暗面</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">月之暗面</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">The DARKSIDE of the Moon</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">5</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">37</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/Floyd-Fish" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PCB设计基础-常识篇
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-14 02:46:19 / 修改时间：02:52:40" itemprop="dateCreated datePublished" datetime="2022-08-14T02:46:19+08:00">2022-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/" class="post-meta-item leancloud_visitors" data-flag-title="PCB设计基础-常识篇" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。</p>
+<p>🐟想通过这一系列基础教程，讲解一下如何设计 <strong>具有优异电气性能</strong> 的PCB。当然，这个教程只是基础教程，并不能涵盖PCB设计的方方面面。我能想到的方向以及这一系列将要讲解的问题如下(勾上的是要讲的):</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="" />
+PCB类型与常识<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+高速信号布线技术<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+精密小信号布线技术<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+模数混合信号布局布线技术<br />
+</li>
+<li><input type="checkbox" disabled="" checked="" />
+退耦技术</li>
+<li><input type="checkbox" disabled="" />
+PCB机械特性<br />
+</li>
+<li><input type="checkbox" disabled="" />
+PCB生产与加工工艺<br />
+</li>
+<li><input type="checkbox" disabled="" />
+PCB热特性<br />
+</li>
+<li><input type="checkbox" disabled="" />
+PCB电气性能表征<br />
+</li>
+<li><input type="checkbox" disabled="" />
+复杂系统中的多PCB设计<br />
+</li>
+<li><input type="checkbox" disabled="" />
+PCB板间互连技术<br />
+</li>
+<li><input type="checkbox" disabled="" />
+射频与微波布线技术<br />
+</li>
+<li><input type="checkbox" disabled="" />
+PCB与结构件搭配<br />
+</li>
+<li><input type="checkbox" disabled="" />
+......</li>
+</ul>
+<p>还有很多我暂时没遇到过的方向与技术，等我遇到了再时不时回来补充一波~<br />
+那么我们开始吧——</p>
+<blockquote>
+<p>本系列教程参考了ADI的高速、混合、微弱信号布线指南,以及各种Mini tutorial和Application Notes,同时还有电子学教材以及嘉立创的PCB加工工艺说明。</p>
+</blockquote>
+<span id="more"></span>
+<h2 id="pcb各项参数">PCB各项参数</h2>
+<p>电子工业发展的早期，人们都用导线将各个元器件的引脚接在一起。现在这种方法早已不能适应大规模、高密度的电子系统需求，仅仅作为简单系统的实验验证目的使用。(比如面包板),印制电路板在电子工业中占领了绝对的主导地位。</p>
+<h3 id="pcb层数layers">PCB层数(Layers)</h3>
+<p>下图是一个典型的8层 PCB示意图, <strong>PCB的层数指的是导电材料的层数</strong>,而最常用也是用的最多的PCB导电材料是 <strong>铜(Copper)</strong>。每两层导电材料都包夹着一层<strong>绝缘介质层</strong>(如果不绝缘,PCB就成了一整块...)，这样就构成了一个超级三明治，每一个导电层是彼此绝缘的,意味着你可以在一块薄薄的8层PCB板上拥有8个可以用来布线的平面。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/8layer_pcb.png" border="0"/></p>
+</center>
+<h3 id="pcb基材">PCB基材</h3>
+<p>PCB的基材普遍是以基板(上图中的Core)的绝缘及强化部分作分类,常见的原料为电木板、玻璃纤维板，以及各式的塑胶板。其主要成分有:</p>
+<ul>
+<li>FR-1 ──酚醛棉纸,这种基材通称电木板（比FR-2便宜）<br />
+</li>
+<li>FR-2 ──酚醛棉纸<br />
+</li>
+<li>FR-3 ──棉纸、环氧树脂<br />
+</li>
+<li>FR-4 ──玻璃布（Woven glass）、环氧树脂<br />
+</li>
+<li>FR-5 ──玻璃布、环氧树脂<br />
+</li>
+<li>FR-6 ──毛面玻璃、聚酯<br />
+</li>
+<li>G-10 ──玻璃布、环氧树脂<br />
+</li>
+<li>CEM-1 ──棉纸、环氧树脂（阻燃）<br />
+</li>
+<li>CEM-2 ──棉纸、环氧树脂（非阻燃）<br />
+</li>
+<li>CEM-3 ──玻璃布、环氧树脂<br />
+</li>
+<li>CEM-4 ──玻璃布、环氧树脂<br />
+</li>
+<li>CEM-5 ──玻璃布、多元酯<br />
+</li>
+<li>AlN ──氮化铝<br />
+</li>
+<li>SIC ──碳化硅</li>
+</ul>
+<p>当然,还有比较特殊的铝基板、黄铜基板、特氟龙介质、Rogers的高频介质、陶瓷基板等。<br />
+而PCB的整体厚度具体取决于生产商的工艺、PCB层数以及机械强度要求等因素。但主要还是取决于设计人员怎么设计,你可以设计2mm厚的双层板,也可以设计1.2mm厚的8层板。不过对于同样层数的PCB，想要加工得越薄,难度越大(越贵)。</p>
+<p>以下是嘉立创PCB能够生产的各类PCB基材说明。(嫖了人家不少板子，免费给打个广告吧~)</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/jlc_pcb2.png" border="0"/></p>
+</center>
+<p>顺带的，国外常用的长度计量单位是mil,国内工程师常用的是mm，许多元器件封装规范中也以mil作为长度单位，在这里提供一个mil(密耳)和mm(毫米)之间的转换关系:</p>
+<ul>
+<li>1mil = 0.001 inches<br />
+</li>
+<li>1mil = 0.0254mm<br />
+</li>
+<li>10mil = 0.254mm<br />
+</li>
+<li>100mil = 2.54mm</li>
+</ul>
+<h3 id="pcb导电材料">PCB导电材料</h3>
+<p>一般PCB的导电层所使用的材料是金属,最常见的有:</p>
+<ul>
+<li>铜<br />
+</li>
+<li>银合金或镀银<br />
+</li>
+<li>铜镀金(抗氧化)<br />
+</li>
+<li>铜镀锡(易焊接,多数PCB的形式)<br />
+</li>
+<li>铜镀锡铅合金(就是镀有铅锡或者无铅锡)</li>
+</ul>
+<p>但是这些导电材料并不是一整坨丢上PCB的，它们是非常薄的一层镀层。下图是一个双层板PCB示意图,在顶层有一条铜导线(Trace),这条走线的长度和宽度都可以由设计者在一定范围内任意设计,但厚度则取决于生产厂家的工艺参数，一般可以选择 <strong>0.5oz至3oz(盎司)</strong> 间的值。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/2layer_pcb.png"  border="0"/></p>
+</center>
+<p>盎司在PCB设计中是个奇怪的单位，他本来是个重量单位,但它在这里指金属镀层的厚度。1oz的意思是重量1oz的铜均匀平铺在1平方英尺（FT2）的面积上所达到的厚度。同样的，提供一个盎司与厚度转换关系:</p>
+<ul>
+<li>0.5oz = 17.5um(微米)</li>
+<li>1oz = 35um</li>
+<li>2oz = 70um</li>
+<li>3oz = 105um</li>
+</ul>
+<p>嗯，这些金属镀层不是那么的厚，意味着PCB上走的导线一般不能承受巨大的电流(100A级别的),而这些大功率走线则会结合传统的连接方式去设计。</p>
+<h3 id="pcb介电常数">PCB介电常数</h3>
+<p>在电磁学里，相对电容率，又称为 <strong>相对介电常数</strong>，定义为电容率与真空电容率的比例∶</p>
+<p><span class="math display">\[
+\epsilon_r = {\epsilon \over \epsilon_0}
+\]</span></p>
+<p>其中, <span class="math inline">\(\epsilon_r\)</span> 是电介质的相对介电常数,<span class="math inline">\(\epsilon\)</span>是电解质的介电常数,<span class="math inline">\(\epsilon_0\)</span>是真空介电常数。</p>
+<p>介电常数对于PCB最大的影响是<strong>电容</strong>这个参数。不同的PCB基材对应不同的介电常数,不同的介电常数材料之上同一段导线的电气参数完全不同。比如在射频PCB设计中,设计者需要提前知道PCB的介质相对介电常数、PCB厚度与导电层厚度等参数,才能建立可靠的传输线仿真模型，从而控制射频传输线的特征阻抗等参数。</p>
+<p>比如最常用的FR-4板材的相对介电常数约为4.5或4.6,特氟龙板材的相对介电常数约为2.1。</p>
+<h3 id="pcb过孔盲孔与埋孔">PCB过孔、盲孔与埋孔</h3>
+<p>如果光有8个独立的导电材料平面,好像并不能做什么。要将层与层之间连接起来，我们就需要<strong>过孔(via)</strong>。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/vias.png"  border="0"/></p>
+</center>
+<p>还是这个8层PCB，我们在PCB上钻孔，同时在孔的内层镀上导电材料,就可以将不同的导电层连接起来。一般过孔分为3类,它们的区别如下:</p>
+<ul>
+<li>过孔(Via):贯穿PCB,一打就必须穿。<br />
+</li>
+<li>盲孔(Blind Via):从PCB一端钻入,钻到某一层停止,不贯穿。<br />
+</li>
+<li>埋孔(Buried Via):在PCB内层间贯通,在PCB外面无法看到它的存在。</li>
+</ul>
+<p>其中,过孔是常规工艺,而盲孔与埋孔是比较高级的工艺,生产时使用盲埋孔的PCB会收高昂的工艺费。</p>
+<p>过孔一般尺寸较大(常规的直径0.4mm-1.0mm左右都有),普通过孔是最为简单粗暴的,但一个过孔打下去会抢占其他层同位置的空间，可能还是会给其他层的布线增加难度。而盲孔和埋孔则可以大大减轻这个效应，从而大幅提高PCB的布线密度。但是盲孔和埋孔有一个弊端——难以debug。</p>
+<h3 id="元器件焊盘pad">元器件焊盘(Pad)</h3>
+<p>顾名思义，<strong>焊盘</strong>就是用来焊接的"盘"。但其实它并不全是圆形的"盘"，最早的直插元器件在PCB上的Pad是一个圆孔，所以可能翻译过来就变成了焊盘。SMT(Surface Mounting Technology,表面贴装技术)的出现彻底改变了PCB的样貌。使用表面贴装封装技术,可以使无源元件(电阻、电容、电感等)和集成芯片的寄生参数更小、所能工作的频率更高、占用更小的PCB空间,同时使得更高层数PCB的设计变得更加容易。下面是直插安装与贴片安装的对比图。</p>
+<center>
+<p>直插元器件的通孔安装方法与表面贴装元器件的贴片安装法:</p>
+<p>(Tek TDR反射计 部分PCB)</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/through_hole.jpg"  border="0"/></p>
+<p>(Floydfish做的精密电压源PCB)</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/smt.jpg"  border="0"/></p>
+</center>
+<p>通孔(Through Hole)焊盘的结构类似过孔，不过孔径要比过孔大不少。而贴片焊盘说白了就是一小块带有几何形状的金属片。比如上图中绿色板子上的 <strong>TP501</strong>、<strong>TP402</strong> 2个测试点，就是一小块圆形的"贴片"。</p>
+<h3 id="pcb层压工艺">PCB层压工艺</h3>
+<p>有时为了满足不同的PCB需求，例如阻抗控制、导热性能、机械强度、导电层与绝缘层间间距控制等，可能需要采用不同的生产工艺。还是以JLC的2种层压工艺为例子:</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/jlc_pcb1.png"  border="0"/></p>
+</center>
+<p>可以从层压图看出:7628层压结构和2313层压结构的区别在于Core基材和PP厚度不同。而且2313的PP填充介质的相对介电常数和Core材料的相对介电常数并不相同。</p>
+<h3 id="pcb阻焊">PCB阻焊</h3>
+<p>阻焊顾名思义就是"阻止焊接"。还是上面那张绿绿的板子，为什么这张板子是绿色的呢？因为它的表面(顶面和底面)覆盖了一层绿色的<strong>阻焊材料</strong>,Wiki上说是聚合物薄漆,不过我们一般称其为阻焊绿油。</p>
+<p>有的小伙伴可能就要问了，PCB是只有绿色的吗？为什么我还见过别的颜色？<br />
+PCB当然不止绿色~ 常用的阻焊颜色还有蓝色、黑色、红色、橙色、黄色、白色、紫色等。有些比较高(昂)级(贵)的工艺还能做哑光绿、哑光黑等特殊阻焊，甚至还有粉色、彩色阻焊的存在。</p>
+<p>阻焊的意义在于<strong>盖住PCB上不需要焊接的部分,同时可以防止金属走线长时间暴露在空气中被氧化</strong>。想象一下，在手工焊接中，焊盘与旁边未覆盖阻焊的地铜区挨得非常近(0.几mm),焊接的时候就极易将焊盘与地铜区焊短路。在回流焊等自动化焊接过程中，抹在SMT焊盘上的锡膏高温融化成液态金属锡，在表面张力的作用下从四面八方汇聚到焊盘上。如果焊盘或布线的密度极高，而所有的金属部分未覆盖阻焊，那么这些融化的液态金属锡就会像无头苍蝇一样乱创。所以阻焊一般是PCB的必备选择。</p>
+<p>阻焊在射频及微波电路PCB中还有一个非常重要的角色:<strong>覆盖在PCB导线上的阻焊材料将影响导线的特征阻抗</strong>。在对传输线特征阻抗有严格要求的情况下，要适当移除传输线上的阻焊。一般在PCB设计软件里,通过操作阻焊层(Mask)可以完成这项操作。</p>
+<center>
+<p>Floydfish设计的DDS信号发生器,紫色阻焊</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/purple_mask.jpg"  border="0"/></p>
+</center>
+<h3 id="pcb丝印silkscreen">PCB丝印(SilkScreen)</h3>
+<p>丝印也是个很形象的翻译，我们在PCB上(当然，只有正反两面)看到的字符、方框、连线标识、Logo等都是<strong>丝印</strong>。比如上图中白色的<code>ANALOG DEVICES</code>的Logo，他就是丝印的一部分,下面的DDS框图也是,右边的版权字符也是。更上面那张绿色板子上的C203、FB401、R301等等都是丝印，不过他们代表的含义有所不同。</p>
+<p>设计丝印的目的是 <strong>使PCB更加容易"阅读"</strong>。在生产调试的过程中,如果给每个元件旁边都写上标号，在所有测试点处都标上序号,那么可以大幅减轻焊接、调试的工作量——如果没有这些标号，你还得对照PCB设计文件去查找哪个元件对应原理图中的某一部分。</p>
+<p>当然，丝印还可以用来干别的，比如打上你个人的logo、版权声明、公司logo、PCB版本号、一些生产测试信息等等。</p>
+<p>丝印一般有黑色和白色2种，彩色的不多见但也有。</p>
+<h3 id="泪滴tear-drops">泪滴(Tear Drops)</h3>
+<p>泪滴是个比较优雅的结构。如果将它单独拎出来观察，形状像一滴水(<del>圣母的眼泪</del>)，故称泪滴。它主要用于在有宽度差异的连接处提供过渡，有3个作用:</p>
+<ol type="1">
+<li>在PCB受到高强度冲击时，有泪滴的连接处不易断裂;<br />
+</li>
+<li>在生产焊接时,有泪滴的连接处焊盘不易经过多次高温加热后脱落;<br />
+</li>
+<li>在2个宽度不等的连线中间提供平滑的阻抗变化,不致于阻抗瞬变从而导致高速信号质量恶化。<br />
+</li>
+<li>让PCB走线更好看;)</li>
+</ol>
+<center>
+<p>左:一般焊盘，右:带有泪滴过渡的焊盘</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/teardrops.png"  border="0"/></p>
+</center>
+<p>泪滴一般可以打在过孔、盲埋孔、焊盘上，也可以打在2个线径不等的连线过渡段。</p>
+<h2 id="pcb设计流程">PCB设计流程</h2>
+<p>简化过的PCB设计流程如下图所示。</p>
+<center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/pcb_design_flow.png"  border="0"/></p>
+</center>
+<p>一般我们通过专用的EDA软件或工具来完成PCB设计的全流程。比较常用的有Altium Designer(常说的AD)、Cadence SPB(阿狸狗)、Eagle、KiCad(开源免费EDA)、立创EDA等。这些EDA软件可以创建并管理元器件库、绘制原理图、绘制PCB、设计规则检查(DRC)、并最终导出PCB的生产文件(一般是Gerber)，用以加工。</p>
+<p>🐟做小项目时习惯用KiCad画板子，因为它足够轻量和简单，功能也很强大(当然bug不少，功能还是不能跟成熟的商业专业软件如Cadence比)。我之前(2020年)录过一个使用KiCad设计PCB的视频教程，现在看来做的不是很好...不过我最近好像也没有重新录一个的计划:( 所以还是将就康康咯——</p>
+<iframe src="//player.bilibili.com/player.html?aid=968269927&amp;bvid=BV1Kp4y1X7pS&amp;cid=203333664&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+</iframe>
+<h1 id="next">Next</h1>
+<p>下一篇:<a target="_blank" rel="noopener" href="https://www.emoe.xyz/decoupling_technic/">PCB设计基础-退耦技术</a></p>
+<h1 id="reference">Reference</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jlc.com/portal/vtechnology.html">嘉立创PCB工艺说明</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://resources.altium.com/cn/pcb-design?page=3">Altium中国社区支持</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Thanks for your support!</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechat.jpg" alt="Floyd-Fish 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="Floyd-Fish 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%B5%E5%AD%90%E7%94%B5%E8%B7%AF/" rel="tag"># 电子电路</a>
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/30/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2022-06-30/" rel="prev" title="生活随笔-2022-06-30">
+      <i class="fa fa-chevron-left"></i> 生活随笔-2022-06-30
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/" rel="next" title="PCB设计基础-退耦技术">
+      PCB设计基础-退耦技术 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#pcb%E5%90%84%E9%A1%B9%E5%8F%82%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">PCB各项参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E5%B1%82%E6%95%B0layers"><span class="nav-number">1.1.</span> <span class="nav-text">PCB层数(Layers)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E5%9F%BA%E6%9D%90"><span class="nav-number">1.2.</span> <span class="nav-text">PCB基材</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E5%AF%BC%E7%94%B5%E6%9D%90%E6%96%99"><span class="nav-number">1.3.</span> <span class="nav-text">PCB导电材料</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E4%BB%8B%E7%94%B5%E5%B8%B8%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">PCB介电常数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E8%BF%87%E5%AD%94%E7%9B%B2%E5%AD%94%E4%B8%8E%E5%9F%8B%E5%AD%94"><span class="nav-number">1.5.</span> <span class="nav-text">PCB过孔、盲孔与埋孔</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E5%99%A8%E4%BB%B6%E7%84%8A%E7%9B%98pad"><span class="nav-number">1.6.</span> <span class="nav-text">元器件焊盘(Pad)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E5%B1%82%E5%8E%8B%E5%B7%A5%E8%89%BA"><span class="nav-number">1.7.</span> <span class="nav-text">PCB层压工艺</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E9%98%BB%E7%84%8A"><span class="nav-number">1.8.</span> <span class="nav-text">PCB阻焊</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pcb%E4%B8%9D%E5%8D%B0silkscreen"><span class="nav-number">1.9.</span> <span class="nav-text">PCB丝印(SilkScreen)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%AA%E6%BB%B4tear-drops"><span class="nav-number">1.10.</span> <span class="nav-text">泪滴(Tear Drops)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pcb%E8%AE%BE%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">PCB设计流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#next"><span class="nav-number"></span> <span class="nav-text">Next</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number"></span> <span class="nav-text">Reference</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Floyd-Fish"
+      src="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+  <p class="site-author-name" itemprop="name">Floyd-Fish</p>
+  <div class="site-description" itemprop="description">-Actually it doesn't exist</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Floyd-Fish" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Floyd-Fish" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/summer200816@outlook.com" title="E-Mail → summer200816@outlook.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.emoe.xyz/" title="https:&#x2F;&#x2F;www.emoe.xyz" rel="noopener" target="_blank">Emoe-Studio</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cjh0613.com/index.html" title="https:&#x2F;&#x2F;cjh0613.com&#x2F;index.html" rel="noopener" target="_blank">峡州仙士之页</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://cheeennpp.github.io/" title="https:&#x2F;&#x2F;cheeennpp.github.io&#x2F;" rel="noopener" target="_blank">橙的核电站</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://badboy2002.xyz/" title="https:&#x2F;&#x2F;badboy2002.xyz&#x2F;" rel="noopener" target="_blank">Badboy's Blog</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Floyd-Fish</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'TtoG3u239PmB71AHnu7OcqHj-gzGzoHsz',
+      appKey     : 'Wm5T0rsN5H5hdHQpXe0dpueI',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
