@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">38</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">39</span></a>
 
   </li>
   </ul>
@@ -161,6 +161,112 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">运算放大器噪声分析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-08-27 22:20:05 / 修改时间：23:05:32" itemprop="dateCreated datePublished" datetime="2022-08-27T22:20:05+08:00">2022-08-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/" class="post-meta-item leancloud_visitors" data-flag-title="运算放大器噪声分析" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="运算放大器噪声分析">运算放大器噪声分析</h1>
+<p>在精密模拟电路设计中，<strong>噪声分析</strong> 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。</p>
+<p>之前🐟也写了有关噪声的3篇文章，分别是——</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">电路中的噪声</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计</a><br />
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-amplifier-building-instruction/">噪声放大器(Noise Amplifier)构建指南</a></li>
+</ul>
+<p>这3篇文章由浅入深、循序渐进地探讨了噪声对电路的影响，以及如何测量噪声。这次杀个回马枪，回归理论和魔电~</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1363,125 +1469,6 @@ PSK</li>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
-      <meta itemprop="name" content="Floyd-Fish">
-      <meta itemprop="description" content="-Actually it doesn't exist">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="月之暗面">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/" class="post-title-link" itemprop="url">信号与系统-周期信号的傅里叶级数表示</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-29 15:24:59" itemprop="dateCreated datePublished" datetime="2022-01-29T15:24:59+08:00">2022-01-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-17 21:14:48" itemprop="dateModified" datetime="2022-02-17T21:14:48+08:00">2022-02-17</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/" class="post-meta-item leancloud_visitors" data-flag-title="信号与系统-周期信号的傅里叶级数表示" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition)<br />
-Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib</p>
-<h2 id="lti系统对复指数信号的响应">LTI系统对复指数信号的响应</h2>
-<p>在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在幅度上的变化;也就是说:</p>
-<p><span class="math display">\[
-连续时间: e^{st} \rightarrow H(s)e^{st} \cdots (3.1)\\
-离散时间: z^n \rightarrow H(z)z^n \cdots (3.2)
-\]</span></p>
-<p>这里 <span class="math inline">\(H(s)\)</span>或<span class="math inline">\(H(z)\)</span>是一个复振幅因子,一般来说是复变量s或z的函数。若系统对该信号的输出响应仅是一个常数（可能是复数）乘以输入，则称该信号为系统的 <strong>特征函数</strong>，而幅度因子称为系统的 <strong>特征值</strong>。</p>
-<h3 id="证明复指数是lti系统的特征函数">证明复指数是LTI系统的特征函数</h3>
-<p>考虑一单位冲激响应为<span class="math inline">\(h(t)\)</span>的连续时间LTI系统。对于任意输入<span class="math inline">\(x(t)\)</span>，可由卷积积分来确定系统输出。若令<span class="math inline">\(x(t)=e^{st}\)</span>，则有:</p>
-<p><span class="math display">\[
-y(t) = \int_{-\infty}^{+\infty} h(T)x(t-T)dT = \int_{-\infty}^{+\infty} h(T)e^{s(t-T)}dT \cdots(3.3)
-\]</span></p>
-<p><span class="math inline">\(e^{s(t-T)}\)</span>可写成<span class="math inline">\(e^{st}e^{-sT}\)</span>，而<span class="math inline">\(e^{st}\)</span>可以从积分号内移出来，这样（3.3）式变成:</p>
-<p><span class="math display">\[
-y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
-\]</span></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1553,7 +1540,7 @@ y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
