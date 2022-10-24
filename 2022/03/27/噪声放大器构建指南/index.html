@@ -91,7 +91,7 @@
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_coaxial_wire.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/test/hands_on_common_wire.jpg">
 <meta property="article:published_time" content="2022-03-27T06:51:54.000Z">
-<meta property="article:modified_time" content="2022-06-07T13:56:16.256Z">
+<meta property="article:modified_time" content="2022-10-17T14:24:31.624Z">
 <meta property="article:author" content="Floyd-Fish">
 <meta property="article:tag" content="电子电路">
 <meta name="twitter:card" content="summary">
@@ -200,7 +200,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">40</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">41</span></a>
 
   </li>
   </ul>
@@ -263,7 +263,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-06-07 21:56:16" itemprop="dateModified" datetime="2022-06-07T21:56:16+08:00">2022-06-07</time>
+                <time title="修改时间：2022-10-17 22:24:31" itemprop="dateModified" datetime="2022-10-17T22:24:31+08:00">2022-10-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -376,7 +376,7 @@
 <p>Jim Williams是一位具有传奇色彩的模拟电路工程师,永远缅怀。</p>
 </center>
 <p>2009年7月，Jim Williams发表了 <strong>Application Note 124:775 Nanovolt Noise Measurement for A Low Noise Voltage Reference</strong>，文章的副标题是 <strong>"Quantifying Silence"</strong> (量化寂静)，有股诗人的气息🤔</p>
-<p>这篇笔记中，为了测量 <strong>LTC6655</strong> 精密基准电压源芯片的输出噪声,Jim搭建了一个 0.1Hz至10Hz 的噪声放大器,精确地测量了LTC6655的输出电压噪声为775nVpp。以下是Jim的电路图。</p>
+<p>这篇笔记中，为了测量 <strong>LTC6655</strong> 精密基准电压源芯片的输出噪声,Jim搭建了一个 0.1Hz至10Hz 的噪声放大器,精确地测量了LTC6655的输出电压噪声为775nVpp(0.1Hz~10Hz)。以下是Jim的电路图。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/an-124_sch.JPG" alt="AN-124 Schematic" border="0"/></p>
 </center>
@@ -397,7 +397,7 @@
 <p>因为对于电压基准源，主要关心它的低频噪声,也就是 <strong>1/f噪声</strong>,所以Jim设计这个放大器时仅仅只提取了0.1Hz到10Hz范围内的噪声进行放大处理。做好屏蔽、挑选合适的元器件、应用适当的布线技术，这样一个低频噪声放大器就出炉了~</p>
 <h2 id="更高带宽">4.2-更高带宽</h2>
 <p>随着技术进步，更牛逼的新器件如雨后春笋般诞生。其中就有LT生产的几款 <strong>超高PSRR(120dB)、极低噪声(0.8uV)的低压差线性稳压器(LDO)</strong> —— LT3042&amp;LT30453094等型号LDO。</p>
-<p>为了测量这些LDO的噪声水平和在宽频率范围内的超高PSRR,Jim之前为低频测量所涉及的噪声放大器已不再适用,需要新的高带宽噪声放大器才能满足我们的需求。</p>
+<p>为了测量这些LDO的噪声水平和在宽频率范围内的超高PSRR,Jim之前为低频测量所设计的噪声放大器已不再适用,需要新的高带宽噪声放大器才能满足我们的需求。</p>
 <h1 id="五.20uvrms宽带噪声测量-an83">五.20uVrms宽带噪声测量-AN83</h1>
 <p>在2000年,Jim和Todd Owen攥写了 <strong>Application Note 83:Performance Verification of Low Noise,Low Dropout Regulators</strong>，副标题是 <strong>"Silence of the Amps"</strong>(电流之静)。</p>
 <center>
@@ -988,7 +988,7 @@ V_{n3} = 2.055uV_{rms}  \cdots 5MHz
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
