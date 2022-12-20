@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">43</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">44</span></a>
 
   </li>
   </ul>
@@ -161,6 +161,115 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">噪声放大器构建指南</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-27 14:51:54" itemprop="dateCreated datePublished" datetime="2022-03-27T14:51:54+08:00">2022-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-11-03 00:58:11" itemprop="dateModified" datetime="2022-11-03T00:58:11+08:00">2022-11-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/" class="post-meta-item leancloud_visitors" data-flag-title="噪声放大器构建指南" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <center>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/ligo.jpg" alt="宇宙中传来的神秘噪声" border="0"/></p>
+</center>
+<p>在精密模拟信号链中，我们肯定不希望 <strong>噪声(Noise)</strong> 在我们的电路中跑火车。但想要验证其存在并对其进行精确测量，却又不是那么容易的事情。</p>
+<p>在开关电源(DC-DC)中,我们通常会测试其输出的 <strong>纹波(Ripple)</strong>,而这通过示波器就可以很容易地测量到,因为开关电源中的纹波的数量级通常在 10mVpp 以上,示波器努努力是可以测量的。</p>
+<h1 id="一.示波器的极限">一.示波器的极限</h1>
+<p>然而，示波器是有极限的,因为通用示波器(我瞎编的名词)为了达到高带宽，通常需要选择采样率较高的ADC(GSa以上)，而这意味着ADC的分辨率不高(8至12位居多,少数16位顶天了)。而ADC的分辨率就直接决定了它所能量化的模拟信号的大小极限——低于ADC LSB的信号都无法被准确量化，全部淹没在滚滚红尘(指示波器前端底噪+ADC底噪)中......</p>
+<p>当然，你也可以选择高位数的ADC去搭建专用的采样系统。这种产品当然是有的咯，比如音频谐波分析设备,有高达32-bit分辨率的ADC和上百kSa的采样速度(对就是咱熟悉的Hi-Fi)。这样的系统的SFDR(无杂散动态范围)可达到100dB以上，但是其最高只能采集几十kHz的信号,奈奎斯特和香农两位大佬也为这种方法判了死刑...(指奈奎斯特采样定理)。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/03/27/%E5%99%AA%E5%A3%B0%E6%94%BE%E5%A4%A7%E5%99%A8%E6%9E%84%E5%BB%BA%E6%8C%87%E5%8D%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1384,127 +1493,6 @@ y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
-      <meta itemprop="name" content="Floyd-Fish">
-      <meta itemprop="description" content="-Actually it doesn't exist">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="月之暗面">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/" class="post-title-link" itemprop="url">生活随笔-2021-10-01</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-10-02 00:46:40" itemprop="dateCreated datePublished" datetime="2021-10-02T00:46:40+08:00">2021-10-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-21 02:38:33" itemprop="dateModified" datetime="2022-05-21T02:38:33+08:00">2022-05-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%9F%E6%B4%BB/" itemprop="url" rel="index"><span itemprop="name">生活</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/" class="post-meta-item leancloud_visitors" data-flag-title="生活随笔-2021-10-01" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>每隔一段时间就会想要记录下近期内心境的变化。不得不说这个记录的频率在今年尤为高，不错，这说明我成长得很快）</p>
-<h1 id="求职之路">求职之路</h1>
-<p>回顾了一下从8月份开始的秋招，感觉自己还是挺失败的——已经到10月了，手里还没有一个保底的offer。因为本人算是个懒狗，只投了几家感兴趣的公司，包括但不限于:</p>
-<ul>
-<li>华为<br />
-</li>
-<li>中兴<br />
-</li>
-<li>字节跳动<br />
-</li>
-<li>小米<br />
-</li>
-<li>海信<br />
-</li>
-<li>大疆<br />
-</li>
-<li>Apple<br />
-</li>
-<li>BOE</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/02/%E7%94%9F%E6%B4%BB%E9%9A%8F%E7%AC%94-2021-10-01/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1576,7 +1564,7 @@ y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
