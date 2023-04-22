@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的PCB。">
+  <meta name="description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的P">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PCB设计基础-常识篇">
 <meta property="og:url" content="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的PCB。">
+<meta property="og:description" content="PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。 🐟想通过这一系列基础教程，讲解一下如何设计 具有优异电气性能 的P">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/8layer_pcb.png">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/jlc_pcb2.png">
@@ -148,7 +148,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -256,60 +256,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>PCB(Printed Circuit Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。</p>
-<p>🐟想通过这一系列基础教程，讲解一下如何设计 <strong>具有优异电气性能</strong> 的PCB。当然，这个教程只是基础教程，并不能涵盖PCB设计的方方面面。我能想到的方向以及这一系列将要讲解的问题如下(勾上的是要讲的):</p>
+        <p>PCB(Printed Circuit
+Board),印刷电路板,是电子工程师最熟悉的事物之一了。PCB帮助工程师链接各个电子元器件与芯片，形成稳定可靠的电路结构。而设计PCB在一个电子工程师的任何阶段都是一门重大课题——毕竟技术也在不断地进步，新器件、新封装、新材料不断地出现，PCB设计、生产、测试技术也相应地在变化。</p>
+<p>🐟想通过这一系列基础教程，讲解一下如何设计
+<strong>具有优异电气性能</strong>
+的PCB。当然，这个教程只是基础教程，并不能涵盖PCB设计的方方面面。我能想到的方向以及这一系列将要讲解的问题如下(勾上的是要讲的):</p>
 <ul class="task-list">
-<li><input type="checkbox" disabled="" checked="" />
-PCB类型与常识<br />
+<li><input type="checkbox" checked="" />PCB类型与常识<br />
 </li>
-<li><input type="checkbox" disabled="" checked="" />
-高速信号布线技术<br />
+<li><input type="checkbox" checked="" />高速信号布线技术<br />
 </li>
-<li><input type="checkbox" disabled="" checked="" />
-精密小信号布线技术<br />
+<li><input type="checkbox" checked="" />精密小信号布线技术<br />
 </li>
-<li><input type="checkbox" disabled="" checked="" />
-模数混合信号布局布线技术<br />
+<li><input type="checkbox" checked="" />模数混合信号布局布线技术<br />
 </li>
-<li><input type="checkbox" disabled="" checked="" />
-退耦技术</li>
-<li><input type="checkbox" disabled="" />
-PCB机械特性<br />
+<li><input type="checkbox" checked="" />退耦技术</li>
+<li><input type="checkbox" />PCB机械特性<br />
 </li>
-<li><input type="checkbox" disabled="" />
-PCB生产与加工工艺<br />
+<li><input type="checkbox" />PCB生产与加工工艺<br />
 </li>
-<li><input type="checkbox" disabled="" />
-PCB热特性<br />
+<li><input type="checkbox" />PCB热特性<br />
 </li>
-<li><input type="checkbox" disabled="" />
-PCB电气性能表征<br />
+<li><input type="checkbox" />PCB电气性能表征<br />
 </li>
-<li><input type="checkbox" disabled="" />
-复杂系统中的多PCB设计<br />
+<li><input type="checkbox" />复杂系统中的多PCB设计<br />
 </li>
-<li><input type="checkbox" disabled="" />
-PCB板间互连技术<br />
+<li><input type="checkbox" />PCB板间互连技术<br />
 </li>
-<li><input type="checkbox" disabled="" />
-射频与微波布线技术<br />
+<li><input type="checkbox" />射频与微波布线技术<br />
 </li>
-<li><input type="checkbox" disabled="" />
-PCB与结构件搭配<br />
+<li><input type="checkbox" />PCB与结构件搭配<br />
 </li>
-<li><input type="checkbox" disabled="" />
-......</li>
+<li><input type="checkbox" />......</li>
 </ul>
 <p>还有很多我暂时没遇到过的方向与技术，等我遇到了再时不时回来补充一波~<br />
 那么我们开始吧——</p>
 <blockquote>
-<p>本系列教程参考了ADI的高速、混合、微弱信号布线指南,以及各种Mini tutorial和Application Notes,同时还有电子学教材以及嘉立创的PCB加工工艺说明。</p>
+<p>本系列教程参考了ADI的高速、混合、微弱信号布线指南,以及各种Mini
+tutorial和Application
+Notes,同时还有电子学教材以及嘉立创的PCB加工工艺说明。</p>
 </blockquote>
 <span id="more"></span>
 <h2 id="pcb各项参数">PCB各项参数</h2>
 <p>电子工业发展的早期，人们都用导线将各个元器件的引脚接在一起。现在这种方法早已不能适应大规模、高密度的电子系统需求，仅仅作为简单系统的实验验证目的使用。(比如面包板),印制电路板在电子工业中占领了绝对的主导地位。</p>
 <h3 id="pcb层数layers">PCB层数(Layers)</h3>
-<p>下图是一个典型的8层 PCB示意图, <strong>PCB的层数指的是导电材料的层数</strong>,而最常用也是用的最多的PCB导电材料是 <strong>铜(Copper)</strong>。每两层导电材料都包夹着一层<strong>绝缘介质层</strong>(如果不绝缘,PCB就成了一整块...)，这样就构成了一个超级三明治，每一个导电层是彼此绝缘的,意味着你可以在一块薄薄的8层PCB板上拥有8个可以用来布线的平面。</p>
+<p>下图是一个典型的8层 PCB示意图,
+<strong>PCB的层数指的是导电材料的层数</strong>,而最常用也是用的最多的PCB导电材料是
+<strong>铜(Copper)</strong>。每两层导电材料都包夹着一层<strong>绝缘介质层</strong>(如果不绝缘,PCB就成了一整块...)，这样就构成了一个超级三明治，每一个导电层是彼此绝缘的,意味着你可以在一块薄薄的8层PCB板上拥有8个可以用来布线的平面。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/8layer_pcb.png" border="0"/></p>
 </center>
@@ -373,7 +366,8 @@ PCB与结构件搭配<br />
 </li>
 <li>铜镀锡铅合金(就是镀有铅锡或者无铅锡)</li>
 </ul>
-<p>但是这些导电材料并不是一整坨丢上PCB的，它们是非常薄的一层镀层。下图是一个双层板PCB示意图,在顶层有一条铜导线(Trace),这条走线的长度和宽度都可以由设计者在一定范围内任意设计,但厚度则取决于生产厂家的工艺参数，一般可以选择 <strong>0.5oz至3oz(盎司)</strong> 间的值。</p>
+<p>但是这些导电材料并不是一整坨丢上PCB的，它们是非常薄的一层镀层。下图是一个双层板PCB示意图,在顶层有一条铜导线(Trace),这条走线的长度和宽度都可以由设计者在一定范围内任意设计,但厚度则取决于生产厂家的工艺参数，一般可以选择
+<strong>0.5oz至3oz(盎司)</strong> 间的值。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/2layer_pcb.png"  border="0"/></p>
 </center>
@@ -386,11 +380,15 @@ PCB与结构件搭配<br />
 </ul>
 <p>嗯，这些金属镀层不是那么的厚，意味着PCB上走的导线一般不能承受巨大的电流(100A级别的),而这些大功率走线则会结合传统的连接方式去设计。</p>
 <h3 id="pcb介电常数">PCB介电常数</h3>
-<p>在电磁学里，相对电容率，又称为 <strong>相对介电常数</strong>，定义为电容率与真空电容率的比例∶</p>
+<p>在电磁学里，相对电容率，又称为
+<strong>相对介电常数</strong>，定义为电容率与真空电容率的比例∶</p>
 <p><span class="math display">\[
 \epsilon_r = {\epsilon \over \epsilon_0}
 \]</span></p>
-<p>其中, <span class="math inline">\(\epsilon_r\)</span> 是电介质的相对介电常数,<span class="math inline">\(\epsilon\)</span>是电解质的介电常数,<span class="math inline">\(\epsilon_0\)</span>是真空介电常数。</p>
+<p>其中, <span class="math inline">\(\epsilon_r\)</span>
+是电介质的相对介电常数,<span
+class="math inline">\(\epsilon\)</span>是电解质的介电常数,<span
+class="math inline">\(\epsilon_0\)</span>是真空介电常数。</p>
 <p>介电常数对于PCB最大的影响是<strong>电容</strong>这个参数。不同的PCB基材对应不同的介电常数,不同的介电常数材料之上同一段导线的电气参数完全不同。比如在射频PCB设计中,设计者需要提前知道PCB的介质相对介电常数、PCB厚度与导电层厚度等参数,才能建立可靠的传输线仿真模型，从而控制射频传输线的特征阻抗等参数。</p>
 <p>比如最常用的FR-4板材的相对介电常数约为4.5或4.6,特氟龙板材的相对介电常数约为2.1。</p>
 <h3 id="pcb过孔盲孔与埋孔">PCB过孔、盲孔与埋孔</h3>
@@ -409,7 +407,9 @@ PCB与结构件搭配<br />
 <p>其中,过孔是常规工艺,而盲孔与埋孔是比较高级的工艺,生产时使用盲埋孔的PCB会收高昂的工艺费。</p>
 <p>过孔一般尺寸较大(常规的直径0.4mm-1.0mm左右都有),普通过孔是最为简单粗暴的,但一个过孔打下去会抢占其他层同位置的空间，可能还是会给其他层的布线增加难度。而盲孔和埋孔则可以大大减轻这个效应，从而大幅提高PCB的布线密度。但是盲孔和埋孔有一个弊端——难以debug。</p>
 <h3 id="元器件焊盘pad">元器件焊盘(Pad)</h3>
-<p>顾名思义，<strong>焊盘</strong>就是用来焊接的"盘"。但其实它并不全是圆形的"盘"，最早的直插元器件在PCB上的Pad是一个圆孔，所以可能翻译过来就变成了焊盘。SMT(Surface Mounting Technology,表面贴装技术)的出现彻底改变了PCB的样貌。使用表面贴装封装技术,可以使无源元件(电阻、电容、电感等)和集成芯片的寄生参数更小、所能工作的频率更高、占用更小的PCB空间,同时使得更高层数PCB的设计变得更加容易。下面是直插安装与贴片安装的对比图。</p>
+<p>顾名思义，<strong>焊盘</strong>就是用来焊接的"盘"。但其实它并不全是圆形的"盘"，最早的直插元器件在PCB上的Pad是一个圆孔，所以可能翻译过来就变成了焊盘。SMT(Surface
+Mounting
+Technology,表面贴装技术)的出现彻底改变了PCB的样貌。使用表面贴装封装技术,可以使无源元件(电阻、电容、电感等)和集成芯片的寄生参数更小、所能工作的频率更高、占用更小的PCB空间,同时使得更高层数PCB的设计变得更加容易。下面是直插安装与贴片安装的对比图。</p>
 <center>
 <p>直插元器件的通孔安装方法与表面贴装元器件的贴片安装法:</p>
 <p>(Tek TDR反射计 部分PCB)</p>
@@ -417,7 +417,10 @@ PCB与结构件搭配<br />
 <p>(Floydfish做的精密电压源PCB)</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/smt.jpg"  border="0"/></p>
 </center>
-<p>通孔(Through Hole)焊盘的结构类似过孔，不过孔径要比过孔大不少。而贴片焊盘说白了就是一小块带有几何形状的金属片。比如上图中绿色板子上的 <strong>TP501</strong>、<strong>TP402</strong> 2个测试点，就是一小块圆形的"贴片"。</p>
+<p>通孔(Through
+Hole)焊盘的结构类似过孔，不过孔径要比过孔大不少。而贴片焊盘说白了就是一小块带有几何形状的金属片。比如上图中绿色板子上的
+<strong>TP501</strong>、<strong>TP402</strong>
+2个测试点，就是一小块圆形的"贴片"。</p>
 <h3 id="pcb层压工艺">PCB层压工艺</h3>
 <p>有时为了满足不同的PCB需求，例如阻抗控制、导热性能、机械强度、导电层与绝缘层间间距控制等，可能需要采用不同的生产工艺。还是以JLC的2种层压工艺为例子:</p>
 <center>
@@ -427,7 +430,8 @@ PCB与结构件搭配<br />
 <h3 id="pcb阻焊">PCB阻焊</h3>
 <p>阻焊顾名思义就是"阻止焊接"。还是上面那张绿绿的板子，为什么这张板子是绿色的呢？因为它的表面(顶面和底面)覆盖了一层绿色的<strong>阻焊材料</strong>,Wiki上说是聚合物薄漆,不过我们一般称其为阻焊绿油。</p>
 <p>有的小伙伴可能就要问了，PCB是只有绿色的吗？为什么我还见过别的颜色？<br />
-PCB当然不止绿色~ 常用的阻焊颜色还有蓝色、黑色、红色、橙色、黄色、白色、紫色等。有些比较高(昂)级(贵)的工艺还能做哑光绿、哑光黑等特殊阻焊，甚至还有粉色、彩色阻焊的存在。</p>
+PCB当然不止绿色~
+常用的阻焊颜色还有蓝色、黑色、红色、橙色、黄色、白色、紫色等。有些比较高(昂)级(贵)的工艺还能做哑光绿、哑光黑等特殊阻焊，甚至还有粉色、彩色阻焊的存在。</p>
 <p>阻焊的意义在于<strong>盖住PCB上不需要焊接的部分,同时可以防止金属走线长时间暴露在空气中被氧化</strong>。想象一下，在手工焊接中，焊盘与旁边未覆盖阻焊的地铜区挨得非常近(0.几mm),焊接的时候就极易将焊盘与地铜区焊短路。在回流焊等自动化焊接过程中，抹在SMT焊盘上的锡膏高温融化成液态金属锡，在表面张力的作用下从四面八方汇聚到焊盘上。如果焊盘或布线的密度极高，而所有的金属部分未覆盖阻焊，那么这些融化的液态金属锡就会像无头苍蝇一样乱创。所以阻焊一般是PCB的必备选择。</p>
 <p>阻焊在射频及微波电路PCB中还有一个非常重要的角色:<strong>覆盖在PCB导线上的阻焊材料将影响导线的特征阻抗</strong>。在对传输线特征阻抗有严格要求的情况下，要适当移除传输线上的阻焊。一般在PCB设计软件里,通过操作阻焊层(Mask)可以完成这项操作。</p>
 <center>
@@ -436,7 +440,8 @@ PCB当然不止绿色~ 常用的阻焊颜色还有蓝色、黑色、红色、橙
 </center>
 <h3 id="pcb丝印silkscreen">PCB丝印(SilkScreen)</h3>
 <p>丝印也是个很形象的翻译，我们在PCB上(当然，只有正反两面)看到的字符、方框、连线标识、Logo等都是<strong>丝印</strong>。比如上图中白色的<code>ANALOG DEVICES</code>的Logo，他就是丝印的一部分,下面的DDS框图也是,右边的版权字符也是。更上面那张绿色板子上的C203、FB401、R301等等都是丝印，不过他们代表的含义有所不同。</p>
-<p>设计丝印的目的是 <strong>使PCB更加容易"阅读"</strong>。在生产调试的过程中,如果给每个元件旁边都写上标号，在所有测试点处都标上序号,那么可以大幅减轻焊接、调试的工作量——如果没有这些标号，你还得对照PCB设计文件去查找哪个元件对应原理图中的某一部分。</p>
+<p>设计丝印的目的是
+<strong>使PCB更加容易"阅读"</strong>。在生产调试的过程中,如果给每个元件旁边都写上标号，在所有测试点处都标上序号,那么可以大幅减轻焊接、调试的工作量——如果没有这些标号，你还得对照PCB设计文件去查找哪个元件对应原理图中的某一部分。</p>
 <p>当然，丝印还可以用来干别的，比如打上你个人的logo、版权声明、公司logo、PCB版本号、一些生产测试信息等等。</p>
 <p>丝印一般有黑色和白色2种，彩色的不多见但也有。</p>
 <h3 id="泪滴tear-drops">泪滴(Tear Drops)</h3>
@@ -460,17 +465,23 @@ PCB当然不止绿色~ 常用的阻焊颜色还有蓝色、黑色、红色、橙
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E5%B8%B8%E8%AF%86%E7%AF%87/pcb_design_flow.png"  border="0"/></p>
 </center>
-<p>一般我们通过专用的EDA软件或工具来完成PCB设计的全流程。比较常用的有Altium Designer(常说的AD)、Cadence SPB(阿狸狗)、Eagle、KiCad(开源免费EDA)、立创EDA等。这些EDA软件可以创建并管理元器件库、绘制原理图、绘制PCB、设计规则检查(DRC)、并最终导出PCB的生产文件(一般是Gerber)，用以加工。</p>
-<p>🐟做小项目时习惯用KiCad画板子，因为它足够轻量和简单，功能也很强大(当然bug不少，功能还是不能跟成熟的商业专业软件如Cadence比)。我之前(2020年)录过一个使用KiCad设计PCB的视频教程，现在看来做的不是很好...不过我最近好像也没有重新录一个的计划:( 所以还是将就康康咯——</p>
+<p>一般我们通过专用的EDA软件或工具来完成PCB设计的全流程。比较常用的有Altium
+Designer(常说的AD)、Cadence
+SPB(阿狸狗)、Eagle、KiCad(开源免费EDA)、立创EDA等。这些EDA软件可以创建并管理元器件库、绘制原理图、绘制PCB、设计规则检查(DRC)、并最终导出PCB的生产文件(一般是Gerber)，用以加工。</p>
+<p>🐟做小项目时习惯用KiCad画板子，因为它足够轻量和简单，功能也很强大(当然bug不少，功能还是不能跟成熟的商业专业软件如Cadence比)。我之前(2020年)录过一个使用KiCad设计PCB的视频教程，现在看来做的不是很好...不过我最近好像也没有重新录一个的计划:(
+所以还是将就康康咯——</p>
 <iframe src="//player.bilibili.com/player.html?aid=968269927&amp;bvid=BV1Kp4y1X7pS&amp;cid=203333664&amp;page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
 </iframe>
 <h1 id="next">Next</h1>
-<p>下一篇:<a target="_blank" rel="noopener" href="https://www.emoe.xyz/decoupling_technic/">PCB设计基础-退耦技术</a></p>
+<p>下一篇:<a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/decoupling_technic/">PCB设计基础-退耦技术</a></p>
 <h1 id="reference">Reference</h1>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.jlc.com/portal/vtechnology.html">嘉立创PCB工艺说明</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.jlc.com/portal/vtechnology.html">嘉立创PCB工艺说明</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://resources.altium.com/cn/pcb-design?page=3">Altium中国社区支持</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://resources.altium.com/cn/pcb-design?page=3">Altium中国社区支持</a></li>
 </ul>
 
     </div>
@@ -593,7 +604,7 @@ PCB当然不止绿色~ 常用的阻焊颜色还有蓝色、黑色、红色、橙
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

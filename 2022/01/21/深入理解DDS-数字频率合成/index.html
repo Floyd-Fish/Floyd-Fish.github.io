@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="深入理解DDS（数字频率合成） 本篇文章翻译于ADI的 DDS Technical Tutorial,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。 由于上一篇文章 利用STM32的片上DAC实现DDS（数字频率合成） 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了。直">
+  <meta name="description" content="深入理解DDS（数字频率合成） 本篇文章翻译于ADI的 DDS Technical Tutorial,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。 由于上一篇文章 利用STM32的片上DAC实现DDS（数字频率合成） 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解DDS(数字频率合成)">
 <meta property="og:url" content="https://floydfish.xyz/2022/01/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS-%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="深入理解DDS（数字频率合成） 本篇文章翻译于ADI的 DDS Technical Tutorial,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。 由于上一篇文章 利用STM32的片上DAC实现DDS（数字频率合成） 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了。直">
+<meta property="og:description" content="深入理解DDS（数字频率合成） 本篇文章翻译于ADI的 DDS Technical Tutorial,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。 由于上一篇文章 利用STM32的片上DAC实现DDS（数字频率合成） 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/1.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/2.jpg">
@@ -146,7 +146,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -261,35 +261,83 @@
 
       
         <h1 id="深入理解dds数字频率合成">深入理解DDS（数字频率合成）</h1>
-<p>本篇文章翻译于ADI的 <code>DDS Technical Tutorial</code>,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。<br />
+<p>本篇文章翻译于ADI的
+<code>DDS Technical Tutorial</code>,可以在ADI官网找到这篇教程,其中详细讲解了DDS技术的所有技术细节,非常值得一读。<br />
 🐟最近也在研究DDS（毕设）,所以闲来无事翻译翻译。。</p>
-<p>由于上一篇文章 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-dac-direct-digital-synthesis/">利用STM32的片上DAC实现DDS（数字频率合成）</a></strong> 中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了。直接从第二章开始~</p>
-<h2 id="section-2.理解dds的采样输出特性">Section 2.理解DDS的采样输出特性</h2>
-<p>在分析DDS输出特性的时候，<strong>采样理论</strong> 分析是必不可少的。采样输出的信号频谱如下图（Fig 2-1）所示,这个例子中,采样时钟 <span class="math inline">\(f_{CLOCK}\)</span> 是300MHz,输出信号基波频率 <span class="math inline">\(f_{OUT}\)</span> 是80MHz。</p>
+<p>由于上一篇文章 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-dac-direct-digital-synthesis/">利用STM32的片上DAC实现DDS（数字频率合成）</a></strong>
+中对DDS的原理已经有了详细的介绍,所以我就跳过第一章DDS原理介绍部分了。直接从第二章开始~</p>
+<h2 id="section-2.理解dds的采样输出特性">Section
+2.理解DDS的采样输出特性</h2>
+<p>在分析DDS输出特性的时候，<strong>采样理论</strong>
+分析是必不可少的。采样输出的信号频谱如下图（Fig
+2-1）所示,这个例子中,采样时钟 <span
+class="math inline">\(f_{CLOCK}\)</span> 是300MHz,输出信号基波频率 <span
+class="math inline">\(f_{OUT}\)</span> 是80MHz。</p>
 <center>
-<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/1.jpg" alt="Spectral Analysis of Sampled Output" border="0"/> "采样"输出的频谱成分</p>
+<p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/1.jpg" alt="Spectral Analysis of Sampled Output" border="0"/>
+"采样"输出的频谱成分</p>
 <p>可以看出,输出频谱具有sinx/x包络（Envelope）形状,奈奎斯特极限频率是时钟的一半,也就是150MHz,左边阴影区域是奈奎斯特带宽。</p>
 </center>
 <span id="more"></span>
-<p>奈奎斯特采样定理指出，在DDS输出的每一个周期内 <strong>至少需要2个采样点</strong> 才能重建出期望的输出波形。输出频谱中含有 <strong>镜像频率</strong> ,镜像频率值由 <span class="math inline">\(f_{CLOCK} ± f_{OUT}\)</span> 决定。第一镜频响应在 <span class="math inline">\(f_{CLOCK} - f_{OUT} = 220MHz\)</span> 处出现,第三、四、五镜频在380MHz、520MHz、680MHz、820MHz（相对地）出现。注意频谱图中,零点出现在采样频率的整数倍处。</p>
-<p>当输出频率超过了时钟频率时,第一镜频将作为混叠镜像出现在奈奎斯特带宽内（ <span class="math inline">\(DC-1/2 f_{CLOCK}\)</span> ）,混叠镜频将无法使用传统的奈奎斯特抗混叠滤波器滤除。</p>
-<p>在典型的DDS应用中,通常在DDS输出接上一个 <strong>低通滤波器（LPF）</strong> 来衰减输出频谱中的镜像频率成分。为了确保低通滤波器的截止频率在合理的范围内（<strong>通常设计滤波器时需要综合考虑滚降速率和带内起伏等因素</strong>））。 约定俗成的规则是将输出带宽限制在 <strong>0.4倍时钟频率</strong> 内。（如果时钟300MHz,那么输出频率范围对应为DC-300*0.4=120MHz），这有助于使用低成本的低通滤波器实现。</p>
+<p>奈奎斯特采样定理指出，在DDS输出的每一个周期内
+<strong>至少需要2个采样点</strong>
+才能重建出期望的输出波形。输出频谱中含有 <strong>镜像频率</strong>
+,镜像频率值由 <span class="math inline">\(f_{CLOCK} ± f_{OUT}\)</span>
+决定。第一镜频响应在 <span class="math inline">\(f_{CLOCK} - f_{OUT} =
+220MHz\)</span>
+处出现,第三、四、五镜频在380MHz、520MHz、680MHz、820MHz（相对地）出现。注意频谱图中,零点出现在采样频率的整数倍处。</p>
+<p>当输出频率超过了时钟频率时,第一镜频将作为混叠镜像出现在奈奎斯特带宽内（
+<span class="math inline">\(DC-1/2 f_{CLOCK}\)</span>
+）,混叠镜频将无法使用传统的奈奎斯特抗混叠滤波器滤除。</p>
+<p>在典型的DDS应用中,通常在DDS输出接上一个
+<strong>低通滤波器（LPF）</strong>
+来衰减输出频谱中的镜像频率成分。为了确保低通滤波器的截止频率在合理的范围内（<strong>通常设计滤波器时需要综合考虑滚降速率和带内起伏等因素</strong>））。
+约定俗成的规则是将输出带宽限制在 <strong>0.4倍时钟频率</strong>
+内。（如果时钟300MHz,那么输出频率范围对应为DC-300*0.4=120MHz），这有助于使用低成本的低通滤波器实现。</p>
 <p>这本教程后面还有骚操作，就是利用DDS输出的镜像频率来实现比时钟频率更高的捷变输出。。这样操作的话就需要滤除基波和高阶镜频，保留一次镜频。这是后话了~</p>
 <h3 id="针对应用场景设计dds系统">针对应用场景设计DDS系统</h3>
-<p>Ass ♂ you can see,在上面的频谱图中, <span class="math inline">\(f_{OUT}\)</span> 和各个镜频的幅度分布符合 <span class="math inline">\(sin(x)/x\)</span> 滚降响应,这是由于采样输出的量化性质（采样信号是一个冲激信号,其频谱为sinc函数）。输出基波和任意给定的镜像频率的响应幅度均可使用 <span class="math inline">\(sin(x)/x\)</span> 公式来直接计算得出。根据滚降响应函数,基波输出的幅度将与其调谐的频率的增加成反比——<strong>DDS系统的输出从直流到奈奎斯特带宽的幅度滚降是-3.92dB</strong>。在前面展示的框图中（这篇文里没放）,DDS架构可以包括一个 <strong>反SINC滤波器</strong>,它可以针对DDS的采样输出特性作出 <strong>预补偿</strong>,从而在输出的80%奈奎斯特带宽内得到非常平稳的幅度滚降响应（±0.1dB,约等于不变）。</p>
-<p>还是来看上面那张频谱图,请注意第一镜频的幅度:它在 $f_{OUT}=0.33 f_{CLOCK} $ 时基波幅度的3dB以内。它的幅度非常接近基波,对输出的影响是最大的。在分析DDS应用时,根据 <span class="math inline">\(sin(x)/x\)</span> 来预测DDS输出的各频率成分和响应,再由此来规划如何设计DDS系统是非常重要的。</p>
+<p>Ass ♂ you can see,在上面的频谱图中, <span
+class="math inline">\(f_{OUT}\)</span> 和各个镜频的幅度分布符合 <span
+class="math inline">\(sin(x)/x\)</span>
+滚降响应,这是由于采样输出的量化性质（采样信号是一个冲激信号,其频谱为sinc函数）。输出基波和任意给定的镜像频率的响应幅度均可使用
+<span class="math inline">\(sin(x)/x\)</span>
+公式来直接计算得出。根据滚降响应函数,基波输出的幅度将与其调谐的频率的增加成反比——<strong>DDS系统的输出从直流到奈奎斯特带宽的幅度滚降是-3.92dB</strong>。在前面展示的框图中（这篇文里没放）,DDS架构可以包括一个
+<strong>反SINC滤波器</strong>,它可以针对DDS的采样输出特性作出
+<strong>预补偿</strong>,从而在输出的80%奈奎斯特带宽内得到非常平稳的幅度滚降响应（±0.1dB,约等于不变）。</p>
+<p>还是来看上面那张频谱图,请注意第一镜频的幅度:它在 $f_{OUT}=0.33
+f_{CLOCK} $
+时基波幅度的3dB以内。它的幅度非常接近基波,对输出的影响是最大的。在分析DDS应用时,根据
+<span class="math inline">\(sin(x)/x\)</span>
+来预测DDS输出的各频率成分和响应,再由此来规划如何设计DDS系统是非常重要的。</p>
 <h3 id="其他的非相关影响">其他的非相关影响</h3>
-<p>输出频谱中其他的异常,比如说 <code>DAC的积分与微分非线性误差</code>、<code>与DAC相关的脉冲（毛刺）能量</code>、<code>时钟馈通噪声</code>等,这些误差将不会遵从 <span class="math inline">\(sin(x)/x\)</span> 滚降响应。这些异常将在输出频谱中以 <strong>谐波</strong>、<strong>杂散</strong> 的形式出现,并且具有比镜频响应低得多的幅度。DDS器件一般的本底噪声（noise floor）一般由 <strong>衬底噪声</strong>、<strong>热噪声效应</strong>、<strong>接地耦合</strong>和各种由其他小信号引起的信号恶化共同决定。 DDS的本底噪声、杂散性能和时钟抖动性能受PCB布局、电源质量和输入参考时钟质量的影响,接下来会逐一对这些影响源进行讨论。</p>
-<h2 id="section-4.dac分辨率对杂散性能的影响">Section 4.DAC分辨率对杂散性能的影响</h2>
+<p>输出频谱中其他的异常,比如说
+<code>DAC的积分与微分非线性误差</code>、<code>与DAC相关的脉冲（毛刺）能量</code>、<code>时钟馈通噪声</code>等,这些误差将不会遵从
+<span class="math inline">\(sin(x)/x\)</span>
+滚降响应。这些异常将在输出频谱中以
+<strong>谐波</strong>、<strong>杂散</strong>
+的形式出现,并且具有比镜频响应低得多的幅度。DDS器件一般的本底噪声（noise
+floor）一般由
+<strong>衬底噪声</strong>、<strong>热噪声效应</strong>、<strong>接地耦合</strong>和各种由其他小信号引起的信号恶化共同决定。
+DDS的本底噪声、杂散性能和时钟抖动性能受PCB布局、电源质量和输入参考时钟质量的影响,接下来会逐一对这些影响源进行讨论。</p>
+<h2 id="section-4.dac分辨率对杂散性能的影响">Section
+4.DAC分辨率对杂散性能的影响</h2>
 <blockquote>
 <p>By Ken Gentile, Systems Engineer, Analog Devices, Inc.</p>
 </blockquote>
-<p>一个DAC器件的分辨率由其输入的数据位数决定。举个例子,一个具有10-bit数据输入的DAC往往是 <strong>10位DAC</strong>。DAC分辨率的影响也可以通过观察DAC输出重建的正弦波而轻松感知到。</p>
+<p>一个DAC器件的分辨率由其输入的数据位数决定。举个例子,一个具有10-bit数据输入的DAC往往是
+<strong>10位DAC</strong>。DAC分辨率的影响也可以通过观察DAC输出重建的正弦波而轻松感知到。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/2.jpg" alt="Effect of DAC Resolution" border="0"/></p>
 </center>
-<p>上图中,黑色曲线是一个4-bit DAC器件输出的正弦波。垂直线是时间标记,用于标记DAC输出更新为新值的时间。因此，每两个垂直线之间的水平距离就代表其采样周期。注意DAC输出与完美正弦波（红色）之间的偏差。在采样时2条曲线之间的垂直距离就是DAC由于其 <strong>分辨率有限</strong> 而引入的误差,这个误差被称作 <strong>量化误差</strong>,并引起称为 <strong>量化失真</strong> 的效应。</p>
-<p>为了理解量化失真效应的本质,请注意DAC输出中 <strong>快速变化的边沿信号</strong>（也就是黑色曲线中的小台阶的边缘）。这些快速的边沿信号引入了相对于基波的 <strong>高频成分</strong>，就是这些高频成分组成了量化失真。在频域中,量化失真误差与奈奎斯特频带内混叠，在DAC输出频谱中显示为离散的杂散成分。</p>
+<p>上图中,黑色曲线是一个4-bit
+DAC器件输出的正弦波。垂直线是时间标记,用于标记DAC输出更新为新值的时间。因此，每两个垂直线之间的水平距离就代表其采样周期。注意DAC输出与完美正弦波（红色）之间的偏差。在采样时2条曲线之间的垂直距离就是DAC由于其
+<strong>分辨率有限</strong> 而引入的误差,这个误差被称作
+<strong>量化误差</strong>,并引起称为 <strong>量化失真</strong>
+的效应。</p>
+<p>为了理解量化失真效应的本质,请注意DAC输出中
+<strong>快速变化的边沿信号</strong>（也就是黑色曲线中的小台阶的边缘）。这些快速的边沿信号引入了相对于基波的
+<strong>高频成分</strong>，就是这些高频成分组成了量化失真。在频域中,量化失真误差与奈奎斯特频带内混叠，在DAC输出频谱中显示为离散的杂散成分。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/3.jpg" alt="discrete spurs in DAC output spectrum" border="0"/></p>
 </center>
@@ -299,18 +347,27 @@
 SQR = 1.76 + 6.02B （dB） \\
 B 是DAC的分辨率位数
 \]</span></p>
-<p>举个栗子,一个8-bit DAC的SQR是49.92dB。需要注意的是,上述SQR计算公式仅仅描述了 <strong>由量化误差引起的噪声</strong>，它不提供任何关于杂散分布或最大杂散电平的信息，只有所有杂散相对于基波的总功率。 关于SQR第二点需要考虑的是，它仅仅描述DAC工作在满量程输出时的性能。当DAC工作在小于满量程输出的情况下时，基波幅度减小了，而 <strong>量化误差 Stays the Same</strong>。这样做的后果是量化噪声相比于基波信号变得更显著。DAC工作在非满量程时的误差也可以量化:</p>
+<p>举个栗子,一个8-bit
+DAC的SQR是49.92dB。需要注意的是,上述SQR计算公式仅仅描述了
+<strong>由量化误差引起的噪声</strong>，它不提供任何关于杂散分布或最大杂散电平的信息，只有所有杂散相对于基波的总功率。
+关于SQR第二点需要考虑的是，它仅仅描述DAC工作在满量程输出时的性能。当DAC工作在小于满量程输出的情况下时，基波幅度减小了，而
+<strong>量化误差 Stays the
+Same</strong>。这样做的后果是量化噪声相比于基波信号变得更显著。DAC工作在非满量程时的误差也可以量化:</p>
 <p><span class="math display">\[
 A = 20\lg（FFS） （dB） \\
 FFS是DAC工作的满量程的分数（几分之几）\\
 因此,SQR方程变成了:\\
 SQR = 1.76 + 6.02B + A \\
- = 1.76 + 6.02B + 20\lg（FFS） （dB）
+= 1.76 + 6.02B + 20\lg（FFS） （dB）
 \]</span></p>
 <p>继续之前的例子,如果一个DAC工作在满量程输出的70%（FFS=0.7）,这将导致SQR降低3.1dB,变成46.82dB。</p>
 <h3 id="过采样对杂散性能的影响">过采样对杂散性能的影响</h3>
-<p>在数据转换器系统中,使用比奈奎斯特频率更高的采样频率被称为 <strong>过采样（OverSampling）</strong>。奈奎斯特采样定理要求被采样信号的带宽不得超过采样率的1/2。如果故意使采样信号的带宽限制为奈奎斯特要求的一小部分,则采样率超过奈奎斯特要求，这时便为过采样。</p>
-<p>下图展示了过采样如何提高SQR。量化噪声功率大小取决于DAC的分辨率。它是一个固定的量，与阴影面积成正比。过采样时,总的量化噪声功率与奈奎斯特采样时的总量化噪声功率是 <strong>相等的</strong>，既然总量化噪声功率在所有情况中是相等的（是常量）,而且"噪声矩形"与噪声总功率相对应,那么"噪声矩形"的高度随着采样率的升高而降低，过采样时噪声矩形的高度远小于奈奎斯特采样时的高度，这样才能保持矩形面积不变。 那么这时候，在我们感兴趣的频带内 <strong>（Band of Interest）</strong>，量化噪声功率就变小了很多，这样就提升了总信噪比。</p>
+<p>在数据转换器系统中,使用比奈奎斯特频率更高的采样频率被称为
+<strong>过采样（OverSampling）</strong>。奈奎斯特采样定理要求被采样信号的带宽不得超过采样率的1/2。如果故意使采样信号的带宽限制为奈奎斯特要求的一小部分,则采样率超过奈奎斯特要求，这时便为过采样。</p>
+<p>下图展示了过采样如何提高SQR。量化噪声功率大小取决于DAC的分辨率。它是一个固定的量，与阴影面积成正比。过采样时,总的量化噪声功率与奈奎斯特采样时的总量化噪声功率是
+<strong>相等的</strong>，既然总量化噪声功率在所有情况中是相等的（是常量）,而且"噪声矩形"与噪声总功率相对应,那么"噪声矩形"的高度随着采样率的升高而降低，过采样时噪声矩形的高度远小于奈奎斯特采样时的高度，这样才能保持矩形面积不变。
+那么这时候，在我们感兴趣的频带内 <strong>（Band of
+Interest）</strong>，量化噪声功率就变小了很多，这样就提升了总信噪比。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/4.jpg" alt="The Effect of Oversampling on SQR" border="0"/></p>
 </center>
@@ -323,7 +380,8 @@ SQR = 1.76 + 6.02B + A + C\\
 = 1.76 + 6.02B + 20\lg(FFS) + 10\lg (F_{S_{OS}} / F_S) (dB)
 \]</span></p>
 <p>还是之前那个栗子。如果我们让DAC工作在满量程输出的70%,但是使用3倍过采样,那么总的SQR变成了51.59dB。这样反而将SQR相比于工作于满量程输出时，采样奈奎斯特采样的情况下提升了1.67dB~</p>
-<h3 id="section-4.相位累加器相位截断误差相位截断杂散分布等内容">Section 4.相位累加器、相位截断误差、相位截断杂散分布等内容</h3>
+<h3 id="section-4.相位累加器相位截断误差相位截断杂散分布等内容">Section
+4.相位累加器、相位截断误差、相位截断杂散分布等内容</h3>
 <p>这几段太长了，我偷个懒😭</p>
 <h2 id="section-5.参考时钟的影响">Section 5.参考时钟的影响</h2>
 <blockquote>
@@ -337,12 +395,18 @@ SQR = 1.76 + 6.02B + A + C\\
 </li>
 <li>相位噪声，单位dBc/Hz</li>
 </ul>
-<p>其中相位噪声实际上是根据 $ 20(F_{OUT} / F_{CLK})$ 降低的。比如10MHz的输出信号的相位噪声将比"创造"它的100MHz的参考时钟的相位噪声少20dB。（20lg（10MHz/100MHz））</p>
+<p>其中相位噪声实际上是根据 $ 20(F_{OUT} / F_{CLK})$
+降低的。比如10MHz的输出信号的相位噪声将比"创造"它的100MHz的参考时钟的相位噪声少20dB。（20lg（10MHz/100MHz））</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/5.jpg" alt="Reference clock edge uncertainty affects DDS output signal quality" border="0"/></p>
 </center>
-<p>上图展示了相位噪声（时域中表示为以百分比为单位的周期抖动）与波形周期的关系，并且绝对边沿抖动不受频率或周期变化的影响。比较 <strong>DDS参考时钟信号</strong> 与 <strong>"Squared-up 时钟输出"</strong> 信号，可以发现边沿抖动在前者的一个周期中所占的比例远高于后者。这说明了通过分频改善相位噪声的原因，即分频前后的信号周期中都存在着相同量的边沿抖动，而该边沿抖动对高频信号的影响远大于对分频后的低频信号的影响。</p>
-<p>参考时钟边沿抖动不会影响相位累加器的相位步进精度。相位累加器的步进由 <strong>频率调谐字（Frequency "tuning" word）</strong> 设定为一定值，并且无论时钟质量如何，都以极高的精度进行"数学操作"。<br />
+<p>上图展示了相位噪声（时域中表示为以百分比为单位的周期抖动）与波形周期的关系，并且绝对边沿抖动不受频率或周期变化的影响。比较
+<strong>DDS参考时钟信号</strong> 与 <strong>"Squared-up
+时钟输出"</strong>
+信号，可以发现边沿抖动在前者的一个周期中所占的比例远高于后者。这说明了通过分频改善相位噪声的原因，即分频前后的信号周期中都存在着相同量的边沿抖动，而该边沿抖动对高频信号的影响远大于对分频后的低频信号的影响。</p>
+<p>参考时钟边沿抖动不会影响相位累加器的相位步进精度。相位累加器的步进由
+<strong>频率调谐字（Frequency "tuning" word）</strong>
+设定为一定值，并且无论时钟质量如何，都以极高的精度进行"数学操作"。<br />
 为了在模拟域中实现精确定位的数字相位步长，必须满足2个条件:</p>
 <ul>
 <li>精确的输出幅度（这是DAC的job）<br />
@@ -356,17 +420,42 @@ SQR = 1.76 + 6.02B + A + C\\
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/6.jpg" alt="Good and poor clock phase noise & DDS output Response" border="0"/></p>
 </center>
 <p>Fig.5-3展示了使用上述2种不同的时钟作为同一DDS器件的参考时钟（100MHz），所测量得到的输出信号（10MHz）的频谱。输出1表明了其输出信号的相位噪声相比于参考时钟信号有20dB的提升（10倍）。输出2展示了相比于其参考时钟信号更小的相位噪声，但由于测量仪器的本底噪声性能不太够,想要像信号1一样测量出20dB的提升有些力不从心了~</p>
-<p>有没有注意到输出信号2的频谱中的小幅度的 <strong>毛刺</strong>？这些杂散信号是由DDS的 <strong>相位-幅度转换级</strong> 中的相位截断效应和相位-幅度转换的算法误差所致。这些杂散信号同样也存在于输出信号1中，只不过在输出信号1中过多的相位噪声掩盖了他们的存在。这说明了 <strong>相位噪声</strong> 在输出高质量、高信噪比信号时为何如此重要。</p>
-<p>但有时候DDS无法反映输入时钟的质量。比如说，一般 DDS&amp;DAC 贡献的相位噪声大约是 <code>-130dBc/Hz</code>（1kHz载波频偏）。如果参考时钟的相位噪声比-130dBc/Hz更小，那么器件所贡献的相位噪声将会让这个参考时钟的卓越性能白白浪费掉。这项DDS的性能指标叫 <strong>"残留相位噪声"（Residual Phase Noise）</strong>。无论使用多好的参考时钟源，DDS的相位噪声性能永远也不会超越这个指标。所以不要浪费那么好的晶振哟~</p>
-<p>DDS输出信号的总相位噪声是参考时钟 <code>在被DDS分频且增强之后的相位噪声</code> 与 DDS自身的<code>残留相位噪声</code> 之和。再举个栗子，一个参考时钟（振荡器，100MHz）的相位噪声是 -110dBc/Hz@1kHz频偏, $F_{OUT} / F_{CLK} = 1/10 $,因此输出相位噪声被衰减20dB。被衰减了相位噪声之后的参考时钟所贡献的相位噪声的量就变成了 -130dBc/Hz（此时输出频率为10MHz），与DDS器件的残留相位噪声相等，将 -130dBc/Hz 与 -130dBc/Hz相加，结果是相位噪声加倍，变为 -127dBc/Hz。即使你使用相位噪声为 -200dBc/Hz 的参考时钟，最后DDS输出信号的相位噪声也无法比DDS器件本身的残留相位噪声（-130dBc/Hz）更低。</p>
-<h3 id="使用dds内建的倍频器为参考时钟倍频">使用DDS内建的倍频器为参考时钟倍频</h3>
+<p>有没有注意到输出信号2的频谱中的小幅度的
+<strong>毛刺</strong>？这些杂散信号是由DDS的
+<strong>相位-幅度转换级</strong>
+中的相位截断效应和相位-幅度转换的算法误差所致。这些杂散信号同样也存在于输出信号1中，只不过在输出信号1中过多的相位噪声掩盖了他们的存在。这说明了
+<strong>相位噪声</strong> 在输出高质量、高信噪比信号时为何如此重要。</p>
+<p>但有时候DDS无法反映输入时钟的质量。比如说，一般 DDS&amp;DAC
+贡献的相位噪声大约是
+<code>-130dBc/Hz</code>（1kHz载波频偏）。如果参考时钟的相位噪声比-130dBc/Hz更小，那么器件所贡献的相位噪声将会让这个参考时钟的卓越性能白白浪费掉。这项DDS的性能指标叫
+<strong>"残留相位噪声"（Residual Phase
+Noise）</strong>。无论使用多好的参考时钟源，DDS的相位噪声性能永远也不会超越这个指标。所以不要浪费那么好的晶振哟~</p>
+<p>DDS输出信号的总相位噪声是参考时钟
+<code>在被DDS分频且增强之后的相位噪声</code> 与
+DDS自身的<code>残留相位噪声</code>
+之和。再举个栗子，一个参考时钟（振荡器，100MHz）的相位噪声是
+-110dBc/Hz@1kHz频偏, $F_{OUT} / F_{CLK} = 1/10
+$,因此输出相位噪声被衰减20dB。被衰减了相位噪声之后的参考时钟所贡献的相位噪声的量就变成了
+-130dBc/Hz（此时输出频率为10MHz），与DDS器件的残留相位噪声相等，将
+-130dBc/Hz 与 -130dBc/Hz相加，结果是相位噪声加倍，变为
+-127dBc/Hz。即使你使用相位噪声为 -200dBc/Hz
+的参考时钟，最后DDS输出信号的相位噪声也无法比DDS器件本身的残留相位噪声（-130dBc/Hz）更低。</p>
+<h3
+id="使用dds内建的倍频器为参考时钟倍频">使用DDS内建的倍频器为参考时钟倍频</h3>
 <p>许多ADI的DDS和数字调制器芯片都有片上的参考时钟倍频电路。这些可以被接入或旁路掉的倍频器，允许使用一个低频外部时钟源来为DDS芯片提供一个高得多的参考时钟信号。这些倍频器可以通过数字编程倍频系数（从4倍至20倍）。这样设计是很有好处的，因为这样就可以使用一个低频时钟来同步多个高速DDS芯片，这有助于简化高速时钟分配与同步问题。如果直接使用一个高频时钟源，系统的复杂度和成本将大幅上升，而在芯片内集成倍频器则可以避免这种问题。</p>
-<p>但是参考时钟倍频器并不适用于所有的应用场景。当涉及参考时钟倍频时，都需要在输出信号的质量方面进行权衡。倍频将在PLL环路带宽内以 <span class="math inline">\(20 \lg(F_{OUT} / F_{CLK})\)</span> 恶化参考时钟的相位噪声（F_out是倍频输出的高频时钟频率，F_clk是参考时钟信号的频率）。又举个栗子，一个6倍倍频器将使一个相位噪声为 -110dBc/Hz的振荡器的相位噪声恶化15.5dB，倍频后的高频信号的相位噪声仅有-94.5dBc/Hz。并且，PLL环路滤波器的特性可能导致在靠近其截止频率时的相位噪声 <strong>"突起"</strong>。下图展示了典型DDS（AD9851）的输出相位噪声恶化，该器件具有片上完整的PLL环路滤波器。其他的带有片外环路滤波器的DDS设备通常不会在滤波器响应中表现出峰值。</p>
+<p>但是参考时钟倍频器并不适用于所有的应用场景。当涉及参考时钟倍频时，都需要在输出信号的质量方面进行权衡。倍频将在PLL环路带宽内以
+<span class="math inline">\(20 \lg(F_{OUT} / F_{CLK})\)</span>
+恶化参考时钟的相位噪声（F_out是倍频输出的高频时钟频率，F_clk是参考时钟信号的频率）。又举个栗子，一个6倍倍频器将使一个相位噪声为
+-110dBc/Hz的振荡器的相位噪声恶化15.5dB，倍频后的高频信号的相位噪声仅有-94.5dBc/Hz。并且，PLL环路滤波器的特性可能导致在靠近其截止频率时的相位噪声
+<strong>"突起"</strong>。下图展示了典型DDS（AD9851）的输出相位噪声恶化，该器件具有片上完整的PLL环路滤波器。其他的带有片外环路滤波器的DDS设备通常不会在滤波器响应中表现出峰值。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/7.jpg" alt="Typical DDS Phase Noise With and Without Clock Multiplier Function" border="0"/></p>
 </center>
-<h3 id="dds的无杂散动态范围sfdr性能">DDS的无杂散动态范围（SFDR）性能</h3>
-<p>使用参考时钟倍频器同样会对 <strong>SFDR（Spurious-free dynamic range）</strong> 性能产生影响。Figure.5-5展示了同一DDS器件分别使用倍频器和不使用倍频器时输出同一频率信号的频谱图，对比窄带SFDR（±1MHz,其实不窄），使用倍频的输出信号SFDR约为-68dBc，不使用倍频的输出信号SFDR约为-78dBc。同时注意到，前者的本底噪声相比后者也同样升高了不少。</p>
+<h3
+id="dds的无杂散动态范围sfdr性能">DDS的无杂散动态范围（SFDR）性能</h3>
+<p>使用参考时钟倍频器同样会对 <strong>SFDR（Spurious-free dynamic
+range）</strong>
+性能产生影响。Figure.5-5展示了同一DDS器件分别使用倍频器和不使用倍频器时输出同一频率信号的频谱图，对比窄带SFDR（±1MHz,其实不窄），使用倍频的输出信号SFDR约为-68dBc，不使用倍频的输出信号SFDR约为-78dBc。同时注意到，前者的本底噪声相比后者也同样升高了不少。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3DDS(%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90)/8.jpg" alt="Spectral Plot of DDS Output with & without Reference Clock Multiplication" border="0"/></p>
 </center>
@@ -476,7 +565,10 @@ SQR = 1.76 + 6.02B + A + C\\
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3dds%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">深入理解DDS（数字频率合成）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2.%E7%90%86%E8%A7%A3dds%E7%9A%84%E9%87%87%E6%A0%B7%E8%BE%93%E5%87%BA%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">Section 2.理解DDS的采样输出特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%88%E5%AF%B9%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1dds%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">针对应用场景设计DDS系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84%E9%9D%9E%E7%9B%B8%E5%85%B3%E5%BD%B1%E5%93%8D"><span class="nav-number">1.1.2.</span> <span class="nav-text">其他的非相关影响</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-4.dac%E5%88%86%E8%BE%A8%E7%8E%87%E5%AF%B9%E6%9D%82%E6%95%A3%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.2.</span> <span class="nav-text">Section 4.DAC分辨率对杂散性能的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E9%87%87%E6%A0%B7%E5%AF%B9%E6%9D%82%E6%95%A3%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">过采样对杂散性能的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#section-4.%E7%9B%B8%E4%BD%8D%E7%B4%AF%E5%8A%A0%E5%99%A8%E7%9B%B8%E4%BD%8D%E6%88%AA%E6%96%AD%E8%AF%AF%E5%B7%AE%E7%9B%B8%E4%BD%8D%E6%88%AA%E6%96%AD%E6%9D%82%E6%95%A3%E5%88%86%E5%B8%83%E7%AD%89%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.2.</span> <span class="nav-text">Section 4.相位累加器、相位截断误差、相位截断杂散分布等内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-5.%E5%8F%82%E8%80%83%E6%97%B6%E9%92%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.3.</span> <span class="nav-text">Section 5.参考时钟的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%91%E8%B0%B1%E6%B5%8B%E9%87%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">频谱测量示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8dds%E5%86%85%E5%BB%BA%E7%9A%84%E5%80%8D%E9%A2%91%E5%99%A8%E4%B8%BA%E5%8F%82%E8%80%83%E6%97%B6%E9%92%9F%E5%80%8D%E9%A2%91"><span class="nav-number">1.3.2.</span> <span class="nav-text">使用DDS内建的倍频器为参考时钟倍频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dds%E7%9A%84%E6%97%A0%E6%9D%82%E6%95%A3%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4sfdr%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.3.</span> <span class="nav-text">DDS的无杂散动态范围（SFDR）性能</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3dds%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">深入理解DDS（数字频率合成）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#section-2.%E7%90%86%E8%A7%A3dds%E7%9A%84%E9%87%87%E6%A0%B7%E8%BE%93%E5%87%BA%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">Section
+2.理解DDS的采样输出特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%92%88%E5%AF%B9%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1dds%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">针对应用场景设计DDS系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E7%9A%84%E9%9D%9E%E7%9B%B8%E5%85%B3%E5%BD%B1%E5%93%8D"><span class="nav-number">1.1.2.</span> <span class="nav-text">其他的非相关影响</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-4.dac%E5%88%86%E8%BE%A8%E7%8E%87%E5%AF%B9%E6%9D%82%E6%95%A3%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.2.</span> <span class="nav-text">Section
+4.DAC分辨率对杂散性能的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E9%87%87%E6%A0%B7%E5%AF%B9%E6%9D%82%E6%95%A3%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">过采样对杂散性能的影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#section-4.%E7%9B%B8%E4%BD%8D%E7%B4%AF%E5%8A%A0%E5%99%A8%E7%9B%B8%E4%BD%8D%E6%88%AA%E6%96%AD%E8%AF%AF%E5%B7%AE%E7%9B%B8%E4%BD%8D%E6%88%AA%E6%96%AD%E6%9D%82%E6%95%A3%E5%88%86%E5%B8%83%E7%AD%89%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.2.</span> <span class="nav-text">Section
+4.相位累加器、相位截断误差、相位截断杂散分布等内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#section-5.%E5%8F%82%E8%80%83%E6%97%B6%E9%92%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-number">1.3.</span> <span class="nav-text">Section 5.参考时钟的影响</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%91%E8%B0%B1%E6%B5%8B%E9%87%8F%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">频谱测量示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8dds%E5%86%85%E5%BB%BA%E7%9A%84%E5%80%8D%E9%A2%91%E5%99%A8%E4%B8%BA%E5%8F%82%E8%80%83%E6%97%B6%E9%92%9F%E5%80%8D%E9%A2%91"><span class="nav-number">1.3.2.</span> <span class="nav-text">使用DDS内建的倍频器为参考时钟倍频</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dds%E7%9A%84%E6%97%A0%E6%9D%82%E6%95%A3%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4sfdr%E6%80%A7%E8%83%BD"><span class="nav-number">1.3.3.</span> <span class="nav-text">DDS的无杂散动态范围（SFDR）性能</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -492,7 +584,7 @@ SQR = 1.76 + 6.02B + A + C\\
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到1">
+  <meta name="description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到">
 <meta property="og:type" content="article">
 <meta property="og:title" content="微观尽头——精密信号测量:理论分析">
 <meta property="og:url" content="https://floydfish.xyz/2021/09/23/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到1">
+<meta property="og:description" content="微观尽头——精密信号测量:理论分析 在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。 商业数字万用表(DMM) 我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的DMM6500。为什么是这款呢？因为我用过最高端的DMM是这个（ 这款6位半的数字万用表能测量10pA到">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/1.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/2.jpg">
@@ -165,7 +165,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -279,14 +279,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="微观尽头精密信号测量理论分析">微观尽头——精密信号测量:理论分析</h1>
-<p>在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。</p>
+        <h1
+id="微观尽头精密信号测量理论分析">微观尽头——精密信号测量:理论分析</h1>
+<p>在上一篇文章中，我们欣赏了HP
+3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。</p>
 <h2 id="商业数字万用表dmm">商业数字万用表(DMM)</h2>
-<p>我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的<a target="_blank" rel="noopener" href="https://www.tek.com/tektronix-and-keithley-digital-multimeter/dmm6500">DMM6500</a>。为什么是这款呢？因为我用过最高端的DMM是这个（</p>
+<p>我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的<a
+target="_blank" rel="noopener" href="https://www.tek.com/tektronix-and-keithley-digital-multimeter/dmm6500">DMM6500</a>。为什么是这款呢？因为我用过最高端的DMM是这个（</p>
 <p>这款6位半的数字万用表能测量10pA到10A的电流，1uΩ到100MΩ的电阻，以及100nV到1000V的电压，同时具有5英寸的电容触控屏，可以将采集到的数据以曲线、表格等形式呈现出来以供分析。（怎么搞得我像是打广告的（雾））</p>
 <p>这台万用表的核心ADC器件是一个16位、1MSPS的ADC，光靠这片ADC是无法实现6位半精度的（22位有效精度），我猜测他们应该是使用过采样算法将有效精度提升至了6位半。</p>
 <h2 id="evm">EVM</h2>
-<p>当然，光靠ADC本身是不能实现如此多的功能、也不能实现如此高的测量范围的，如果要做一台数字万用表，那么必须为ADC设计不同的前端电路来实现各种功能和档位切换，而这个系统对于验证阶段的我们来说太过于复杂。所以我的计划是设计一个ADC评估模块（Evaluation Module，EVM），先用这个模块简单地验证一下ADC和模拟前端的性能参数是否达标，同时也锻炼一下我的精密小信号电路、以及数模混合系统 PCB Layout的能力，积累经验（踩坑）。</p>
+<p>当然，光靠ADC本身是不能实现如此多的功能、也不能实现如此高的测量范围的，如果要做一台数字万用表，那么必须为ADC设计不同的前端电路来实现各种功能和档位切换，而这个系统对于验证阶段的我们来说太过于复杂。所以我的计划是设计一个ADC评估模块（Evaluation
+Module，EVM），先用这个模块简单地验证一下ADC和模拟前端的性能参数是否达标，同时也锻炼一下我的精密小信号电路、以及数模混合系统
+PCB Layout的能力，积累经验（踩坑）。</p>
 <p>所以我将设计一块这样的板子:</p>
 <ul>
 <li>搭载核心器件——ADC，型号为ADI的AD7177-2（32位集成式ADC）<br />
@@ -300,18 +305,29 @@
 <p>我决定为他命名为——EmoeMetrology :)</p>
 <span id="more"></span>
 <h3 id="借鉴cern-hpm7177">借鉴——CERN HPM7177</h3>
-<p>前段时间Hackaday上公开了 <strong><a target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">这么一篇文章</a></strong>，CERN制作的开源8位半数据采集系统，核心的ADC器件是AD7177，所以它们为这个工程命名为HPM7177，这个数据采集系统将用于CERN的 <strong><a target="_blank" rel="noopener" href="https://hilumilhc.web.cern.ch/">高光度大型强子对撞机</a></strong> 项目,它们需要上百个这样的数据采集器来完成高精度的实验数据采集任务。（不得不说CERN的宣传做的真不戳。）</p>
+<p>前段时间Hackaday上公开了 <strong><a
+target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">这么一篇文章</a></strong>，CERN制作的开源8位半数据采集系统，核心的ADC器件是AD7177，所以它们为这个工程命名为HPM7177，这个数据采集系统将用于CERN的
+<strong><a
+target="_blank" rel="noopener" href="https://hilumilhc.web.cern.ch/">高光度大型强子对撞机</a></strong>
+项目,它们需要上百个这样的数据采集器来完成高精度的实验数据采集任务。（不得不说CERN的宣传做的真不戳。）</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/1.jpg" alt="Homebrew Metrology CERN" border="0"/></p>
 </center>
-<p><a target="_blank" rel="noopener" href="https://edms.cern.ch/ui/#!master/navigator/document?I:100912592:100912593:subDocs">这里</a> 可以找到他们开源的项目文件，在他们的文件托管服务器上，其中最核心的模拟前端+电压基准的电路图可以在 <strong><a target="_blank" rel="noopener" href="https://edms.cern.ch/ui/file/2605823/1/EDA-04061-V3-0_sch.pdf">这里</a></strong> 摸到。</p>
+<p><a
+target="_blank" rel="noopener" href="https://edms.cern.ch/ui/#!master/navigator/document?I:100912592:100912593:subDocs">这里</a>
+可以找到他们开源的项目文件，在他们的文件托管服务器上，其中最核心的模拟前端+电压基准的电路图可以在
+<strong><a
+target="_blank" rel="noopener" href="https://edms.cern.ch/ui/file/2605823/1/EDA-04061-V3-0_sch.pdf">这里</a></strong>
+摸到。</p>
 <p>可以看到他们的设计非常精细，为整个模拟电路部分设计了一个恒温腔室，用以确保基准源和模拟前端的热稳定性，同时金属腔体也起到了屏蔽外界电磁干扰的作用。看到那块小板子上的2片金灿灿的芯片了吗？如果我告诉你它其实是电阻你会不会...</p>
 <p>好吧，其实它真的是电阻，是Vishay生产的超精准、精密匹配、低温漂、无感薄膜电阻网络。这2片电阻网络一个将用于精密的模拟前端电路，另一个部分会用于基准电压源输出的分压网络。</p>
-<p>看见那个银色的圆金属封装芯片了吗？那个就是LTZ1000，地表最强的基准电压源。它拥有0.05ppm/°C的超强绝对温度系数，以及超低的长期漂移特性，上一期我们讲的HP 3458A 数字万用表就使用了LTZ1000作为电压基准源。</p>
+<p>看见那个银色的圆金属封装芯片了吗？那个就是LTZ1000，地表最强的基准电压源。它拥有0.05ppm/°C的超强绝对温度系数，以及超低的长期漂移特性，上一期我们讲的HP
+3458A 数字万用表就使用了LTZ1000作为电压基准源。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/2.jpg" alt="Homebrew Metrology CERN Core Analog Board" border="0"/></p>
 </center>
-<p>嗯，顺便，他们使用了一块Xilinx生产的 <strong>XC7A35T</strong> FPGA作为整个系统的控制器，那块大底板上的35T就是这块FPGA的最小系统板。</p>
+<p>嗯，顺便，他们使用了一块Xilinx生产的 <strong>XC7A35T</strong>
+FPGA作为整个系统的控制器，那块大底板上的35T就是这块FPGA的最小系统板。</p>
 <p>银色的巨大铝块就是恒温腔了，它的底部塞了一块TEC（半导体加热/制冷片），同时配备了控制器，用以控制精密模拟电路部分的恒温状态。</p>
 <h3 id="前端电路">前端电路</h3>
 <p>但这些都不是重点，重点是我们需要借鉴它的电路图！</p>
@@ -331,7 +347,8 @@
 <p>当然，下面还为这个差分级提供了共模偏置，他使用了来自ADC内部基准源的2.5V电压，同时为其设置了CMRR调节电路，如果电阻匹配度不佳会导致电路共模抑制比降低，这2个电位器支路可小范围微调CMRR。</p>
 <h3 id="基准电路">基准电路</h3>
 <p>在基准这一块，它使用的LTZ1000内部是带有加热丝的（就是LTZ1000框框里面那一小段蛇形线），所以有些外围电路是用来做加热丝闭环控制的，我们暂时可以不用理会。</p>
-<p>LTZ1000输出电压约为7V，它使用了分压电阻网络+放大器的结构，输出了5V、7V、10V 3个电压。其实也没啥好看的...</p>
+<p>LTZ1000输出电压约为7V，它使用了分压电阻网络+放大器的结构，输出了5V、7V、10V
+3个电压。其实也没啥好看的...</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/4.jpg" alt="Voltage Reference Circuit diagram - Emoe Metrology" border="0"/></p>
 </center>
@@ -353,13 +370,16 @@
 <li>Reference | 基准电压源及其外围</li>
 <li>MCU &amp; Peripherals | 单片机以及外设接口等</li>
 </ul>
-<p>老样子，还是用KiCad完成了Schematic Design和PCB Layout，在顶层电路结构图中我划分了整个系统的框图，还算是比较清晰吧——</p>
+<p>老样子，还是用KiCad完成了Schematic Design和PCB
+Layout，在顶层电路结构图中我划分了整个系统的框图，还算是比较清晰吧——</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/6.jpg" alt="KiCad System Design - Emoe Metrology" border="0"/></p>
 </center>
 <h1 id="设计理论-经验">设计理论 &amp; 经验</h1>
 <p>这一节可谓是整个系统中的精华之一了。因为我自己造不了轮子，我用了现成的集成式ADC芯片，那么我现在还需要做的就是设计好精密小信号模拟前端和基准电压源的线路布局等。</p>
-<p>因为这是一个典型的数模混合系统，在数字域会产生上MHz的高频噪声，而模拟域中 <strong>有用信号</strong> 的最高频率不过kHz，两者不在一个数量级上，不良的PCB设计会导致数字与模拟域互相干扰（主要是数字干扰模拟，老恶棍了），最终呈现出来的就是系统可靠性、稳定性下降，精度也将无法达到要求（高频噪声增高）。</p>
+<p>因为这是一个典型的数模混合系统，在数字域会产生上MHz的高频噪声，而模拟域中
+<strong>有用信号</strong>
+的最高频率不过kHz，两者不在一个数量级上，不良的PCB设计会导致数字与模拟域互相干扰（主要是数字干扰模拟，老恶棍了），最终呈现出来的就是系统可靠性、稳定性下降，精度也将无法达到要求（高频噪声增高）。</p>
 <p>以我的菜鸡水平，目前能想到的一些需要在设计过程中重点考虑的是:</p>
 <ul>
 <li>整体电路布局划分<br />
@@ -376,20 +396,25 @@
 </ul>
 <p>我借助了ADI的众多文档，大致上算是完成了这些复杂的设计。虽然最后的效果不一定有多好。。。那么我就不长篇大论了，直接摆上我看完这些文档的总结经验吧~</p>
 <h2 id="去耦技术总结">去耦技术总结</h2>
-<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></strong></p>
+<p>请参考 <strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></strong></p>
 <ol type="1">
 <li><p>距离ic不超过2in（5.08cm）的地方放置一个10uF~100uF的大电解<br />
 这个电容的作用是充当电路的动态电荷库，从而使电路需要瞬态大电流时，电流无需通过带有更高寄生电感的电源引线，从离芯片更近的电容中直接获取能量。</p></li>
-<li><p>再并联一个更小的（0.01uF~0.1uF）电容 这个电容的作用是将高频噪声短路，从而使高频噪声无法进入IC。</p></li>
-<li><p>所有的退耦电容都应该使用尽可能短的连线连接到一大块 <strong>低阻抗地平面</strong>，以最小化引线电感</p></li>
+<li><p>再并联一个更小的（0.01uF~0.1uF）电容
+这个电容的作用是将高频噪声短路，从而使高频噪声无法进入IC。</p></li>
+<li><p>所有的退耦电容都应该使用尽可能短的连线连接到一大块
+<strong>低阻抗地平面</strong>，以最小化引线电感</p></li>
 <li><p>（可选的）在IC的电源引脚和电源总线之间串联一铁氧体磁珠，多半时间在调试时可以这样做，有如下好处:<br />
 定位系统中的噪声<br />
 将高频噪声隔离<br />
 避免该支路芯片内部产生的噪声传播到系统的其余部分</p></li>
 </ol>
 <h2 id="模数混合系统共地问题">模数混合系统共地问题</h2>
-<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></strong></p>
-<p>我认为这篇文章中最重要的一句话是: <strong>没有任何一种接地的方法能始终保持最佳性能！！！</strong><br />
+<p>请参考 <strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></strong></p>
+<p>我认为这篇文章中最重要的一句话是:
+<strong>没有任何一种接地的方法能始终保持最佳性能！！！</strong><br />
 有股听君一席话，如听一席话的感觉.jpg</p>
 <h3 id="接地层的作用">接地层的作用</h3>
 <ol type="1">
@@ -406,13 +431,15 @@
 <li>星形接地（单点接地）</li>
 <li>避免 <strong>"孤岛"</strong> 产生</li>
 <li>避免接地层的相邻大面积区块间有薄弱连接</li>
-<li>电源层和接地层 <strong>彼此相邻</strong> 可提供额外的层间电容，有助于电源的高频去耦</li>
+<li>电源层和接地层 <strong>彼此相邻</strong>
+可提供额外的层间电容，有助于电源的高频去耦</li>
 <li>在物理上分离敏感的模拟元件与多噪声的数字器件，也可针对模拟和数字电路使用分离的接地层，避免叠可将两者间的容性耦合降至最低</li>
 <li>多PCB系统中，在模拟/数字地间串联背对背肖特基二极管，防止插拔时产生的尖峰损坏敏感器件</li>
 <li>多关注系统整体布局！</li>
 </ol>
 <h2 id="基准电压源">基准电压源</h2>
-<p>我使用了ADR4525这片电压基准源，<strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">数据手册在这</a></strong></p>
+<p>我使用了ADR4525这片电压基准源，<strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">数据手册在这</a></strong></p>
 <p>为了保证基准电压源能发挥最佳性能，需要考虑的因素有非常多。<br />
 在ADR4525的Datasheet中陈列了诸多影响基准源性能的指标和原因:<br />
 - 焊接热阻<br />
@@ -424,7 +451,8 @@
 - 功率循环迟滞</p>
 <p>其中有些参数我们是无法左右的，我们大致能把控的就是温度和湿度，还有电源纹波。</p>
 <h3 id="电压基准源的湿度敏感度">电压基准源的湿度敏感度</h3>
-<p>因为ADR4525采用SOIC塑料封装，湿气敏感度等级为MSL-1，符合JEDEC标准，但是从空气中吸收到封装的湿气会 <strong>改变裸片内的机械应力</strong>，从而使输出电压发生变化。如下图所示，相对湿度阶跃变化随时间推移对输出电压产生的影响。</p>
+<p>因为ADR4525采用SOIC塑料封装，湿气敏感度等级为MSL-1，符合JEDEC标准，但是从空气中吸收到封装的湿气会
+<strong>改变裸片内的机械应力</strong>，从而使输出电压发生变化。如下图所示，相对湿度阶跃变化随时间推移对输出电压产生的影响。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/7.jpg" alt="ADR4525 Humidity Sensitivity 1 - Emoe Metrology" border="0"/></p>
 </center>
@@ -432,25 +460,39 @@
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/8.jpg" alt="ADR4525 Humidity Sensitivity 2 - Emoe Metrology" border="0"/></p>
 </center>
-<p>塑料模具化合物会吸收水分。随着相对湿度的变化，塑料封装材料施加于芯片内部的压力会发生改变，这会导致基准电压源的输出发生轻微变化（通常约为 100ppm）。PCB板的材料可能会吸收水分并对芯片施加机械应力。合适的板材料和布局也至关重要。−40°C 至 125°C 的迟滞曲线PCB板布局对获取最佳稳定性至关重要。PCB板温度和位置变化以及老化程度都会改变施加于焊接到板上的元件的机械应力。FR4和类似材料也会吸收水分，导致电路板鼓起。虽然可以通过降低吸收率来延迟这种征兆，但即使采用保形涂层或电路板灌封也并不能完全消除这种影响。</p>
-<p>同时应当省略基准电压源 IC 下面的电源层和接地层，以获得最佳稳定性。</p>
+<p>塑料模具化合物会吸收水分。随着相对湿度的变化，塑料封装材料施加于芯片内部的压力会发生改变，这会导致基准电压源的输出发生轻微变化（通常约为
+100ppm）。PCB板的材料可能会吸收水分并对芯片施加机械应力。合适的板材料和布局也至关重要。−40°C
+至 125°C
+的迟滞曲线PCB板布局对获取最佳稳定性至关重要。PCB板温度和位置变化以及老化程度都会改变施加于焊接到板上的元件的机械应力。FR4和类似材料也会吸收水分，导致电路板鼓起。虽然可以通过降低吸收率来延迟这种征兆，但即使采用保形涂层或电路板灌封也并不能完全消除这种影响。</p>
+<p>同时应当省略基准电压源 IC
+下面的电源层和接地层，以获得最佳稳定性。</p>
 <h3 id="基准电压ic的pcb布局">基准电压IC的PCB布局</h3>
 <p>将IC焊接至PCB上时所引起的机械应力可能会导致输出变压发生偏移和温度系数发生变化。为了减少与应力相关的偏移影响，可以将基准电压源安装与靠近PCB短边附近或拐角处。此外，可以在器件两侧的板上开槽，以减小机械应力。更厚更小的电路板更硬，并且不易弯曲。最后在安装电路板时采取消除应力措施（如柔性支座）。</p>
 <p>其他预防措施包括确保焊点清洁和PCB上无残留助焊剂，因为这些残留助焊剂将导致PCB表面导电性能发生变化，在电路中会增加漏电流路径。</p>
-<p>可以运用下图所示的三边拉环式切割PCB板，这将显著降低IC上的应力（如应用笔记-82所述）。为了获得更好的性能，下面还有四边切槽PCB板。切槽应尽可能长，<strong>拐角尺寸只需足以容纳走线</strong>。现已表明，以这种方法设计的PCB板在相对湿度变化约为60％时，湿敏度可降低至 35ppm 以下。将基准电压源安装在电路板中心位置附近，并在四边切槽，可以将湿敏度进一步降低至 10ppm 以下。PCB板切槽的另一个优势是可将芯片与周围电路热隔离。这有助于减少热电偶效应并提高准确度。</p>
+<p>可以运用下图所示的三边拉环式切割PCB板，这将显著降低IC上的应力（如应用笔记-82所述）。为了获得更好的性能，下面还有四边切槽PCB板。切槽应尽可能长，<strong>拐角尺寸只需足以容纳走线</strong>。现已表明，以这种方法设计的PCB板在相对湿度变化约为60％时，湿敏度可降低至
+35ppm
+以下。将基准电压源安装在电路板中心位置附近，并在四边切槽，可以将湿敏度进一步降低至
+10ppm
+以下。PCB板切槽的另一个优势是可将芯片与周围电路热隔离。这有助于减少热电偶效应并提高准确度。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/9.jpg" alt="Reference PCB Cutting pattern 2 - Emoe Metrology" border="0"/></p>
 </center>
 <p>关于更多电压基准源的相关文献，我还参考了下列:</p>
 <p>为何基准电压噪声这一指标如此重要？<br />
-请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog Dialogue 第54卷第2期</a></strong></p>
-<p>基准电压源原理 请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></strong></p>
+请参考 <strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog
+Dialogue 第54卷第2期</a></strong></p>
+<p>基准电压源原理 请参考 <strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></strong></p>
 <h2 id="精密运算放大器外围布局布线">精密运算放大器外围布局布线</h2>
-<p>请参考 <strong><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></strong></p>
+<p>请参考 <strong><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></strong></p>
 <p>考虑的问题如下:<br />
 - 避免泄漏电流，保持PCB表面洁净干燥<br />
 - 正确旁路电源，保持短连线<br />
-- 考虑外围阻容的热均衡，避免 <strong>Peltier-Seebeck电压（其实就是热电效应）</strong> 降低失调性能</p>
+- 考虑外围阻容的热均衡，避免
+<strong>Peltier-Seebeck电压（其实就是热电效应）</strong>
+降低失调性能</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4-%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F-%E7%90%86%E8%AE%BA/10.jpg
 " alt="ADA4522 PCB Layout - Emoe Metrology" border="0"/></p>
@@ -484,13 +526,23 @@
 <p>嘿，我觉得从板子背面看内层的电源轨走线，还挺好看的。</p>
 <p>好啦，这期就到这里~接下来我们即将进入激动人心的测试和二次开发环节！敬请期待——</p>
 <h1 id="后记参考文献">后记:参考文献</h1>
-<p><a target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">Homebrew Metrology</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">ADR4525 Datasheet</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog Dialogue 第54卷第2期</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://hackaday.com/2021/02/26/homebrew-metrology-the-cern-way/">Homebrew
+Metrology</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-101_cn.pdf">MT-101应用指南</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/evaluation-documentation/MT-031_cn.pdf">MT-031应用指南</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADR4520_4525_4530_4533_4540_4550_cn.pdf">ADR4525
+Datasheet</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/analog-dialogue/volume-54/number-1/why-does-voltage-reference-noise-matter_cn.pdf">Analog
+Dialogue 第54卷第2期</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/MT-087_cn.pdf">MT-087应用指南</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/technical-documentation/data-sheets/ADA4522-2_cn.pdf">ADA4522的数据手册</a></p>
 
     </div>
 
@@ -613,7 +665,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

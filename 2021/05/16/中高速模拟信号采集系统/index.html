@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Floy">
+  <meta name="description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Flo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="中高速模拟信号采集系统">
 <meta property="og:url" content="https://floydfish.xyz/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Floy">
+<meta property="og:description" content="创作说明 本文首发于EmoeStudio 感觉俺自己的blog好久没更新了,于是转发过来混个更新(bushi) 正文 米娜桑好久不见! 废话就不多说啦。来点正经的技术文~ 这次来试试做一个中高速精密模拟信号采集系统,是一套模拟向数字转换的完整信号链~ 资料汇总   ADS8860驱动代码(即将作废,预计将合并到下面的repo中): https:&#x2F;&#x2F;github.com&#x2F;Flo">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN81AO.png">
 <meta property="og:image" content="https://z3.ax1x.com/2021/05/10/gN8MB6.png">
@@ -162,7 +162,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -286,21 +286,30 @@
 <h2 id="资料汇总">资料汇总</h2>
 <blockquote>
 <ul>
-<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>): https://github.com/Floyd-Fish/ADS8860-STM32F4<br />
+<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>):
+https://github.com/Floyd-Fish/ADS8860-STM32F4<br />
 </li>
-<li>本教程所有设计资源: https://github.com/Floyd-Fish/ADS8860_SignalChain<br />
+<li>本教程所有设计资源:
+https://github.com/Floyd-Fish/ADS8860_SignalChain<br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860 Datasheet</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860
+Datasheet</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189 Datasheet</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189
+Datasheet</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G Datasheet</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G
+Datasheet</a></li>
 </ul>
 </blockquote>
 <span id="more"></span>
 <h2 id="电路性能参数">电路性能参数</h2>
 <ul>
-<li>使用ADS8860完成16-bit 1Msps(1M sample per second)的模拟信号采集<br />
+<li>使用ADS8860完成16-bit 1Msps(1M sample per
+second)的模拟信号采集<br />
 </li>
 <li>输入信号为跨在0V上的(无直流偏置的正负信号),幅值为16V(Vpp=32V)的模拟信号<br />
 </li>
@@ -311,7 +320,8 @@
 <li>整个模拟电路系统的供电为3.3V单电源</li>
 </ul>
 <h2 id="adc前端设计">ADC前端设计</h2>
-<p>参考 <strong><新概念模拟电路></strong> -Section-125:单电源标准运放ADC驱动电路</p>
+<p>参考 <strong><新概念模拟电路></strong>
+-Section-125:单电源标准运放ADC驱动电路</p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN81AO.png" alt="gN81AO.png" border="0" /></p>
 <p>参考电路性能设计需求:</p>
 <ul>
@@ -331,9 +341,12 @@
 </ul>
 </blockquote>
 <p>分析过程就简略了~如果需要了解的话请自行翻书哦</p>
-<p><span class="math display">\[ R_2 = {G * V_{dd} \over U_{oz}} * R_1 \]</span></p>
-<p><span class="math display">\[R_5 = {G * V_{dd}} \over {V_{dd} - G * V_{dd} - U_{oz}} * R_1\]</span></p>
-<p><span class="math display">\[R_4 = R1 || R2 || R5\]</span> 设R1 = 100k,根据上述参数代入公式计算R2,R4,R5</p>
+<p><span class="math display">\[ R_2 = {G * V_{dd} \over U_{oz}} * R_1
+\]</span></p>
+<p><span class="math display">\[R_5 = {G * V_{dd}} \over {V_{dd} - G *
+V_{dd} - U_{oz}} * R_1\]</span></p>
+<p><span class="math display">\[R_4 = R1 || R2 || R5\]</span> 设R1 =
+100k,根据上述参数代入公式计算R2,R4,R5</p>
 <h2 id="抗混叠滤波器设计">抗混叠滤波器设计</h2>
 <h3 id="什么为什么">什么&amp;为什么?</h3>
 <p>当输入被测信号频率为Fi,按照奈奎斯特采样定律,要想采集完整的信号,采样率Fs必须大于2倍被测信号频率Fi。当采样率小于2Fi时，<code>一定会出现混叠现象</code>,即采集的波形中出现很低的混叠频率。下图演示了混叠频率出现的原因——</p>
@@ -342,7 +355,8 @@
 <p>唯一的方法就是让大于Fs/2的频率的信号不要出现在ADC的输入端,或者这种频率分量的信号在ADC输入端只有很小的幅度。因此增加一个抗混叠滤波器是非常有必要的。</p>
 <p>最简单、最常见的方法就是在ADC输入端前增加一级截止频率Fh的无源低通滤波电路,以实现抗混叠滤波。</p>
 <p>抗混叠滤波器的截止频率选择有如下要求:</p>
-<p><span class="math display">\[ f_{signal} &lt;&lt; f_H &lt;&lt; {f_s} / 2  \]</span></p>
+<p><span class="math display">\[ f_{signal} &lt;&lt; f_H &lt;&lt; {f_s}
+/ 2  \]</span></p>
 <p>比如信号频率100KHz,采样频率1MHz,那么fH就在100KHz和500KHz之间取值。但是不能太过于靠近这2个极限值,太过接近100k,会损伤有用信号。太过接近500k,滤波效果会打折扣。</p>
 <p>杨老师的比喻是:</p>
 <blockquote>
@@ -351,19 +365,23 @@
 <p>所以还是需要斟酌一下.jpg</p>
 <h3 id="设计">设计</h3>
 <p>ADS8860最高采样率1MHz,输入信号频率不超过100KHz,根据前面的公式可得:</p>
-<p><span class="math display">\[ 1kHz &lt; f_H &lt; {f_s \over 2} = 500kHz  \]</span></p>
+<p><span class="math display">\[ 1kHz &lt; f_H &lt; {f_s \over 2} =
+500kHz  \]</span></p>
 <p>在没有其他已知条件下,建议将Fh选为两者的乘法平均数:</p>
-<p><span class="math display">\[ f_H = {1 \over 2*pi*R_{ISO}*C_L} = {\sqrt{100k*500k}} = 223.607kHz  \]</span></p>
+<p><span class="math display">\[ f_H = {1 \over 2*pi*R_{ISO}*C_L} =
+{\sqrt{100k*500k}} = 223.607kHz  \]</span></p>
 <p>即</p>
 <p><span class="math display">\[ R_{ISO}*C_L = 0.7118us  \]</span></p>
-<p>同时兼顾采样误差对电阻的要求,查询 <strong><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860的Datasheet</a></strong></p>
+<p>同时兼顾采样误差对电阻的要求,查询 <strong><a
+target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860的Datasheet</a></strong></p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN8J9H.png" alt="gN8J9H.png" border="0" /></p>
 <p>可知转换时间最少为500ns,也就是</p>
 <p><span class="math display">\[ T_{SAM} = 0.5us   \]</span></p>
 <p>再看ADS8860内部等效采样电路</p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN8Y3d.png" alt="gN8Y3d.png" border="0" /></p>
 <p>而ADS8860内部采样电容约为4pF,考虑到最为苛刻的要求:</p>
-<p><span class="math display">\[ R_s*(4pF+C_L) &lt;= {T_{SAM} \over {0.69314*(16+1)}} = 0.042433us  \]</span></p>
+<p><span class="math display">\[ R_s*(4pF+C_L) &lt;= {T_{SAM} \over
+{0.69314*(16+1)}} = 0.042433us  \]</span></p>
 <p>设CL = 100pF,解得:</p>
 <p><span class="math display">\[ R_s &lt;= 408Ω  \]</span></p>
 <p>即前级驱动电路的输出电阻加内部开关电阻不得超过408欧姆。OPA2189的开环输出电阻在f=100kHz时约为200Ω(见下图)。所以可以选择电阻为100欧姆。</p>
@@ -473,7 +491,8 @@
 </tbody>
 </table>
 <h2 id="pcb-layout">PCB Layout</h2>
-<p>同样的,用KiCad进行PCB Layout,最后交由某5块钱PCB代工厂(懂得都懂)进行加工。</p>
+<p>同样的,用KiCad进行PCB
+Layout,最后交由某5块钱PCB代工厂(懂得都懂)进行加工。</p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN884e.png" alt="gN884e.png" border="0" /></p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN83ND.jpg" alt="gN83ND.jpg" border="0" /></p>
 <p><img src="https://z3.ax1x.com/2021/05/10/gN8QHK.jpg" alt="gN8QHK.jpg" border="0" /></p>
@@ -481,18 +500,22 @@
 <p>测试单片机平台 <code>STM32F303CCT6</code><br />
 代码我之前写过一份最简单的3-wire模式操作,放在文章开头的资料链接里了~</p>
 <p><del>啊,板子还没到,暂时先鸽着.jpg</del></p>
-<p>到了到了,但是基准电压IC-REF03G我还没买 (<del>好贵的说</del>) ,于是先用LDO的3.3V输出当reference用用~</p>
+<p>到了到了,但是基准电压IC-REF03G我还没买 (<del>好贵的说</del>)
+,于是先用LDO的3.3V输出当reference用用~</p>
 <p>正面</p>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc7EPf.jpg" alt="" /><figcaption>gc7EPf.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc7EPf.jpg" alt="gc7EPf.jpg" />
+<figcaption aria-hidden="true">gc7EPf.jpg</figcaption>
 </figure>
 <p>反面</p>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc7Fat.jpg" alt="" /><figcaption>gc7Fat.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc7Fat.jpg" alt="gc7Fat.jpg" />
+<figcaption aria-hidden="true">gc7Fat.jpg</figcaption>
 </figure>
 <p>连上杜邦线的样子:</p>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc7VG8.jpg" alt="" /><figcaption>gc7VG8.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc7VG8.jpg" alt="gc7VG8.jpg" />
+<figcaption aria-hidden="true">gc7VG8.jpg</figcaption>
 </figure>
 <h3 id="adc驱动电路测试">ADC驱动电路测试</h3>
 <p>使用的测试仪器有:</p>
@@ -501,23 +524,27 @@
 </li>
 <li>200MHz信号源</li>
 </ul>
-<p>首先,用信号源产生一个 <strong>16Vpp,无直流偏置 /(±8V) ,频率100kHz的正弦信号</strong> ,输入模拟前端,在ADC输入侧,即模拟前端输出的测试点,用示波器测试如下:</p>
+<p>首先,用信号源产生一个 <strong>16Vpp,无直流偏置 /(±8V)
+,频率100kHz的正弦信号</strong>
+,输入模拟前端,在ADC输入侧,即模拟前端输出的测试点,用示波器测试如下:</p>
 <center>
 <strong>100kHz正弦信号</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5Acd.jpg" alt="" /><figcaption>gc5Acd.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5Acd.jpg" alt="gc5Acd.jpg" />
+<figcaption aria-hidden="true">gc5Acd.jpg</figcaption>
 </figure>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5uAf.jpg" alt="" /><figcaption>gc5uAf.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5uAf.jpg" alt="gc5uAf.jpg" />
+<figcaption aria-hidden="true">gc5uAf.jpg</figcaption>
 </figure>
 <p>依据我们ADC驱动电路的设计传输函数:</p>
 <p><span class="math display">\[ y = G * x + b \]</span></p>
 <p><span class="math display">\[
- G = 0.0625, b = 1 
+G = 0.0625, b = 1
 \]</span></p>
 <p><span class="math display">\[
- y为输出,x为输入 
+y为输出,x为输入
 \]</span></p>
 <p>计算得出的结果符合实际测试结果~ 真不戳</p>
 <p>再来测试一些别的信号:</p>
@@ -525,31 +552,36 @@
 <strong>1kHz,±8V正弦信号</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5mHP.jpg" alt="" /><figcaption>gc5mHP.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5mHP.jpg" alt="gc5mHP.jpg" />
+<figcaption aria-hidden="true">gc5mHP.jpg</figcaption>
 </figure>
 <center>
 <strong>10Hz,±8V正弦信号</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5ZnI.jpg" alt="" /><figcaption>gc5ZnI.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5ZnI.jpg" alt="gc5ZnI.jpg" />
+<figcaption aria-hidden="true">gc5ZnI.jpg</figcaption>
 </figure>
 <center>
 <strong>100kHz,±8V三角波信号</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5eBt.jpg" alt="" /><figcaption>gc5eBt.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5eBt.jpg" alt="gc5eBt.jpg" />
+<figcaption aria-hidden="true">gc5eBt.jpg</figcaption>
 </figure>
 <center>
 <strong>100kHz,±1V三角波信号</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5EjA.jpg" alt="" /><figcaption>gc5EjA.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5EjA.jpg" alt="gc5EjA.jpg" />
+<figcaption aria-hidden="true">gc5EjA.jpg</figcaption>
 </figure>
 <center>
 <strong>100kHz,奇怪的信号增加了~</strong>
 </center>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gc5k1H.jpg" alt="" /><figcaption>gc5k1H.jpg</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gc5k1H.jpg" alt="gc5k1H.jpg" />
+<figcaption aria-hidden="true">gc5k1H.jpg</figcaption>
 </figure>
 <h3 id="单片机收集数据">单片机收集数据</h3>
 <p>我用了STM32F303CCT6来控制ADS8860采集信号并接受其发送的转换数据,配置ADS8860工作模式为</p>
@@ -607,13 +639,17 @@
 	<span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
 <p>驱动代码和其他资料一起打包放在开头的github仓库里了~</p>
-<p>采集一个1kHz 峰峰值16V,无直流偏置的正弦信号,并将波形数据通过串口打印到上位机绘图,得到如下结果:</p>
+<p>采集一个1kHz
+峰峰值16V,无直流偏置的正弦信号,并将波形数据通过串口打印到上位机绘图,得到如下结果:</p>
 <figure>
-<img src="https://z3.ax1x.com/2021/05/16/gcbk38.png" alt="" /><figcaption>gcbk38.png</figcaption>
+<img src="https://z3.ax1x.com/2021/05/16/gcbk38.png" alt="gcbk38.png" />
+<figcaption aria-hidden="true">gcbk38.png</figcaption>
 </figure>
 <p>真不戳。</p>
 <p>在调试的时候遇到了一些问题,比如采样率和定时器计算值不符,后来发现可能是F3的主频太低,spi速率不太够...</p>
-<p>现在测试出来最高采样率差不多只能跑到20kHz (<strong><del>啊喂,这也差太多了吧!</del></strong>) 如果以后有条件我会尝试使用更高速的单片机进行测试的~</p>
+<p>现在测试出来最高采样率差不多只能跑到20kHz
+(<strong><del>啊喂,这也差太多了吧!</del></strong>)
+如果以后有条件我会尝试使用更高速的单片机进行测试的~</p>
 <p>这期就是这样,感谢你耐心地看完~</p>
 
     </div>
@@ -737,7 +773,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

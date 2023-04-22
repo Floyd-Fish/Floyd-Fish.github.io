@@ -20,36 +20,19 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gith">
+  <meta name="description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用STM32的片上DAC实现DDS">
 <meta property="og:url" content="https://floydfish.xyz/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gith">
+<meta property="og:description" content="利用STM32的片上DAC实现DDS（数字频率合成） 前言 本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo 本文用到的资源 - STM32F303CCT6 Overview - Extending the DAC performance of STM32 Microcontroller - 本文示例代码 Gi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/3.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/4.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/8.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/13.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/14.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/11.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/12.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/5.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/6.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/7.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/15.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/16.jpg">
 <meta property="article:published_time" content="2021-05-20T04:20:14.000Z">
 <meta property="article:modified_time" content="2022-01-30T12:08:18.378Z">
 <meta property="article:author" content="Floyd-Fish">
 <meta property="article:tag" content="电子电路">
 <meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png">
 
 <link rel="canonical" href="https://floydfish.xyz/2021/05/20/%E5%88%A9%E7%94%A8STM32%E7%9A%84%E7%89%87%E4%B8%8ADAC%E5%AE%9E%E7%8E%B0DDS/">
 
@@ -154,7 +137,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -268,32 +251,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="利用stm32的片上dac实现dds数字频率合成">利用STM32的片上DAC实现DDS（数字频率合成）</h1>
+        <h1
+id="利用stm32的片上dac实现dds数字频率合成">利用STM32的片上DAC实现DDS（数字频率合成）</h1>
 <h1 id="前言">前言</h1>
 <p>本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。<br />
 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo</p>
 <p>本文用到的资源<br />
-- <a target="_blank" rel="noopener" href="https://www.st.com/en/microcontrollers-microprocessors/stm32f303cc.html">STM32F303CCT6 Overview</a><br />
-- <a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending the DAC performance of STM32 Microcontroller</a><br />
-- 本文示例代码 <strong><a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/STM32_DAC_DDS">Github</a></strong></p>
+- <a
+target="_blank" rel="noopener" href="https://www.st.com/en/microcontrollers-microprocessors/stm32f303cc.html">STM32F303CCT6
+Overview</a><br />
+- <a
+target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending
+the DAC performance of STM32 Microcontroller</a><br />
+- 本文示例代码 <strong><a
+target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/STM32_DAC_DDS">Github</a></strong></p>
 <h1 id="dds">DDS</h1>
-<p>Direct-Digital Synthesizer是一种频率合成技术,用于产生周期性波形。目前，从低频到上百MHz的正弦波、三角波的产生，绝大多数都用DDS完成。包括我们买到的信号源之类的，里面的核心也是DDS芯片。传统的模拟电路——即振荡器产生正弦、方波、三角波的方式在DDS面前都得叫大哥:D</p>
+<p>Direct-Digital
+Synthesizer是一种频率合成技术,用于产生周期性波形。目前，从低频到上百MHz的正弦波、三角波的产生，绝大多数都用DDS完成。包括我们买到的信号源之类的，里面的核心也是DDS芯片。传统的模拟电路——即振荡器产生正弦、方波、三角波的方式在DDS面前都得叫大哥:D</p>
 <p>DDS的优点有:<br />
 - 可精细选择输出频率，实现从低到高的频率选择。<br />
 - 可快速跳频，且可以保证相位连续，这在模拟电路方法中是难以实现的。<br />
 - 可实现正交输出，可实现相位设置<br />
 - 可实现正弦、三角波输出，配合比较器可实现同频同相方波输出<br />
-- 事实上，只要有波表，随便什么波形都能给你打出来。。（你甚至可以在示波器屏幕上看Badapple）</p>
+-
+事实上，只要有波表，随便什么波形都能给你打出来。。（你甚至可以在示波器屏幕上看Badapple）</p>
 <p>当然DDS也不是浑身是宝，他也有弊端:<br />
-- 在发出高质量的正弦波中,DDS无法实现超低失真度，这是最大的弊端。（因为是一个点一个点地突变,不可避免会引起非线性失真,即增加了高频谐波分量）<br />
-- DDS中使用的DAC位数不会很高（常见的14位）,其积分非线性INL不可能做到很小,其次DDS一般采用普通DAC,没有为降低失真度做出更多考虑<br />
+-
+在发出高质量的正弦波中,DDS无法实现超低失真度，这是最大的弊端。（因为是一个点一个点地突变,不可避免会引起非线性失真,即增加了高频谐波分量）<br />
+-
+DDS中使用的DAC位数不会很高（常见的14位）,其积分非线性INL不可能做到很小,其次DDS一般采用普通DAC,没有为降低失真度做出更多考虑<br />
 - 目前DDS实现的正弦波输出，失真度一般只能做到-80dB左右。</p>
 <span id="more"></span>
 <h1 id="dds核心思想">DDS核心思想</h1>
 <p>先假设DDS有一个固定的时钟MCLK=36MHz。</p>
 <p>要实现高精度的DDS,我们需要一个正弦波的<code>相位-幅度</code>表,且它应具有足够细密的步长,比如0.01°。那么一个完整的正弦波表就需要36000个点。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png" alt="" /><figcaption>sin table</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/2.png"
+alt="sin table" />
+<figcaption aria-hidden="true">sin table</figcaption>
 </figure>
 <p>如上图所示,N代表相位点的序号,phase代表这个点对应的正弦相位,Am代表这个点对应的正弦的值（也就是sin（phase））,Data_10代表这个值对应的10位DAC的Code。</p>
 <blockquote>
@@ -301,13 +297,20 @@
 </blockquote>
 <p>在前12个相位点,正弦的幅度变化非常小,以至于DAC输出的Code一直是512。在第13个相位点,DAC输出Code增加了1。由此可见这个具有36000点的波表几乎记录了一个标准正弦波的全部。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/3.png" alt="" /><figcaption>DDS表的前100点</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/3.png"
+alt="DDS表的前100点" />
+<figcaption aria-hidden="true">DDS表的前100点</figcaption>
 </figure>
-<p>将这个表首位衔接,假设相位步长m=1,以DDS主时钟MCLK为节拍，依序发作： - 第一个CLK时，DAC输出N=0时对应的DATA_OUT，即512.<br />
-- 第二个CLK时，DAC输出N=1时对应的DATA_OUT,即512 - ...... - 当36000个CLK过去之后，一个完整的正弦波便被打了出来。</p>
+<p>将这个表首位衔接,假设相位步长m=1,以DDS主时钟MCLK为节拍，依序发作： -
+第一个CLK时，DAC输出N=0时对应的DATA_OUT，即512.<br />
+- 第二个CLK时，DAC输出N=1时对应的DATA_OUT,即512 - ...... -
+当36000个CLK过去之后，一个完整的正弦波便被打了出来。</p>
 <p>之前我们假设DDS时钟为F_MCLK=36MHz<br />
 那么这个正弦波的频率就非常容易算出了:</p>
-<p><span class="math display">\[ f_{out} = {1 \over T_{MCLK}* {N_{max} \over m}} = {f_{MCLK}*m \over N_{max}} = {36*10^6*1 \over 36000} = 1000Hz \]</span></p>
+<p><span class="math display">\[ f_{out} = {1 \over T_{MCLK}* {N_{max}
+\over m}} = {f_{MCLK}*m \over N_{max}} = {36*10^6*1 \over 36000} =
+1000Hz \]</span></p>
 <p>上式代表了DDS最核心的计算,参数含义如下:<br />
 - T_MCLK 为DDS主振荡器时钟周期,即1/36MHz,约为27.78ns。<br />
 - N_max为正弦波波表总点数,为36000<br />
@@ -316,14 +319,19 @@
 m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高。</p>
 <p>可见,<strong>改变步长m就可以改变输出频率</strong>,当然,改变时钟频率也可以。不过一般采用固定的时钟。</p>
 <p>那么DDS的最小分辨率就是:</p>
-<p><span class="math display">\[ \Delta f_{OUT} = {f_{MCLK}* \Delta m \over N_{max}} \]</span></p>
+<p><span class="math display">\[ \Delta f_{OUT} = {f_{MCLK}* \Delta m
+\over N_{max}} \]</span></p>
 <p>根据上述参数确定的DDS输出最小分辨率为1000Hz。</p>
 <h2 id="实际dds">实际DDS</h2>
 <p>前面假设的DDS主频不高,样点不多。</p>
 <p>我们来看一个专用DDS芯片的内部框图。<br />
-<a target="_blank" rel="noopener" href="https://www.analog.com/cn/products/ad9833.html">AD9833</a>是一款28位分辨率,25MHz完整DDS芯片。</p>
+<a
+target="_blank" rel="noopener" href="https://www.analog.com/cn/products/ad9833.html">AD9833</a>是一款28位分辨率,25MHz完整DDS芯片。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png" alt="" /><figcaption>ad9833</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/1.png"
+alt="ad9833" />
+<figcaption aria-hidden="true">ad9833</figcaption>
 </figure>
 <p>DDS核心由相位累加器<code>PA</code>、<code>相位幅度表(波表)</code>和<code>数模转换器(DAC)</code>组成。</p>
 <p>对应上面的框图是这样的（好啦知道某些读者嘤语不好了orz）:</p>
@@ -337,9 +345,11 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <li>其他的框图你可以暂时忽略不看~</li>
 </ul>
 <p>28位相位累加器意味着什么呢？意味着它可以计数0~2<sup>28,或者说,它的相位表点数为2</sup>28=268435456点（2亿6800万）,远远大于36000点。</p>
-<p>如果我们要使用这个DDS,我们需要输入一个计数步长m（当然这个m小于2^28）。此后外部时钟MCLK每出现一个脉冲,相位累加器PA完成一次累加（以计数步长m为步进,在SIN ROM里等间隔抽值）,DAC输出一个从正弦波表里抠出来的值。</p>
+<p>如果我们要使用这个DDS,我们需要输入一个计数步长m（当然这个m小于2^28）。此后外部时钟MCLK每出现一个脉冲,相位累加器PA完成一次累加（以计数步长m为步进,在SIN
+ROM里等间隔抽值）,DAC输出一个从正弦波表里抠出来的值。</p>
 <p>那么这个DDS的最小频率分辨率是:</p>
-<p><span class="math display">\[ \Delta f = {1 \over 2^{28} }*f_{MCLK}= {25MHz \over 2^{28}} = 0.0931Hz \]</span></p>
+<p><span class="math display">\[ \Delta f = {1 \over 2^{28} }*f_{MCLK}=
+{25MHz \over 2^{28}} = 0.0931Hz \]</span></p>
 <p>多么恐怖的分辨率.jpg<br />
 也就意味着你可以设置这个DDS输出频率为10khz,10.0000931kHz,10.0001862kHz......</p>
 <p>这个DDS输出的最高频率是FMCLK的一半。这时候整个波表中只有2个点会被扫描到，这时候输出的是一个三角波，而非正弦。</p>
@@ -349,10 +359,15 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <p>我们先解释方法,原因之后讲。<br />
 通常如果要使用STM32的DAC进行高速转换,我们需要用到DMA传输,数据流如下图所示:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/4.png" alt="" /><figcaption>DAC DMA</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/4.png"
+alt="DAC DMA" />
+<figcaption aria-hidden="true">DAC DMA</figcaption>
 </figure>
-<p>首先我们手搓一个波表出来（具体后面讲）,然后把他存到RAM中（当然是RAM咯,实时运算出来的...）,然后我们开启一个定时器,比如TIM8,配置成更新事件模式（Update Event）。</p>
-<p>接下来,开启DMA传输,将DAC与DMA总线链接起来（Link）,并指定DMA传输的源地址（source address）,也就是我们存储在RAM里的波表数组的起始地址,同时指定DMA传输的长度（也就是波表长度）。</p>
+<p>首先我们手搓一个波表出来（具体后面讲）,然后把他存到RAM中（当然是RAM咯,实时运算出来的...）,然后我们开启一个定时器,比如TIM8,配置成更新事件模式（Update
+Event）。</p>
+<p>接下来,开启DMA传输,将DAC与DMA总线链接起来（Link）,并指定DMA传输的源地址（source
+address）,也就是我们存储在RAM里的波表数组的起始地址,同时指定DMA传输的长度（也就是波表长度）。</p>
 <p>完成上述初始化操作之后,每当一个定时器更新事件出现时,DMA就会将一个波形数据点传输到DAC的输出保持寄存器中,过一会儿这个数据就会被自动装载到DAC的输出寄存器中,DAC便按这个数据进行相应的输出。</p>
 <p>看到这里是不是明白了？我们将这个系统与前文的DDS对比一下:</p>
 <ul>
@@ -363,38 +378,57 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <li>相位累加器步长m = 1,而DDS的m是可变的</li>
 </ul>
 <p>为什么我们不用像真正DDS那样的固定波表呢?原因有2:<br />
-- STM32的DMA的 <strong>增量地址是连续的</strong>,也就是说DMA搬运数据时只能搬运地址连续的存储空间。<br />
-- STM32的存储空间有限,无法容纳如此巨量的数据。（毕竟是身娇体柔的单片机嘛）</p>
-<p>那么我们如果需要一个可变长度的波表, <strong>最好的办法就是现算现用</strong> ,这样才能实现可调步长,也即实现输出频率可调。<br />
+- STM32的DMA的
+<strong>增量地址是连续的</strong>,也就是说DMA搬运数据时只能搬运地址连续的存储空间。<br />
+-
+STM32的存储空间有限,无法容纳如此巨量的数据。（毕竟是身娇体柔的单片机嘛）</p>
+<p>那么我们如果需要一个可变长度的波表,
+<strong>最好的办法就是现算现用</strong>
+,这样才能实现可调步长,也即实现输出频率可调。<br />
 并且,使用STM32有一个专用DDS芯片不太好实现的功能——可变时钟频率,只要更改定时器的更新事件触发频率,就改变了<code>"DDS"</code>的时钟频率。</p>
 <p>那么我么来实践一下。</p>
 <h2 id="stm32的dac">STM32的DAC</h2>
-<p>STM32的DAC在手册中注明了转换速率可达1Msps。但是这还不够—— 我们要更快!</p>
-<p>参考这篇手册,<a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending the DAC Performance of STM32 microcontrollers</a></p>
+<p>STM32的DAC在手册中注明了转换速率可达1Msps。但是这还不够——
+我们要更快!</p>
+<p>参考这篇手册,<a
+target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending
+the DAC Performance of STM32 microcontrollers</a></p>
 <p>文中提到了一件非常重要的事——STM32的DAC等效模型,以及为何DAC的输出速度提不上去</p>
 <h3 id="stm32的dac等效模型">STM32的DAC等效模型</h3>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/8.png" alt="" /><figcaption>model</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/8.png"
+alt="model" />
+<figcaption aria-hidden="true">model</figcaption>
 </figure>
 <p>可以看到,当输出Buffer关闭的时候,DAC的等效输出阻抗为Ra+Rb,RDAC=2Ra。当输出Buffer开启时,一个内置的运放配置为反相放大模式,增益为-1,输出阻抗接近于0。（低阻）</p>
 <p>但是当使用了输出Buffer的时候也带来了几个问题:</p>
 <ul>
-<li><strong>输出幅度被限制为正负电源轨±0.2V （因为这个运放并非轨到轨运放）</strong><br />
+<li><strong>输出幅度被限制为正负电源轨±0.2V
+（因为这个运放并非轨到轨运放）</strong><br />
 </li>
 <li>输出速度取决于这个运放的性能（通常只能到1MHz）</li>
 </ul>
 <p>同时手册举了个例子,见下图:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png" alt="" /><figcaption>explain</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/9.png"
+alt="explain" />
+<figcaption aria-hidden="true">explain</figcaption>
 </figure>
-<p>简单来说,在输出Buffer关闭的情况下,如果输出有容性负载（事实上绝大多数情况下不可避免）,如果要得到1LSB精度的输出值（也就是DAC输出稳定下来）,通过RC充电电路的计算公式可以得出 DAC的 <strong>Settling time</strong>。</p>
-<p>算出来约为1.8us,也就是DAC的输出速率最高只能到 <strong>555kHz</strong> 左右!<br />
+<p>简单来说,在输出Buffer关闭的情况下,如果输出有容性负载（事实上绝大多数情况下不可避免）,如果要得到1LSB精度的输出值（也就是DAC输出稳定下来）,通过RC充电电路的计算公式可以得出
+DAC的 <strong>Settling time</strong>。</p>
+<p>算出来约为1.8us,也就是DAC的输出速率最高只能到 <strong>555kHz</strong>
+左右!<br />
 而且这个计算还没考虑到DAC在高速运行时的其他寄生参数带来的影响,也就是说实际上这个最大速率会更低。</p>
 <h3 id="外部运放-提升性能">外部运放-提升性能</h3>
 <p>诶..我这么好的性能,怎么就速度上不去呢?（<del>我没有开某人</del>（bushi））</p>
 <p>既然内部的Buffer太弟弟了,我们就外接一个牛逼点的。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png" alt="" /><figcaption>Ex op</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/10.png"
+alt="Ex op" />
+<figcaption aria-hidden="true">Ex op</figcaption>
 </figure>
 <p>在这个模型中，限制DAC输出速度的主要有3个因素:</p>
 <ol type="1">
@@ -405,20 +439,31 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <li>DAC的数据更新率（主要是单片机限制）</li>
 </ol>
 <p>当运用了外置运放之后,RC的影响就很小了,可以暂时忽略掉。现在对外置运放提出了要求——也就是高压摆率和高增益带宽积。(<del>这个简单,氪金就行了。</del>)</p>
-<p>我使用了<a target="_blank" rel="noopener" href="https://www.ti.com.cn/product/cn/OPA2211-EP">OPA2211</a>,性能很牛的片子。 以下是我的电路图,用Kicad绘制。</p>
+<p>我使用了<a
+target="_blank" rel="noopener" href="https://www.ti.com.cn/product/cn/OPA2211-EP">OPA2211</a>,性能很牛的片子。
+以下是我的电路图,用Kicad绘制。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/13.png" alt="" /><figcaption>opa2211</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/13.png"
+alt="opa2211" />
+<figcaption aria-hidden="true">opa2211</figcaption>
 </figure>
 <p>其中,0.5VBUS使用一个精密运放作为Buffer产生:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/14.png" alt="" /><figcaption>opa27</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/14.png"
+alt="opa27" />
+<figcaption aria-hidden="true">opa27</figcaption>
 </figure>
 <h3 id="dac的数据更新率">DAC的数据更新率</h3>
 <p>解决了RC和运放的问题,最后就是DAC的数据更新率了。<br />
 纵使我的外围硬件电路再牛逼,DAC的数据更新慢,输出频率一样上不去嘛。<br />
 先康康手册的描述:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/11.png" alt="" /><figcaption>update rate</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/11.png"
+alt="update rate" />
+<figcaption aria-hidden="true">update rate</figcaption>
 </figure>
 <p>有几种将数据传送到DAC的方法:</p>
 <ol type="1">
@@ -436,30 +481,44 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <li>定时器触发频率</li>
 </ul>
 <p>比如STM32F407x的APB1总线上,当触发信号之后的3个周期,DHR中的数据被转移到DOR中,同时DMA产生请求,DMA花费至少一个时钟周期将数据搬运完成。<br />
-满打满算算下来搬运一个数据总共需要4个时钟周期。如果APB1总线频率42MHz,那么DAC的数据更新率能达到<strong>10.5Msps（M sample per second）</strong>。</p>
+满打满算算下来搬运一个数据总共需要4个时钟周期。如果APB1总线频率42MHz,那么DAC的数据更新率能达到<strong>10.5Msps（M
+sample per second）</strong>。</p>
 <p>当然这是F407的情况,别的型号具体还得查数据手册。<br />
 总之,DAC你还是蛮快的嘛（笑）</p>
 <h4 id="dma-double-data-mode">DMA Double Data Mode</h4>
 <p>还有一个小细节。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/12.png" alt="" /><figcaption>dma ddm</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/12.png"
+alt="dma ddm" />
+<figcaption aria-hidden="true">dma ddm</figcaption>
 </figure>
 <p>有些型号的DAC支持双数据模式。什么意思呢?<br />
 就是说DMA的总线是32-bit宽的,而DAC的数据是12-bit宽的,一般存储的话就使用<code>uint16_t</code>类型,是16-bit宽度。那么在DMA传输的时候,将2个数据一并传过去,占满DMA总线的位宽,可以提升2倍的数据速率（在定时器触发频率不变的情况下）。</p>
 <p>当然,上限还是摆在那里的，这样做的意义是可以降低一半的定时器触发频率。</p>
-<p>至此,我们找到了提升DAC输出速率的方法,从硬件到软件,从理论到实践,All Pass.</p>
+<p>至此,我们找到了提升DAC输出速率的方法,从硬件到软件,从理论到实践,All
+Pass.</p>
 <h2 id="配置stm32">配置STM32</h2>
 <p>在CubeMx中配置STM32F303CCT6,这里就放最关键的配置啦,具体的可以看开头我传的工程文件~</p>
-<p>配置DAC通道2,触发器选择 <code>TIM8触发输出事件</code>,<strong>同时禁用Buffer</strong>（具体为什么请看前文）</p>
+<p>配置DAC通道2,触发器选择
+<code>TIM8触发输出事件</code>,<strong>同时禁用Buffer</strong>（具体为什么请看前文）</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/5.png" alt="" /><figcaption>DAC Param</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/5.png"
+alt="DAC Param" />
+<figcaption aria-hidden="true">DAC Param</figcaption>
 </figure>
-<p>然后配置DAC的DMA通道: - 选择DMA2_CHANNEL_4（我在网上看有人说F3的DAC只能用DMA2,我也没验证过DMA1能不能用...）<br />
+<p>然后配置DAC的DMA通道: -
+选择DMA2_CHANNEL_4（我在网上看有人说F3的DAC只能用DMA2,我也没验证过DMA1能不能用...）<br />
 - Priority（优先级）设置为High<br />
-- Mode 选择 Circular（传输完成之后回到开头自动重新开始,即不间断传输）<br />
+- Mode 选择
+Circular（传输完成之后回到开头自动重新开始,即不间断传输）<br />
 - Data Width选择Word,即32位位宽,可以使用Double data Mode</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/6.png" alt="" /><figcaption>dma conf</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/6.png"
+alt="dma conf" />
+<figcaption aria-hidden="true">dma conf</figcaption>
 </figure>
 <p>接下来是配置DAC的Trigger——TIM8</p>
 <ul>
@@ -467,12 +526,18 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 </li>
 <li>然后Prescaler（预分频）设置为0,不分频<br />
 </li>
-<li>Counter Period（计数周期）设置为18-1，那么定时器的触发频率就是 72MHz / 18 = 4MHz</li>
-<li><strong>Trigger Event Selection TRGO</strong>选择Update Event,即更新事件,这个事件用于触发DAC的DMA去搬数据</li>
+<li>Counter Period（计数周期）设置为18-1，那么定时器的触发频率就是 72MHz
+/ 18 = 4MHz</li>
+<li><strong>Trigger Event Selection TRGO</strong>选择Update
+Event,即更新事件,这个事件用于触发DAC的DMA去搬数据</li>
 </ul>
-<p>别忘了,我们开了Double data Mode,定时器更新事件频率为4MHz,实际的DAC 输出 sampling rate应该是8MHz哦</p>
+<p>别忘了,我们开了Double data Mode,定时器更新事件频率为4MHz,实际的DAC
+输出 sampling rate应该是8MHz哦</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/7.png" alt="" /><figcaption>TIM8</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/7.png"
+alt="TIM8" />
+<figcaption aria-hidden="true">TIM8</figcaption>
 </figure>
 <h2 id="生成波形算法">生成波形算法</h2>
 <p>其实很简单,就是算。<br />
@@ -494,11 +559,17 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
 <h1 id="测试">测试!</h1>
 <p>输出200kHz的正弦波</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/15.jpg" alt="" /><figcaption>200k</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/15.jpg"
+alt="200k" />
+<figcaption aria-hidden="true">200k</figcaption>
 </figure>
 <p>输出40kHz的正弦波+小板子合影</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/16.jpg" alt="" /><figcaption>40k</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E5%90%88%E6%88%90/16.jpg"
+alt="40k" />
+<figcaption aria-hidden="true">40k</figcaption>
 </figure>
 <p>还有更多测试图,待后续上传.jpg</p>
 
@@ -622,7 +693,7 @@ m越大意味着间隔越大,扫描完的周期就越短,输出频率就越高�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

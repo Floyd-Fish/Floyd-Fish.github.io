@@ -20,38 +20,19 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="前言 最近在CNPP同学处嫖到一片ADI公司生产的 AD630 ，这是一款平衡调制&#x2F;解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!  我看不懂，但我大受震撼.jpg  100dB是什么概念呢? \[  20\lg{S} &#x3D; 100dB \] \[ S &#x3D; {Vpp(noise)\over{Vpp(">
+  <meta name="description" content="前言 最近在CNPP同学处嫖到一片ADI公司生产的 AD630 ，这是一款平衡调制&#x2F;解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!   我看不懂，但我大受震撼.jpg  100dB是什么概念呢? \[ 20\lg{S} &#x3D; 100dB \] \[ S &#x3D; {Vpp(noise)\over{Vp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="神奇的锁定放大器">
 <meta property="og:url" content="https://floydfish.xyz/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="前言 最近在CNPP同学处嫖到一片ADI公司生产的 AD630 ，这是一款平衡调制&#x2F;解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!  我看不懂，但我大受震撼.jpg  100dB是什么概念呢? \[  20\lg{S} &#x3D; 100dB \] \[ S &#x3D; {Vpp(noise)\over{Vpp(">
+<meta property="og:description" content="前言 最近在CNPP同学处嫖到一片ADI公司生产的 AD630 ，这是一款平衡调制&#x2F;解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!   我看不懂，但我大受震撼.jpg  100dB是什么概念呢? \[ 20\lg{S} &#x3D; 100dB \] \[ S &#x3D; {Vpp(noise)\over{Vp">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/2.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/3.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/4.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/5.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/6.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/8.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/7.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/sch.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/180degree_filtered.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/90degree_filtered.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/45degree_filtered.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/0degree.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/9.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/10.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_210617.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_205818.jpg">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210802_195708.jpg">
 <meta property="article:published_time" content="2021-08-03T07:47:19.000Z">
 <meta property="article:modified_time" content="2022-03-02T12:16:42.182Z">
 <meta property="article:author" content="Floyd-Fish">
 <meta property="article:tag" content="电子电路">
 <meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg">
 
 <link rel="canonical" href="https://floydfish.xyz/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/">
 
@@ -156,7 +137,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -271,22 +252,30 @@
 
       
         <h1 id="前言">前言</h1>
-<p>最近在CNPP同学处嫖到一片ADI公司生产的 <strong>AD630</strong> ，这是一款平衡调制/解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!</p>
+<p>最近在CNPP同学处嫖到一片ADI公司生产的 <strong>AD630</strong>
+，这是一款平衡调制/解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg" alt="" /><figcaption>我看不懂，但我大受震撼.jpg</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg"
+alt="我看不懂，但我大受震撼.jpg" />
+<figcaption aria-hidden="true">我看不懂，但我大受震撼.jpg</figcaption>
 </figure>
 <p>100dB是什么概念呢?</p>
-<p><span class="math display">\[ 
+<p><span class="math display">\[
 20\lg{S} = 100dB
 \]</span></p>
 <p><span class="math display">\[
 S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
 \]</span></p>
-<p>比如...我的信号Vpp为10uV，噪声的Vpp为1V，这时S就是100dB。而AD630 <strong>据说（可不是瞎说，他Datasheet上标的...）</strong> 能将我的信号从这汹涌的噪声洪流中将它还原出来...</p>
+<p>比如...我的信号Vpp为10uV，噪声的Vpp为1V，这时S就是100dB。而AD630
+<strong>据说（可不是瞎说，他Datasheet上标的...）</strong>
+能将我的信号从这汹涌的噪声洪流中将它还原出来...</p>
 <p>这不得来试一试？</p>
 <span id="more"></span>
-<h1 id="锁定放大器lock-in-amplifier-lia基本原理">锁定放大器（Lock-in Amplifier-LIA）基本原理</h1>
-<p>此处参考杨建国老师编著的《新概念模拟电路》-信号处理电路分册的 <strong>Section130.电荷放大器与锁定放大器</strong> （yjg我的超人!）</p>
+<h1 id="锁定放大器lock-in-amplifier-lia基本原理">锁定放大器（Lock-in
+Amplifier-LIA）基本原理</h1>
+<p>此处参考杨建国老师编著的《新概念模拟电路》-信号处理电路分册的
+<strong>Section130.电荷放大器与锁定放大器</strong> （yjg我的超人!）</p>
 <h2 id="数学原理">数学原理</h2>
 <p>在微弱信号检测领域，遇到的最大问题就是被测信号往往都被淹没在广谱的噪声之中。此时如果想要从广谱噪声中提取指定频率的待测信号（一般为正弦），可以用模拟带通滤波器，也可以用数字带通滤波器。但这对带通滤波器的设计提出的极为苛刻的要求——通带无法做到很窄。</p>
 <p>这就是锁定放大器出场的时候了。它的基本思想为:</p>
@@ -311,9 +300,10 @@ A_{m1}\sin{(w_1t+\phi_1)} * A_{m2}\sin{(w_2t+\phi_2)} \\
 <p><span class="math display">\[
 A_{m1}\sin{(wt+\phi_1)}*A_{m2}\sin{(wt+\phi_2)} = \\
 0.5A_{m1}*A_{m2}\cos{(\phi_1-\phi_2)} -\\
- 0.5A_{m1}*A_{m2}\sin{(2wt+\phi_1+\phi_2)}
+0.5A_{m1}*A_{m2}\sin{(2wt+\phi_1+\phi_2)}
 \]</span></p>
-<p>如果再进一步,有 <span class="math display">\[\phi_1=\phi_2=\phi\]</span> 则有:</p>
+<p>如果再进一步,有 <span
+class="math display">\[\phi_1=\phi_2=\phi\]</span> 则有:</p>
 <p><span class="math display">\[
 A_{m1}\sin{(wt+\phi)}*A_{m2}\sin{(wt+\phi)} = \\
 0.5A_{m1}*A_{m2} - 0.5A_{m1}*A_{m2}\sin{(2wt+2\phi)}
@@ -323,25 +313,33 @@ A_{m1}\sin{(wt+\phi)}*A_{m2}\sin{(wt+\phi)} = \\
 <p>要求Am2,那么就做一个与他同频率，同相位，幅度为Am1的参考信号，将它们两个塞进乘法器相乘，得到最后的公式结果。其中第一项为直流分量，第二项为2倍频信号。</p>
 <p>再用低通滤波器滤除2倍频信号，就可以得到0.5Am1Am2的大小了。Am1已知，求Am2不是有手就行?（诶我手呢?）</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/2.png" alt="" /><figcaption>Lock-in Amplifier</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/2.png"
+alt="Lock-in Amplifier" />
+<figcaption aria-hidden="true">Lock-in Amplifier</figcaption>
 </figure>
 <h2 id="额外的优点">额外的优点</h2>
 <p>上式还有额外的功效——经过低通滤波后，可以保留与参考信号频率相同的待测信号，剔除全部与参考信号频率不同的量。这也可以从数学角度出发得出:</p>
-<p>如果w2 <strong>!=</strong> w1 （抱歉C写多了hhh），那么乘法器输出仍然为两项，但是第一项不再是直流分量，而是一个低频正弦波:</p>
-<p><span class="math display">\[ 0.5A_{m1}A_{m2}\cos((w_1-w_2)t+\phi_1-\phi_2) \]</span></p>
+<p>如果w2 <strong>!=</strong> w1
+（抱歉C写多了hhh），那么乘法器输出仍然为两项，但是第一项不再是直流分量，而是一个低频正弦波:</p>
+<p><span class="math display">\[
+0.5A_{m1}A_{m2}\cos((w_1-w_2)t+\phi_1-\phi_2) \]</span></p>
 <p>此时乘法器输出无直流成分。那么经过低通滤波器之后，输出一定为0。这导致锁定放大器输出经过低通滤波之后，广谱噪声均被剔除，而只保留了待测信号。</p>
 <p>但是实际情况可能这样吗？当然是不可能的。杨老师在书中没分析，我自己想了一下原因应该如下:</p>
 <ul>
 <li><strong>低通滤波器不理想</strong>。与参考信号频率相差非常小（甚至同频率）的噪声所产生的交流成分的频率很低。</li>
-<li>而低通滤波器很难做到极低的截止频率，<del>又同时又具有极低的群延迟</del> <strong>(更正:不关群延迟的事，我概念记歪了，这里应该考察低通滤波器的输出建立时间，感谢小白指正)</strong>。这会导致低通滤波器的输出会有微弱起伏。</li>
+<li>而低通滤波器很难做到极低的截止频率，<del>又同时又具有极低的群延迟</del>
+<strong>(更正:不关群延迟的事，我概念记歪了，这里应该考察低通滤波器的输出建立时间，感谢小白指正)</strong>。这会导致低通滤波器的输出会有微弱起伏。</li>
 </ul>
 <h2 id="理想锁定放大器的困境">理想锁定放大器的困境</h2>
 <p>上述的锁定放大器理论分析，全部建立在一个重要的基础上:</p>
 <p><strong>参考信号与待测信号同频同相</strong></p>
 <p>但在实际工作时，要达到这个条件并不容易，甚至十分困难。如果不能保证他们同相，那么<strong>不知道相位差，要通过输出直流量求解原信号就无从实现</strong>。</p>
 <p>好在还是有解决办法的。</p>
-<h3 id="solution1在参考信号通路中加入移相环节">Solution1:在参考信号通路中加入移相环节</h3>
-<p>利用cos（0）=1而cos（phi）&lt; 1，在参考信号通路中加入移相环节，不断手动或自动调节相位，总能找到输出直流量的最大值。此时相差一定为0°，也就是参考信号与待测信号同相。</p>
+<h3
+id="solution1在参考信号通路中加入移相环节">Solution1:在参考信号通路中加入移相环节</h3>
+<p>利用cos（0）=1而cos（phi）&lt;
+1，在参考信号通路中加入移相环节，不断手动或自动调节相位，总能找到输出直流量的最大值。此时相差一定为0°，也就是参考信号与待测信号同相。</p>
 <p>but，这种方法非常麻烦。</p>
 <h2 id="solution2双相位法">Solution2:双相位法</h2>
 <p>这种方法能一次性求解出Am2，同时获得2信号相位差。但方便的同时也会付出额外的代价——电路系统变得更加复杂了（虽然看起来复杂了，但实际上可能并没有，之后会说）</p>
@@ -349,29 +347,47 @@ A_{m1}\sin{(wt+\phi)}*A_{m2}\sin{(wt+\phi)} = \\
 <p><span class="math display">\[
 设待测信号为： A_{m2}\sin(wt+\phi_2)  \\
 参考信号A为 : A_{m1}\sin(wt+\phi_{1A}) \\
-参考信号B为 : A_{m1}\sin(wt+\phi_{1B}) 
+参考信号B为 : A_{m1}\sin(wt+\phi_{1B})
 \]</span></p>
 <p>用2个完全相同的<strong>乘法器</strong>，他们的乘数相同，均为被噪声淹没的待测信号，他们的被乘数为2个相互正交（相差90°）的参考源，这样得到2个乘法器的输出，经过相同的低通滤波后，输出分别为:</p>
 <p><span class="math display">\[
 U_{OA} = 0.5A_{m1}A_{m2}\cos(\phi_{1A}-\phi_{2}) \\
-U_{OB} = 0.5A_{m1}A_{m2}\cos(\phi_{1A}-\phi_{2}+{\pi\over 2}) = 0.5A_{m1}A_{m2}\sin(\phi_{1A}-\phi_2)
+U_{OB} = 0.5A_{m1}A_{m2}\cos(\phi_{1A}-\phi_{2}+{\pi\over 2}) =
+0.5A_{m1}A_{m2}\sin(\phi_{1A}-\phi_2)
 \]</span></p>
-<p>利用 $ <sup>2()+</sup>2()=1 $ 的特性，将上述2个输出信号实施<strong>平方和开根号运算</strong>，得到:</p>
-<p><span class="math display">\[U_O = \sqrt{U^2_{OA} + U^2_{OB}}=0.5A_{m1}A_{m2}\sqrt{sin^2(\phi_{1A}-\phi_2)+\cos^2(\phi_{1A}-\phi_2)} = \\
+<p>利用 $ <sup>2()+</sup>2()=1 $
+的特性，将上述2个输出信号实施<strong>平方和开根号运算</strong>，得到:</p>
+<p><span class="math display">\[U_O = \sqrt{U^2_{OA} +
+U^2_{OB}}=0.5A_{m1}A_{m2}\sqrt{sin^2(\phi_{1A}-\phi_2)+\cos^2(\phi_{1A}-\phi_2)}
+= \\
 0.5A_{m1}A_{m2}\]</span></p>
-<p>至此，我们无需知道待测信号与参考信号的相位关系，就可以获得待测信号的幅度。 同时可得出参考信号与待测信号的相位差:</p>
+<p>至此，我们无需知道待测信号与参考信号的相位关系，就可以获得待测信号的幅度。
+同时可得出参考信号与待测信号的相位差:</p>
 <p><span class="math display">\[
-\tan(\phi_{1A}-\phi_2) = {\sin(\phi_{1A}-\phi_2)\over\cos(\phi_{1A}-\phi_2)}={U_{OB}\over U_{OA}} \\
+\tan(\phi_{1A}-\phi_2) =
+{\sin(\phi_{1A}-\phi_2)\over\cos(\phi_{1A}-\phi_2)}={U_{OB}\over U_{OA}}
+\\
 \phi_{1A}-\phi_2=tan^{-1}{U_{OA}\over U_{OB}}
 \]</span></p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/3.png" alt="" /><figcaption>Coherent demodulation</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/3.png"
+alt="Coherent demodulation" />
+<figcaption aria-hidden="true">Coherent demodulation</figcaption>
 </figure>
-<p>实际上，如果不要最后一步的平方和开根号，保留前面的所有电路，这种解调方法也被称作 <strong>相干解调（Coherent demodulation）</strong>，或者是<strong>模拟相干检波</strong>，广泛用于通信接收电路中（比如雷达接收机）。</p>
-<p>但这种电路有一个缺点就是——乘法器的作用是对输入信号进行 <strong>混频</strong>。信号与系统中学过的知识告诉我们，时域信号 <strong>相乘</strong>，在频域中体现为 <strong>卷积</strong>，意思就是说对乘法器的2个输入信号的频谱进行卷积操作，得到的结果就是输出信号的频谱（理想乘法器，在实际的器件中会存在非线性失真）。而混频的后果就是可能会产生 <strong>镜像频率</strong>，简称 <strong>镜频</strong>。</p>
+<p>实际上，如果不要最后一步的平方和开根号，保留前面的所有电路，这种解调方法也被称作
+<strong>相干解调（Coherent
+demodulation）</strong>，或者是<strong>模拟相干检波</strong>，广泛用于通信接收电路中（比如雷达接收机）。</p>
+<p>但这种电路有一个缺点就是——乘法器的作用是对输入信号进行
+<strong>混频</strong>。信号与系统中学过的知识告诉我们，时域信号
+<strong>相乘</strong>，在频域中体现为
+<strong>卷积</strong>，意思就是说对乘法器的2个输入信号的频谱进行卷积操作，得到的结果就是输出信号的频谱（理想乘法器，在实际的器件中会存在非线性失真）。而混频的后果就是可能会产生
+<strong>镜像频率</strong>，简称 <strong>镜频</strong>。</p>
 <p>如果镜频的频率落在LPF（低通滤波器）的通带内，那么这个镜频不会被滤除，这样就为后续信号的进一步处理带来了误差。当然这都是题外话了（233一不小心扯远了）。</p>
-<h1 id="从理论到实践方波作为参考信号">从理论到实践——方波作为参考信号</h1>
-<p>上述所讲述的相干解调方法实现起来可真不容易呢...最大的难点在于 <strong>精准的90°移相</strong>。我们知道全通滤波器可以实现对模拟信号的移相，但是它的相频曲线并不是一马平川的，输入信号的频率不同，全通滤波器对其的移相大小也不一样。在模拟电路中实现对全频段信号的移相固定为90°，且输出幅度不变还是很困难的。</p>
+<h1
+id="从理论到实践方波作为参考信号">从理论到实践——方波作为参考信号</h1>
+<p>上述所讲述的相干解调方法实现起来可真不容易呢...最大的难点在于
+<strong>精准的90°移相</strong>。我们知道全通滤波器可以实现对模拟信号的移相，但是它的相频曲线并不是一马平川的，输入信号的频率不同，全通滤波器对其的移相大小也不一样。在模拟电路中实现对全频段信号的移相固定为90°，且输出幅度不变还是很困难的。</p>
 <p>另外一点就是 <strong>模拟乘法器实在是太贵了！</strong><br />
 感兴趣的读者可以搜一搜ADI公司的模拟乘法器比如AD835/AD834这样的，了解一下市场行情。</p>
 <p>实践中，多半使用方波作为参考信号实现锁定放大。原理如下:</p>
@@ -381,41 +397,61 @@ U_{OB} = 0.5A_{m1}A_{m2}\cos(\phi_{1A}-\phi_{2}+{\pi\over 2}) = 0.5A_{m1}A_{m2}\
 <p>表达式为:</p>
 <p><span class="math display">\[
 U_{REF}(t) = \left\{ \begin{array} {c}
-    A_{m1};  {\phi_1 \over w}\leq MOD(t,T={2\pi\over w})&lt;{\phi_1 \over w}+{\pi \over w} \\
-    -A_{m1}; MOD(t,T={2\pi\over w}) &lt; {\phi_1 \over w}; and\,MOD(t,T={2\pi\over w}) \geq {\phi_1 \over w}+{\pi \over w}
+    A_{m1};  {\phi_1 \over w}\leq MOD(t,T={2\pi\over w})&lt;{\phi_1
+\over w}+{\pi \over w} \\
+    -A_{m1}; MOD(t,T={2\pi\over w}) &lt; {\phi_1 \over w};
+and\,MOD(t,T={2\pi\over w}) \geq {\phi_1 \over w}+{\pi \over w}
 \end{array} \right.
 \]</span></p>
 <ol start="2" type="1">
 <li>此方波与频率相同，相位相同的正弦波相乘，会出现如下图所示的波形。</li>
 </ol>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/4.png" alt="" /><figcaption>Square</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/4.png"
+alt="Square" />
+<figcaption aria-hidden="true">Square</figcaption>
 </figure>
 <p>其中，Up为乘法器的输出波形（红色曲线），经过低通滤波后得到直流分量（即波形的平均值）为Uo，这可以通过对波形进行半个周期的积分除以半个周期得到:</p>
 <p><span class="math display">\[
-U_o={1\over {\pi \over w}} \int_0^{\pi \over w} {A_{m1}*A_{m2}\sin(wt\,dt)} = \\
+U_o={1\over {\pi \over w}} \int_0^{\pi \over w}
+{A_{m1}*A_{m2}\sin(wt\,dt)} = \\
 {2 \over \pi}A_{m1}*A_{m2} \approx 0.6366A_{m1}*A_{m2}
 \]</span></p>
 <ol start="3" type="1">
-<li>当以待测波形0度相移，而参考波形具有 <span class="math display">\[\phi_1\]</span> 相移，可以得到Section130-7所示如下的时域波形:</li>
+<li>当以待测波形0度相移，而参考波形具有 <span
+class="math display">\[\phi_1\]</span>
+相移，可以得到Section130-7所示如下的时域波形:</li>
 </ol>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/5.png" alt="" /><figcaption>shifted</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/5.png"
+alt="shifted" />
+<figcaption aria-hidden="true">shifted</figcaption>
 </figure>
-<p>可以看出乘法器输出波形仍是 <strong>周期性的</strong>，其周期为待测波形周期的2倍。同样，也可以利用半个周期积分除半个周期的方法得出乘法器输出平均值，也就是低通滤波器输出Uo:</p>
+<p>可以看出乘法器输出波形仍是
+<strong>周期性的</strong>，其周期为待测波形周期的2倍。同样，也可以利用半个周期积分除半个周期的方法得出乘法器输出平均值，也就是低通滤波器输出Uo:</p>
 <p><span class="math display">\[
-U_o = {1\over \pi} \int_{\phi_1}^{\phi_1+\pi} A_{m1}*A_{m2}\sin(wt)\,d(wt) =\\
- {2\over \pi}A_{m1}*A_{m2}\cos \phi_1 \approx 0.6366A_{m1}*A_{m2}\cos \phi_1
+U_o = {1\over \pi} \int_{\phi_1}^{\phi_1+\pi}
+A_{m1}*A_{m2}\sin(wt)\,d(wt) =\\
+{2\over \pi}A_{m1}*A_{m2}\cos \phi_1 \approx 0.6366A_{m1}*A_{m2}\cos
+\phi_1
 \]</span></p>
-<p>由此可知，当2信号同频但存在相移时，低通滤波器输出正比于两信号的幅度乘积，且相移越大输出越小（cos关系），直至相移90°时输出为0，相移大于90°时输出小于0，相移180°时输出为负值最大。这个结论与 <strong>以正弦波为参考信号完全相同</strong>，他们唯一的区别是参考信号为方波时，最大值不再是0.5Am1xAm2，而是0.6366Am1xAm2。</p>
-<p>4.当待测信号与参考信号频率不同时，可证明乘法器输出是一个 <strong>正负对称信号</strong>，经过低通滤波之后输出一定为0.</p>
+<p>由此可知，当2信号同频但存在相移时，低通滤波器输出正比于两信号的幅度乘积，且相移越大输出越小（cos关系），直至相移90°时输出为0，相移大于90°时输出小于0，相移180°时输出为负值最大。这个结论与
+<strong>以正弦波为参考信号完全相同</strong>，他们唯一的区别是参考信号为方波时，最大值不再是0.5Am1xAm2，而是0.6366Am1xAm2。</p>
+<p>4.当待测信号与参考信号频率不同时，可证明乘法器输出是一个
+<strong>正负对称信号</strong>，经过低通滤波之后输出一定为0.</p>
 <p>说到这里，我们可以把乘法器扔一边去啦~</p>
 <p>用方波作为参考信号实现锁定放大的好处如下:</p>
 <ul>
-<li>1.不用再用贵上天的乘法器了！我们可以使用 <strong>模拟开关</strong> 和反相器来实现锁定放大，结构如下:</li>
+<li>1.不用再用贵上天的乘法器了！我们可以使用 <strong>模拟开关</strong>
+和反相器来实现锁定放大，结构如下:</li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/6.png" alt="" /><figcaption>easy way</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/6.png"
+alt="easy way" />
+<figcaption aria-hidden="true">easy way</figcaption>
 </figure>
 <ul>
 <li>2.对方波信号进行90度移相还不简单？上图中方波用于控制开关的导向，因此只需要是数字电平的0&amp;1即可。这样就完全可以使用数字电路来控制。用数字电路产生90°相移，可以用单片机、FPGA、触发器等完成，方法很多。</li>
@@ -423,20 +459,33 @@ U_o = {1\over \pi} \int_{\phi_1}^{\phi_1+\pi} A_{m1}*A_{m2}\sin(wt)\,d(wt) =\\
 <h1 id="lia的用法">LIA的用法？</h1>
 <p>码字好累呀，偷个懒抄书——</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/8.png" alt="" /><figcaption>usage</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/8.png"
+alt="usage" />
+<figcaption aria-hidden="true">usage</figcaption>
 </figure>
-<p>至于为什么2个信号源的频率会漂？了解DDS的同学都知道（如果不了解可以看我 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-dac-direct-digital-synthesis/">上次写的文</a></strong> 嗷）多半是信号源的时钟源不稳定导致的。比如该时钟源的频率会随着环境温度、湿度、承受的电压、时间等因素而发生微小的漂移，从而导致DDS的输出频率有微小的变化。虽然在示波器上基本看不出来，但对锁定放大器来说这些误差还是十分可观的。</p>
+<p>至于为什么2个信号源的频率会漂？了解DDS的同学都知道（如果不了解可以看我
+<strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-dac-direct-digital-synthesis/">上次写的文</a></strong>
+嗷）多半是信号源的时钟源不稳定导致的。比如该时钟源的频率会随着环境温度、湿度、承受的电压、时间等因素而发生微小的漂移，从而导致DDS的输出频率有微小的变化。虽然在示波器上基本看不出来，但对锁定放大器来说这些误差还是十分可观的。</p>
 <p>因此多数情况下LIA都工作在下图所示的模式下。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/7.png" alt="" /><figcaption>working</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/7.png"
+alt="working" />
+<figcaption aria-hidden="true">working</figcaption>
 </figure>
 <p>图中一切信号的频率源在参考信号，它在给锁定放大器提供参考频率的同时，还给待测网络提供测试信号，因此一定能够保证待测信号的频率与参考信号的频率完全一致。（我同一个信号在传递的过程中频率总不可能漂了吧（</p>
-<p>图中 <code>方波/正弦</code> 是将参考信号的方波变换成同频正弦波，可用带通滤波器等方法实现，当然也可以用正弦当频率源，将正弦转为方波作为参考信号。</p>
+<p>图中 <code>方波/正弦</code>
+是将参考信号的方波变换成同频正弦波，可用带通滤波器等方法实现，当然也可以用正弦当频率源，将正弦转为方波作为参考信号。</p>
 <h1 id="使用比较器模拟开关实现lia">使用比较器+模拟开关实现LIA</h1>
 <p>双相位法可以用方波作为参考信号，那么不用双相位法的LIA可不可以用方波作为参考信号实现呢？当然是可以的。</p>
 <p>为了验证，我使用LTSpice搭建了一个仿真电路，原理图如下:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/sch.png" alt="" /><figcaption>schematic</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/sch.png"
+alt="schematic" />
+<figcaption aria-hidden="true">schematic</figcaption>
 </figure>
 <p>待测信号与参考信号同频率（都是10kHz），但是存在相差。2个信号都是正弦，参考信号经过过零比较器后变成方波，用于控制模拟开关ADG1633的选通。模拟开关的输入一个为待测信号，另一个为反相的待测信号（相移180°）。模拟开关的输出经过一个截止频率为1kHz的低通滤波器，输出直流信号，测量这个直流信号来验证方案可行性。</p>
 <p>如果前述计算正确，那么输出直流电平应该有如下关系（待测信号幅度1.5V）:</p>
@@ -452,60 +501,93 @@ when \phi = 180\deg, \,V_{DC}=-0.9549V \\
 <li>180度相移</li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/180degree_filtered.png" alt="" /><figcaption>180</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/180degree_filtered.png"
+alt="180" />
+<figcaption aria-hidden="true">180</figcaption>
 </figure>
 <ul>
 <li>90度相移</li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/90degree_filtered.png" alt="" /><figcaption>90</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/90degree_filtered.png"
+alt="90" />
+<figcaption aria-hidden="true">90</figcaption>
 </figure>
 <ul>
 <li>45度相移</li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/45degree_filtered.png" alt="" /><figcaption>45</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/45degree_filtered.png"
+alt="45" />
+<figcaption aria-hidden="true">45</figcaption>
 </figure>
 <ul>
 <li>0度相移（同相）</li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/0degree.png" alt="" /><figcaption>0</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/0degree.png"
+alt="0" />
+<figcaption aria-hidden="true">0</figcaption>
 </figure>
 <p>嗯，考虑到各级电路的失调电压、偏置电流等影响，还有模拟开关导通关断瞬间产生的尖峰，可以说结果是非常理想了。</p>
 <h1 id="ad630">AD630</h1>
 <p>AD630可用作锁定放大器，在datasheet中关于LIA的用法介绍如下:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/9.png" alt="" /><figcaption>ad630_LIA</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/9.png"
+alt="ad630_LIA" />
+<figcaption aria-hidden="true">ad630_LIA</figcaption>
 </figure>
 <p>还给出了一个电路图，长这样：</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/10.png" alt="" /><figcaption>ad630_sch</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/10.png"
+alt="ad630_sch" />
+<figcaption aria-hidden="true">ad630_sch</figcaption>
 </figure>
 <p>我们来分析一下~</p>
 <p>左下的信号是一个0.1Hz调制信号，载波频率为400Hz，同时输出了载波的同频同相参考信号，加到了AD630的9脚，为其内部的模拟开关提供选通参考。</p>
-<p>这个调制信号经过了他头上的 <strong>Attenuator（衰减器）</strong> ，衰减倍数是100dB...也就是...呃...10万倍。如果信号原来的Vpp是1V，那么衰减过后只剩下了10uV。</p>
-<p>再来看最上面的 <strong>Clipped Band Limited White Noise</strong> ，这个是 <strong>带限白噪声</strong> ，可以用一个广谱的白噪声经过一带通滤波器之后得到。</p>
+<p>这个调制信号经过了他头上的 <strong>Attenuator（衰减器）</strong>
+，衰减倍数是100dB...也就是...呃...10万倍。如果信号原来的Vpp是1V，那么衰减过后只剩下了10uV。</p>
+<p>再来看最上面的 <strong>Clipped Band Limited White Noise</strong>
+，这个是 <strong>带限白噪声</strong>
+，可以用一个广谱的白噪声经过一带通滤波器之后得到。</p>
 <p>现在有了噪声信号和衰减过的信号，我们用反相加法器将他们加起来（反相加法器的特点是源间隔离，互不干扰）。然后输入到AD630的1脚。</p>
 <p>AD630内部的结构挺简单，但这个电路图画的非常绕，看的人脑阔疼...我简单分析了一下，直接给出结果：</p>
 <ul>
-<li>在模拟开关选通 <strong>上通道/下通道</strong> 的时候，AD630内部放大器对输入信号放大分别为 <strong>2倍/-2倍</strong> ,就跟我上面拿LTSpice仿真的结构类似，不同的是AD630的输出接了补偿电容，还有一个未知的补偿网络。</li>
+<li>在模拟开关选通 <strong>上通道/下通道</strong>
+的时候，AD630内部放大器对输入信号放大分别为 <strong>2倍/-2倍</strong>
+,就跟我上面拿LTSpice仿真的结构类似，不同的是AD630的输出接了补偿电容，还有一个未知的补偿网络。</li>
 <li>输出经过一个反相放大器之后再经过一RC低通滤波器，得到解调之后的输出信号。</li>
 </ul>
-<p>可以看上面截图中的 <strong>Figure.34</strong>，加上噪声的信号已经完全分辨不清原来的形状了...但通过LIA能将它还原出来，就挺神奇的。</p>
+<p>可以看上面截图中的
+<strong>Figure.34</strong>，加上噪声的信号已经完全分辨不清原来的形状了...但通过LIA能将它还原出来，就挺神奇的。</p>
 <h1 id="试一试呗">试一试呗</h1>
 <p>为此我画了个板子，电路图就是上图手册中的那个，用覆铜板热转印制作了这块PCB。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_210617.jpg" alt="" /><figcaption>pcb</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_210617.jpg"
+alt="pcb" />
+<figcaption aria-hidden="true">pcb</figcaption>
 </figure>
 <p>测试输入信号使用一个<code>AM调制信号</code>，幅度比较低，然后加上信号源输出的<code>Noise信号</code>，幅度比较高，使用调制信号的<code>Sync信号</code>作为AD630的<code>载波相位参考信号</code>，加上双12V电源，测试输出如下:</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_205818.jpg" alt="" /><figcaption>figure1</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210730_205818.jpg"
+alt="figure1" />
+<figcaption aria-hidden="true">figure1</figcaption>
 </figure>
 <p>可以看到还是能还原大致的形状的~不过似乎远没有官方手册中所说的那样凶猛的性能，能从100dB的噪声中恢复信号...</p>
 <p>又尝试了另一个调制信号，这次将信号幅度缩小了10倍多，得到输出长这样...好吧有点不忍直视了，如果把带宽限制打开或许会好看一点...</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210802_195708.jpg" alt="" /><figcaption>figure2</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/IMG_20210802_195708.jpg"
+alt="figure2" />
+<figcaption aria-hidden="true">figure2</figcaption>
 </figure>
 <h1 id="plan">Plan</h1>
 <p>我预计会画一个锁定放大器的PCB，专门用来做LIA，可以用作高频LCR电桥的模拟前端。</p>
@@ -616,7 +698,8 @@ when \phi = 180\deg, \,V_{DC}=-0.9549V \\
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8lock-in-amplifier-lia%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">锁定放大器（Lock-in Amplifier-LIA）基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">数学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">额外的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E6%83%B3%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8%E7%9A%84%E5%9B%B0%E5%A2%83"><span class="nav-number">2.3.</span> <span class="nav-text">理想锁定放大器的困境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#solution1%E5%9C%A8%E5%8F%82%E8%80%83%E4%BF%A1%E5%8F%B7%E9%80%9A%E8%B7%AF%E4%B8%AD%E5%8A%A0%E5%85%A5%E7%A7%BB%E7%9B%B8%E7%8E%AF%E8%8A%82"><span class="nav-number">2.3.1.</span> <span class="nav-text">Solution1:在参考信号通路中加入移相环节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#solution2%E5%8F%8C%E7%9B%B8%E4%BD%8D%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">Solution2:双相位法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%A2%E4%BD%9C%E4%B8%BA%E5%8F%82%E8%80%83%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.</span> <span class="nav-text">从理论到实践——方波作为参考信号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lia%E7%9A%84%E7%94%A8%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">LIA的用法？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AF%94%E8%BE%83%E5%99%A8%E6%A8%A1%E6%8B%9F%E5%BC%80%E5%85%B3%E5%AE%9E%E7%8E%B0lia"><span class="nav-number">5.</span> <span class="nav-text">使用比较器+模拟开关实现LIA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ad630"><span class="nav-number">6.</span> <span class="nav-text">AD630</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%95%E4%B8%80%E8%AF%95%E5%91%97"><span class="nav-number">7.</span> <span class="nav-text">试一试呗</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#plan"><span class="nav-number">8.</span> <span class="nav-text">Plan</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8lock-in-amplifier-lia%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">锁定放大器（Lock-in
+Amplifier-LIA）基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">数学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%9D%E5%A4%96%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">额外的优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E6%83%B3%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8%E7%9A%84%E5%9B%B0%E5%A2%83"><span class="nav-number">2.3.</span> <span class="nav-text">理想锁定放大器的困境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#solution1%E5%9C%A8%E5%8F%82%E8%80%83%E4%BF%A1%E5%8F%B7%E9%80%9A%E8%B7%AF%E4%B8%AD%E5%8A%A0%E5%85%A5%E7%A7%BB%E7%9B%B8%E7%8E%AF%E8%8A%82"><span class="nav-number">2.3.1.</span> <span class="nav-text">Solution1:在参考信号通路中加入移相环节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#solution2%E5%8F%8C%E7%9B%B8%E4%BD%8D%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">Solution2:双相位法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5%E6%96%B9%E6%B3%A2%E4%BD%9C%E4%B8%BA%E5%8F%82%E8%80%83%E4%BF%A1%E5%8F%B7"><span class="nav-number">3.</span> <span class="nav-text">从理论到实践——方波作为参考信号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lia%E7%9A%84%E7%94%A8%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">LIA的用法？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AF%94%E8%BE%83%E5%99%A8%E6%A8%A1%E6%8B%9F%E5%BC%80%E5%85%B3%E5%AE%9E%E7%8E%B0lia"><span class="nav-number">5.</span> <span class="nav-text">使用比较器+模拟开关实现LIA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ad630"><span class="nav-number">6.</span> <span class="nav-text">AD630</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%95%E4%B8%80%E8%AF%95%E5%91%97"><span class="nav-number">7.</span> <span class="nav-text">试一试呗</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#plan"><span class="nav-number">8.</span> <span class="nav-text">Plan</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -632,7 +715,7 @@ when \phi = 180\deg, \,V_{DC}=-0.9549V \\
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

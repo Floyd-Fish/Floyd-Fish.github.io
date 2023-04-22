@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition) Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib LTI系统对复指数信号的响应 在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在幅">
+  <meta name="description" content="本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition) Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib LTI系统对复指数信号的响应 在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在">
 <meta property="og:type" content="article">
 <meta property="og:title" content="信号与系统-周期信号的傅里叶级数表示">
 <meta property="og:url" content="https://floydfish.xyz/2022/01/29/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F-%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition) Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib LTI系统对复指数信号的响应 在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在幅">
+<meta property="og:description" content="本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition) Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib LTI系统对复指数信号的响应 在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F/%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/Figure_1.svg">
 <meta property="article:published_time" content="2022-01-29T07:24:59.000Z">
@@ -139,7 +139,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -254,75 +254,134 @@
 
       
         <p>本文摘自《信号与系统》-ALAN V.OPPENHEIM (Second Edition)<br />
-Written by markdown &amp; LATEX, Coding by python.numpy &amp; matplotlib</p>
+Written by markdown &amp; LATEX, Coding by python.numpy &amp;
+matplotlib</p>
 <h2 id="lti系统对复指数信号的响应">LTI系统对复指数信号的响应</h2>
 <p>在研究LTI系统时，复指数信号的重要性在于这样一个事实:一个LTI系统对复指数信号的响应也同样是一个复指数信号，不同的只是在幅度上的变化;也就是说:</p>
 <p><span class="math display">\[
 连续时间: e^{st} \rightarrow H(s)e^{st} \cdots (3.1)\\
 离散时间: z^n \rightarrow H(z)z^n \cdots (3.2)
 \]</span></p>
-<p>这里 <span class="math inline">\(H(s)\)</span>或<span class="math inline">\(H(z)\)</span>是一个复振幅因子,一般来说是复变量s或z的函数。若系统对该信号的输出响应仅是一个常数（可能是复数）乘以输入，则称该信号为系统的 <strong>特征函数</strong>，而幅度因子称为系统的 <strong>特征值</strong>。</p>
-<h3 id="证明复指数是lti系统的特征函数">证明复指数是LTI系统的特征函数</h3>
-<p>考虑一单位冲激响应为<span class="math inline">\(h(t)\)</span>的连续时间LTI系统。对于任意输入<span class="math inline">\(x(t)\)</span>，可由卷积积分来确定系统输出。若令<span class="math inline">\(x(t)=e^{st}\)</span>，则有:</p>
+<p>这里 <span class="math inline">\(H(s)\)</span>或<span
+class="math inline">\(H(z)\)</span>是一个复振幅因子,一般来说是复变量s或z的函数。若系统对该信号的输出响应仅是一个常数（可能是复数）乘以输入，则称该信号为系统的
+<strong>特征函数</strong>，而幅度因子称为系统的
+<strong>特征值</strong>。</p>
+<h3
+id="证明复指数是lti系统的特征函数">证明复指数是LTI系统的特征函数</h3>
+<p>考虑一单位冲激响应为<span
+class="math inline">\(h(t)\)</span>的连续时间LTI系统。对于任意输入<span
+class="math inline">\(x(t)\)</span>，可由卷积积分来确定系统输出。若令<span
+class="math inline">\(x(t)=e^{st}\)</span>，则有:</p>
 <p><span class="math display">\[
-y(t) = \int_{-\infty}^{+\infty} h(T)x(t-T)dT = \int_{-\infty}^{+\infty} h(T)e^{s(t-T)}dT \cdots(3.3)
+y(t) = \int_{-\infty}^{+\infty} h(T)x(t-T)dT = \int_{-\infty}^{+\infty}
+h(T)e^{s(t-T)}dT \cdots(3.3)
 \]</span></p>
-<p><span class="math inline">\(e^{s(t-T)}\)</span>可写成<span class="math inline">\(e^{st}e^{-sT}\)</span>，而<span class="math inline">\(e^{st}\)</span>可以从积分号内移出来，这样（3.3）式变成:</p>
+<p><span class="math inline">\(e^{s(t-T)}\)</span>可写成<span
+class="math inline">\(e^{st}e^{-sT}\)</span>，而<span
+class="math inline">\(e^{st}\)</span>可以从积分号内移出来，这样（3.3）式变成:</p>
 <p><span class="math display">\[
 y(t) = e^{st} \int_{-\infty}^{+\infty} h(T)e^{-sT}dT \cdots (3.4)
 \]</span></p>
 <span id="more"></span>
-<p>假设上式右边积分收敛,于是系统对于 <span class="math inline">\(e^{st}\)</span> 的响应为:</p>
+<p>假设上式右边积分收敛,于是系统对于 <span
+class="math inline">\(e^{st}\)</span> 的响应为:</p>
 <p><span class="math display">\[
 y(t) = H(s)e^{st} \cdots (3.5) \\
 H(s) = \int_{-\infty}^{+\infty}h(T)e^{-sT}dT \cdots (3.6)
 \]</span></p>
-<p>式（3.5）中<span class="math inline">\(H(s)\)</span>是一个复常数,其值决定于s,并且它与系统单位冲激响应关系如式（3.6）所示。</p>
-<p>通过上述推导证明了 <strong>复指数是LTI系统的特征函数</strong>，对于某一给定的s值,常数<span class="math inline">\(H(s)\)</span>就是与特征函数<span class="math inline">\(e^{st}\)</span>有关的特征值。</p>
+<p>式（3.5）中<span
+class="math inline">\(H(s)\)</span>是一个复常数,其值决定于s,并且它与系统单位冲激响应关系如式（3.6）所示。</p>
+<p>通过上述推导证明了
+<strong>复指数是LTI系统的特征函数</strong>，对于某一给定的s值,常数<span
+class="math inline">\(H(s)\)</span>就是与特征函数<span
+class="math inline">\(e^{st}\)</span>有关的特征值。</p>
 <p>可以用完全并行的方式证明复指数序列也是离散时间LTI系统的特征函数,在此省略。</p>
 <h3 id="lti系统分析">LTI系统分析</h3>
-<p>对于LTI系统分析，借助特征函数把一个更为一般的信号分解开来，更有利于系统分析。e.g:令<span class="math inline">\(x(t)\)</span>是三个复指数信号的线性组合，即:</p>
+<p>对于LTI系统分析，借助特征函数把一个更为一般的信号分解开来，更有利于系统分析。e.g:令<span
+class="math inline">\(x(t)\)</span>是三个复指数信号的线性组合，即:</p>
 <p><span class="math display">\[
-x(t) = \alpha_1e^{s_1t} + \alpha_2e^{s_2t} + \alpha_3e^{s_3t} \cdots (3.11)
+x(t) = \alpha_1e^{s_1t} + \alpha_2e^{s_2t} + \alpha_3e^{s_3t} \cdots
+(3.11)
 \]</span></p>
 <p>根据 <strong>叠加性质</strong>，和的响应就是响应的和，因而:</p>
 <p><span class="math display">\[
-y(t) = \alpha_1H(s_1)e^{s_1t} + \alpha_2H(s_2)e^{s_2t} + \alpha_3H(s_3)e^{s_3t} \cdots (3.12)
+y(t) = \alpha_1H(s_1)e^{s_1t} + \alpha_2H(s_2)e^{s_2t} +
+\alpha_3H(s_3)e^{s_3t} \cdots (3.12)
 \]</span></p>
 <p>更一般地说,在连续时间情况下，（3.5）式与叠加性质结合在一起就意味着：将信号表示成复指数的线性组合，LTI系统的响应将更为清晰（数学形式上）。</p>
-<p>一般来说，上面的讨论中 <span class="math inline">\(s\)</span> 和 <span class="math inline">\(z\)</span> 可以是任意复数，<strong>但傅里叶分析仅限于这些变量的特殊形式</strong>。在连续时间下仅涉及 <span class="math inline">\(s\)</span> 的纯虚部值，即 <span class="math inline">\(s=\jmath\omega\)</span>,因此仅考虑 <span class="math inline">\(e^{\jmath\omega t}\)</span> 形式的复指数。类似地，离散时间下仅局限于单位振幅的 <span class="math inline">\(z\)</span> 值，即 <span class="math inline">\(z=e^{\jmath\omega}\)</span> ，因此仅考虑 <span class="math inline">\(e^{\jmath\omega n}\)</span> 形式的复指数。</p>
-<h2 id="连续时间周期信号的傅里叶级数表示">连续时间周期信号的傅里叶级数表示</h2>
-<h3 id="成谐波关系的复指数信号的线性组合">成谐波关系的复指数信号的线性组合</h3>
+<p>一般来说，上面的讨论中 <span class="math inline">\(s\)</span> 和
+<span class="math inline">\(z\)</span>
+可以是任意复数，<strong>但傅里叶分析仅限于这些变量的特殊形式</strong>。在连续时间下仅涉及
+<span class="math inline">\(s\)</span> 的纯虚部值，即 <span
+class="math inline">\(s=\jmath\omega\)</span>,因此仅考虑 <span
+class="math inline">\(e^{\jmath\omega t}\)</span>
+形式的复指数。类似地，离散时间下仅局限于单位振幅的 <span
+class="math inline">\(z\)</span> 值，即 <span
+class="math inline">\(z=e^{\jmath\omega}\)</span> ，因此仅考虑 <span
+class="math inline">\(e^{\jmath\omega n}\)</span> 形式的复指数。</p>
+<h2
+id="连续时间周期信号的傅里叶级数表示">连续时间周期信号的傅里叶级数表示</h2>
+<h3
+id="成谐波关系的复指数信号的线性组合">成谐波关系的复指数信号的线性组合</h3>
 <p>考虑2个基本周期信号:</p>
 <p><span class="math display">\[
 正弦信号:x(t) = \cos(\omega_0t) \cdots (3.22) \\
 周期复指数信号:x(t) = e^{\jmath \omega t} \cdots (3.23)
 \]</span></p>
-<p>这两个信号都是周期的，其基波频率都为<span class="math inline">\(\omega_0\)</span>，基波周期 $ T = {2} / w_0$。与（3.23）式有关的 <strong>成谐波关系</strong> 的复指数信号集就是:</p>
+<p>这两个信号都是周期的，其基波频率都为<span
+class="math inline">\(\omega_0\)</span>，基波周期 $ T = {2} /
+w_0$。与（3.23）式有关的 <strong>成谐波关系</strong>
+的复指数信号集就是:</p>
 <p><span class="math display">\[
-\phi_k(t) = e^{\jmath k \omega_0 t} = e^{\jmath k(2\pi /T)t}, k = 0, \pm1, \pm2, \cdots  (3.24)
+\phi_k(t) = e^{\jmath k \omega_0 t} = e^{\jmath k(2\pi /T)t}, k = 0,
+\pm1, \pm2, \cdots  (3.24)
 \]</span></p>
-<p>这些信号中的每一个都有一个基波频率，它是<span class="math inline">\(\omega_0\)</span>的倍数。因此每一个信号对周期<span class="math inline">\(T\)</span>来说都是周期的（虽然对于|k|&gt;=2来说，<span class="math inline">\(\phi_k(t)\)</span>的基波周期是T的约数）。于是一个由成谐波关系的复指数线性组合形成的信号:</p>
+<p>这些信号中的每一个都有一个基波频率，它是<span
+class="math inline">\(\omega_0\)</span>的倍数。因此每一个信号对周期<span
+class="math inline">\(T\)</span>来说都是周期的（虽然对于|k|&gt;=2来说，<span
+class="math inline">\(\phi_k(t)\)</span>的基波周期是T的约数）。于是一个由成谐波关系的复指数线性组合形成的信号:</p>
 <p><span class="math display">\[
-x(t) = \sum_{k=-\infty}^{+\infty} a_ke^{\jmath \omega_0 t} = \sum_{k=-\infty}^{+\infty} a_ke^{\jmath k(2\pi/T)t} \cdots (3.25)
+x(t) = \sum_{k=-\infty}^{+\infty} a_ke^{\jmath \omega_0 t} =
+\sum_{k=-\infty}^{+\infty} a_ke^{\jmath k(2\pi/T)t} \cdots (3.25)
 \]</span></p>
-<p>该信号对<span class="math inline">\(T\)</span>来说也是周期的。在（3.25）式中，k=0 这一项就是一常数， k=+1 和 k=-1 这两项都有基波频率<span class="math inline">\(\omega_0\)</span>，两者合在一起称之为 <strong>基波分量</strong> 或称为 <strong>一次谐波分量</strong>。k=+2 和 k=-2 这两项也是周期的，其周期是基波分量周期的1/2（或者说频率是基波的2倍。），称为 <strong>二次谐波分量</strong>。一般来说，k=+N 和 k=-N的分量称为 <strong>第N次谐波分量</strong>。</p>
-<p>一个周期信号表示成（3.25）的形式，就称为 <strong>傅里叶级数</strong> 表示。</p>
+<p>该信号对<span
+class="math inline">\(T\)</span>来说也是周期的。在（3.25）式中，k=0
+这一项就是一常数， k=+1 和 k=-1 这两项都有基波频率<span
+class="math inline">\(\omega_0\)</span>，两者合在一起称之为
+<strong>基波分量</strong> 或称为 <strong>一次谐波分量</strong>。k=+2 和
+k=-2
+这两项也是周期的，其周期是基波分量周期的1/2（或者说频率是基波的2倍。），称为
+<strong>二次谐波分量</strong>。一般来说，k=+N 和 k=-N的分量称为
+<strong>第N次谐波分量</strong>。</p>
+<p>一个周期信号表示成（3.25）的形式，就称为 <strong>傅里叶级数</strong>
+表示。</p>
 <h3 id="傅里叶级数表示举例">傅里叶级数表示举例</h3>
-<p>有一周期信号<span class="math inline">\(x(t)\)</span>，其基波频率为<span class="math inline">\(2\pi\)</span>，用傅里叶级数表示为:</p>
+<p>有一周期信号<span
+class="math inline">\(x(t)\)</span>，其基波频率为<span
+class="math inline">\(2\pi\)</span>，用傅里叶级数表示为:</p>
 <p><span class="math display">\[
 x(t) = \sum_{k=-3}^{+3} a_k e^{\jmath k2\pi t} \cdots (3.26) \\
-其中,a_0 = 1, a_1 = a_{-1} = {1\over 4}, a_2 = a_{-2} = {1\over 2}, a_3 = a_{-3} = {1\over 3} 
+其中,a_0 = 1, a_1 = a_{-1} = {1\over 4}, a_2 = a_{-2} = {1\over 2}, a_3
+= a_{-3} = {1\over 3}
 \]</span></p>
 <p>将（3.26）式中具有同一基波频率的谐波分量合在一起，重新写成:</p>
 <p><span class="math display">\[
-x(t) = 1 + {1\over 4}(e^{\jmath 2\pi t} + e^{-\jmath 2\pi t}) + {1\over 2}(e^{\jmath 4\pi t} + e^{-\jmath 4\pi t}) + {1\over 3}(e^{\jmath 6\pi t} + e^{-\jmath 6\pi t}) \cdots (3.27)
+x(t) = 1 + {1\over 4}(e^{\jmath 2\pi t} + e^{-\jmath 2\pi t}) + {1\over
+2}(e^{\jmath 4\pi t} + e^{-\jmath 4\pi t}) + {1\over 3}(e^{\jmath 6\pi
+t} + e^{-\jmath 6\pi t}) \cdots (3.27)
 \]</span></p>
 <p>再利用欧拉公式将其改写:</p>
 <p><span class="math display">\[
-x(t) = 1 + {1\over 2} \cos(2\pi t) + \cos(4\pi t) + {2\over 3}\cos(6\pi t) \cdots (3.28)
+x(t) = 1 + {1\over 2} \cos(2\pi t) + \cos(4\pi t) + {2\over 3}\cos(6\pi
+t) \cdots (3.28)
 \]</span></p>
-<p>下图使用matplotlib+numpy绘制，展示了上述信号是如何由不同成分的谐波分量组成的。左边从上到下依次为: <span class="math inline">\(1/2\cos(2\pi t)、\cos(4\pi t)、{2\over 3}\cos(6\pi t)\)</span>，右边最上为1V的直流分量（红色），中间为 <span class="math inline">\(1/2\cos(2\pi t) + \cos(4\pi t)\)</span>合成的信号（蓝色），下面就是 <span class="math inline">\(x(t) = 1 + {1\over 2} \cos(2\pi t) + \cos(4\pi t) + {2\over 3}\cos(6\pi t)\)</span>。</p>
+<p>下图使用matplotlib+numpy绘制，展示了上述信号是如何由不同成分的谐波分量组成的。左边从上到下依次为:
+<span class="math inline">\(1/2\cos(2\pi t)、\cos(4\pi t)、{2\over
+3}\cos(6\pi t)\)</span>，右边最上为1V的直流分量（红色），中间为 <span
+class="math inline">\(1/2\cos(2\pi t) + \cos(4\pi
+t)\)</span>合成的信号（蓝色），下面就是 <span class="math inline">\(x(t)
+= 1 + {1\over 2} \cos(2\pi t) + \cos(4\pi t) + {2\over 3}\cos(6\pi
+t)\)</span>。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E4%BF%A1%E5%8F%B7%E4%B8%8E%E7%B3%BB%E7%BB%9F/%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0%E8%A1%A8%E7%A4%BA/Figure_1.svg" alt="Harmonics to construct a signal" class="full-image" border="0"/></p>
 </center>
@@ -378,7 +437,9 @@ ax6.plot(t, s+s2+s3+dc, &#39;c&#39;)
 
 # show
 plt.show()<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>（3.28）式是实周期信号傅里叶级数另一种表示形式的例子（利用正弦函数表示）。具体地说，如果<span class="math inline">\(x(t)\)</span>是一个实信号，而且能表示成式（3.25）的形式，那么因为 <span class="math inline">\(x^*(t) = x(t)\)</span>,所以有:</p>
+<p>（3.28）式是实周期信号傅里叶级数另一种表示形式的例子（利用正弦函数表示）。具体地说，如果<span
+class="math inline">\(x(t)\)</span>是一个实信号，而且能表示成式（3.25）的形式，那么因为
+<span class="math inline">\(x^*(t) = x(t)\)</span>,所以有:</p>
 <p><span class="math display">\[
 x(t) = \sum_{k=-\infty}^{+\infty} a^*_ke^{-\jmath \omega_0 t}
 \]</span></p>
@@ -386,21 +447,26 @@ x(t) = \sum_{k=-\infty}^{+\infty} a^*_ke^{-\jmath \omega_0 t}
 <p><span class="math display">\[
 x(t) = \sum_{k=-\infty}^{+\infty} a^*_{-k}e^{\jmath \omega_0 t}
 \]</span></p>
-<p>将此式与（3.25）式比较，则要求 <span class="math inline">\(a_k = a^*_{-k}\)</span>,或者:</p>
+<p>将此式与（3.25）式比较，则要求 <span class="math inline">\(a_k =
+a^*_{-k}\)</span>,或者:</p>
 <p><span class="math display">\[
 a^*_k = a_{-k} \cdots (3.29)
 \]</span></p>
 <p>为了导出傅里叶级数的另一种形式，首先将式（3.25）的求和重写成:</p>
 <p><span class="math display">\[
-x(t) = a_0 + \sum_{k=1}^\infty [a_k e^{\jmath k\omega_0 t} + a_{-k}e^{-\jmath k\omega_0 t}]
+x(t) = a_0 + \sum_{k=1}^\infty [a_k e^{\jmath k\omega_0 t} +
+a_{-k}e^{-\jmath k\omega_0 t}]
 \]</span></p>
-<p>由（3.29）式，以<span class="math inline">\(a_k^*\)</span>取代<span class="math inline">\(a_{-k}\)</span>，上式变成:</p>
+<p>由（3.29）式，以<span class="math inline">\(a_k^*\)</span>取代<span
+class="math inline">\(a_{-k}\)</span>，上式变成:</p>
 <p><span class="math display">\[
-x(t) = a_0 + \sum_{k=1}^\infty [a_k e^{\jmath k\omega_0 t} + a^*_ke^{-\jmath k\omega_0 t}]
+x(t) = a_0 + \sum_{k=1}^\infty [a_k e^{\jmath k\omega_0 t} +
+a^*_ke^{-\jmath k\omega_0 t}]
 \]</span></p>
 <p>因为 <strong>括号内两项互为共轭</strong> ，于是:</p>
 <p><span class="math display">\[
-x(t) = a_0 + \sum_{k=1}^\infty 2Re[{a_k e^{\jmath k\omega_0 t}}] \cdots (3.30)
+x(t) = a_0 + \sum_{k=1}^\infty 2Re[{a_k e^{\jmath k\omega_0 t}}] \cdots
+(3.30)
 \]</span></p>
 <p>若将<span class="math inline">\(a_k\)</span>以极坐标形式给出:</p>
 <p><span class="math display">\[
@@ -408,66 +474,114 @@ a_k = A_k e^{\jmath \theta_k}
 \]</span></p>
 <p>那么式（3.30）可写成:</p>
 <p><span class="math display">\[
-x(t) = a_0 + \sum_{k=1}^\infty 2Re [{A_k e^{\jmath(k\omega_0 t + \theta_k)}}]
+x(t) = a_0 + \sum_{k=1}^\infty 2Re [{A_k e^{\jmath(k\omega_0 t +
+\theta_k)}}]
 \]</span></p>
 <p>这就是！</p>
 <p><span class="math display">\[
-x(t) = a_0 + 2\sum_{k=1}^\infty A_k \cos(k\omega_0 t + \theta_k) \cdots (3.31)
+x(t) = a_0 + 2\sum_{k=1}^\infty A_k \cos(k\omega_0 t + \theta_k) \cdots
+(3.31)
 \]</span></p>
-<p>式（3.31）就是在连续时间情况下，对实周期信号常常见到的傅里叶级数的表达式。若将<span class="math inline">\(a_k\)</span>以直角坐标形式表示，则可得到另一种表达式。令:</p>
+<p>式（3.31）就是在连续时间情况下，对实周期信号常常见到的傅里叶级数的表达式。若将<span
+class="math inline">\(a_k\)</span>以直角坐标形式表示，则可得到另一种表达式。令:</p>
 <p><span class="math display">\[
 a_k = B_k + \jmath C_k
 \]</span></p>
-<p>这里<span class="math inline">\(B_k、C_k\)</span>都是实数，于是式（3.30）可改写为:</p>
+<p>这里<span
+class="math inline">\(B_k、C_k\)</span>都是实数，于是式（3.30）可改写为:</p>
 <p><span class="math display">\[
-x(t) = a_0 + 2\sum_{k=1}^\infty [B_k \cos k\omega_0 t - C_k \sin k\omega_0 t] \cdots (3.32)
+x(t) = a_0 + 2\sum_{k=1}^\infty [B_k \cos k\omega_0 t - C_k \sin
+k\omega_0 t] \cdots (3.32)
 \]</span></p>
-<p>（3.31）和（3.32）这两个表达式最终都变成如（3.28）那样的形式。 由此可见，对于实周期函数来说，按照（3.25）式给出的复指数形式的傅里叶级数，数学上等效为（3.31）和（3.32）这两种形式之一 —— <strong>即都是三角函数的表达式</strong> 。尽管我们习惯用三角函数表达式的形式来直观地认识信号的成分与特征，但在数学分析时，复指数形式则能更方便地参与计算。</p>
-<h3 id="求解连续时间周期信号的傅里叶级数系数">求解连续时间周期信号的傅里叶级数系数</h3>
-<p>之前我们说一个给定的周期信号能表示成（3.25）的级数形式，那么我们还需要一种办法来确定这些系数 <span class="math inline">\(a_k\)</span>。将（3.25）式两边各乘上 <span class="math inline">\(e^{-\jmath n\omega_0 t}\)</span>，可得:</p>
+<p>（3.31）和（3.32）这两个表达式最终都变成如（3.28）那样的形式。
+由此可见，对于实周期函数来说，按照（3.25）式给出的复指数形式的傅里叶级数，数学上等效为（3.31）和（3.32）这两种形式之一
+—— <strong>即都是三角函数的表达式</strong>
+。尽管我们习惯用三角函数表达式的形式来直观地认识信号的成分与特征，但在数学分析时，复指数形式则能更方便地参与计算。</p>
+<h3
+id="求解连续时间周期信号的傅里叶级数系数">求解连续时间周期信号的傅里叶级数系数</h3>
+<p>之前我们说一个给定的周期信号能表示成（3.25）的级数形式，那么我们还需要一种办法来确定这些系数
+<span class="math inline">\(a_k\)</span>。将（3.25）式两边各乘上 <span
+class="math inline">\(e^{-\jmath n\omega_0 t}\)</span>，可得:</p>
 <p><span class="math display">\[
-x(t)e^{-\jmath n\omega_0 t} = \sum_{k=-\infty}^{+\infty} a_k e^{\jmath k\omega_0 t} e^{-\jmath n\omega_0 t} \cdots (3.33)
+x(t)e^{-\jmath n\omega_0 t} = \sum_{k=-\infty}^{+\infty} a_k e^{\jmath
+k\omega_0 t} e^{-\jmath n\omega_0 t} \cdots (3.33)
 \]</span></p>
-<p>将上式两边从0到 <span class="math inline">\(T=2\pi/\omega_0\)</span> 对t积分，有:</p>
+<p>将上式两边从0到 <span class="math inline">\(T=2\pi/\omega_0\)</span>
+对t积分，有:</p>
 <p><span class="math display">\[
-\int_0^T x(t)e^{-\jmath n\omega_0 t}dt = \int_0^T \sum_{k=-\infty}^{+\infty} a_k e^{\jmath k\omega_0 t} e^{-\jmath n\omega_0 t} dt
+\int_0^T x(t)e^{-\jmath n\omega_0 t}dt = \int_0^T
+\sum_{k=-\infty}^{+\infty} a_k e^{\jmath k\omega_0 t} e^{-\jmath
+n\omega_0 t} dt
 \]</span></p>
-<p>这里<span class="math inline">\(T\)</span>是<span class="math inline">\(x(t)\)</span>的基波周期，以上就是在该周期内积分。将上式右边的积分和求和次序交换后得:</p>
+<p>这里<span class="math inline">\(T\)</span>是<span
+class="math inline">\(x(t)\)</span>的基波周期，以上就是在该周期内积分。将上式右边的积分和求和次序交换后得:</p>
 <p><span class="math display">\[
-\int_0^T x(t)e^{-\jmath n\omega_0 t}dt = \sum_{k=-\infty}^{+\infty} a_k[\int_0^T e^{\jmath(k-n)\omega_0 t}dt] \cdots (3.34)
+\int_0^T x(t)e^{-\jmath n\omega_0 t}dt = \sum_{k=-\infty}^{+\infty}
+a_k[\int_0^T e^{\jmath(k-n)\omega_0 t}dt] \cdots (3.34)
 \]</span></p>
 <p>（3.34）式右边括号内的积分很简单（我:???），为此利用欧拉关系得:</p>
 <p><span class="math display">\[
-\int_0^T e^{\jmath(k-n)\omega_0 t}dt = \int_0^T \cos(k-n)\omega_0 tdt + \jmath \int_0^T \sin(k-n)\omega_0tdt \cdots (3.35)
+\int_0^T e^{\jmath(k-n)\omega_0 t}dt = \int_0^T \cos(k-n)\omega_0 tdt +
+\jmath \int_0^T \sin(k-n)\omega_0tdt \cdots (3.35)
 \]</span></p>
-<p>对于<span class="math inline">\(k\neq n,\cos(k-n)\omega_0 t\)</span>和<span class="math inline">\(\sin(k-n)\omega_0t\)</span>都是周期函数，其基波周期为 <span class="math inline">\(T/|k-n|\)</span>。现在做的积分是在<span class="math inline">\(T\)</span>区间内进行，而<span class="math inline">\(T\)</span>又一定是他们的基波周期<span class="math inline">\(T/|k-n|\)</span>的整倍数。由于积分可以看作是被积函数在积分区间内所包括的面积，所以（3.35）式右边的两个积分对于<span class="math inline">\(k\neq n\)</span>来说，其值为0。而对于<span class="math inline">\(k=n\)</span>，（3.35）式左边的被积函数是1，所以其积分值为<span class="math inline">\(T\)</span>。综合上述可得:</p>
+<p>对于<span class="math inline">\(k\neq n,\cos(k-n)\omega_0
+t\)</span>和<span
+class="math inline">\(\sin(k-n)\omega_0t\)</span>都是周期函数，其基波周期为
+<span class="math inline">\(T/|k-n|\)</span>。现在做的积分是在<span
+class="math inline">\(T\)</span>区间内进行，而<span
+class="math inline">\(T\)</span>又一定是他们的基波周期<span
+class="math inline">\(T/|k-n|\)</span>的整倍数。由于积分可以看作是被积函数在积分区间内所包括的面积，所以（3.35）式右边的两个积分对于<span
+class="math inline">\(k\neq n\)</span>来说，其值为0。而对于<span
+class="math inline">\(k=n\)</span>，（3.35）式左边的被积函数是1，所以其积分值为<span
+class="math inline">\(T\)</span>。综合上述可得:</p>
 <p><span class="math display">\[
-\int_0^T e^{\jmath(k-n)\omega_0t}dt = \left\{\begin{array}{rcl} 
+\int_0^T e^{\jmath(k-n)\omega_0t}dt = \left\{\begin{array}{rcl}
 T, &amp; k = n \\
 0, &amp; k \neq n
 \end{array}\right.
 \]</span></p>
-<p>这样（3.34）式的右边就化为<span class="math inline">\(T a_n\)</span>。因此有:</p>
+<p>这样（3.34）式的右边就化为<span class="math inline">\(T
+a_n\)</span>。因此有:</p>
 <p><span class="math display">\[
 a_n = {1\over T} \int_0^T x(t)e^{-\jmath n\omega_0t}dt \cdots (3.36)
 \]</span></p>
-<p>这就是确定系数的关系式。同时注意一点，积分是在<span class="math inline">\(T\)</span>的任意一个间隔内进行，结果一定是相同的。若以<span class="math inline">\(\int_T\)</span>表示在任意一个<span class="math inline">\(T\)</span>间隔内积分，则有:</p>
+<p>这就是确定系数的关系式。同时注意一点，积分是在<span
+class="math inline">\(T\)</span>的任意一个间隔内进行，结果一定是相同的。若以<span
+class="math inline">\(\int_T\)</span>表示在任意一个<span
+class="math inline">\(T\)</span>间隔内积分，则有:</p>
 <p><span class="math display">\[
 a_n = {1\over T}\int_T x(t) e^{\jmath n\omega_0t}dt \cdots (3.37)
 \]</span></p>
 <h4 id="总结">总结</h4>
-<p>如果一个<span class="math inline">\(x(t)\)</span>有一个傅里叶级数表达式（即<span class="math inline">\(x(t)\)</span>能表示成一组成谐波关系的复指数信号的线性组合，如（3.25）所示），那么傅里叶级数中的系数就可由（3.37）式所确定。这一对关系式定义为 <strong>一个周期连续时间信号的傅里叶级数</strong>。</p>
+<p>如果一个<span
+class="math inline">\(x(t)\)</span>有一个傅里叶级数表达式（即<span
+class="math inline">\(x(t)\)</span>能表示成一组成谐波关系的复指数信号的线性组合，如（3.25）所示），那么傅里叶级数中的系数就可由（3.37）式所确定。这一对关系式定义为
+<strong>一个周期连续时间信号的傅里叶级数</strong>。</p>
 <p><span class="math display">\[
 \left\{\begin{array}{clr}
-x(t) = \sum^{+\infty}_{k=-\infty} a_ke^{\jmath k\omega_0t} = \sum^{+\infty}_{k=-\infty} a_ke^{\jmath k(2\pi / T)t} \cdots (3.38)\\
-a_k = {1\over T}\int_T x(t)e^{-\jmath k\omega_0t}dt = {1\over T}\int_T x(t) e^{-\jmath k(2\pi /T)t}dt \cdots(3.39)
+x(t) = \sum^{+\infty}_{k=-\infty} a_ke^{\jmath k\omega_0t} =
+\sum^{+\infty}_{k=-\infty} a_ke^{\jmath k(2\pi / T)t} \cdots (3.38)\\
+a_k = {1\over T}\int_T x(t)e^{-\jmath k\omega_0t}dt = {1\over T}\int_T
+x(t) e^{-\jmath k(2\pi /T)t}dt \cdots(3.39)
 \end{array}\right.
 \]</span></p>
-<p>式中分别给出了用基波频率<span class="math inline">\(\omega_0\)</span>和基波周期<span class="math inline">\(T\)</span>所表示的傅里叶级数的等效表示式。（3.38）式称为 <strong>综合公式</strong>，而（3.39）式称为 <strong>分析公式</strong>。系数<span class="math inline">\(a_k\)</span>往往称为<span class="math inline">\(x(t)\)</span>的 <strong>傅里叶级数系数</strong> 或称为 <span class="math inline">\(x(t)\)</span>的 <strong>频谱系数</strong> 。 这些复数系数是对信号<span class="math inline">\(x(t)\)</span>中的每一个谐波分量的大小做出的度量，系数<span class="math inline">\(a_0\)</span>就是<span class="math inline">\(x(t)\)</span>中的直流或常数分量。由（3.39）式代入k=0可得:</p>
+<p>式中分别给出了用基波频率<span
+class="math inline">\(\omega_0\)</span>和基波周期<span
+class="math inline">\(T\)</span>所表示的傅里叶级数的等效表示式。（3.38）式称为
+<strong>综合公式</strong>，而（3.39）式称为
+<strong>分析公式</strong>。系数<span
+class="math inline">\(a_k\)</span>往往称为<span
+class="math inline">\(x(t)\)</span>的 <strong>傅里叶级数系数</strong>
+或称为 <span class="math inline">\(x(t)\)</span>的
+<strong>频谱系数</strong> 。 这些复数系数是对信号<span
+class="math inline">\(x(t)\)</span>中的每一个谐波分量的大小做出的度量，系数<span
+class="math inline">\(a_0\)</span>就是<span
+class="math inline">\(x(t)\)</span>中的直流或常数分量。由（3.39）式代入k=0可得:</p>
 <p><span class="math display">\[
 a_0 = {1\over T} \int_T x(t)dt \cdots (3.40)
 \]</span></p>
-<p>这就是<span class="math inline">\(x(t)\)</span>在一个周期内的平均值。</p>
+<p>这就是<span
+class="math inline">\(x(t)\)</span>在一个周期内的平均值。</p>
 
     </div>
 
@@ -589,7 +703,7 @@ a_0 = {1\over T} \int_T x(t)dt \cdots (3.40)
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

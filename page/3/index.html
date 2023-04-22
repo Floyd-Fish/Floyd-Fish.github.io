@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -161,6 +161,126 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/" class="post-title-link" itemprop="url">电路中的噪声</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-11-10 14:10:30" itemprop="dateCreated datePublished" datetime="2021-11-10T14:10:30+08:00">2021-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-02 20:10:36" itemprop="dateModified" datetime="2022-03-02T20:10:36+08:00">2022-03-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/" class="post-meta-item leancloud_visitors" data-flag-title="电路中的噪声" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近🐟在精密测量的巨坑中打滚，最近在做的 <a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/emoe-metrology-design/">EmoeMetrology</a>项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接</p>
+<h1 id="噪声定义">噪声定义</h1>
+<p>噪声（Noise）在电子学中指，信号在传输过程中会受到一些
+<strong>外在能量所产生信号（如杂散电磁场）的干扰</strong>
+，这些能量即噪声。噪声通常会造成信号的失真。其来源除了来自系统外部，亦有可能由接收系统本身产生。噪声的强度通常都是与信号带宽成正比，所以当信号带宽越宽，噪声的干扰也会越大。所以在评估噪声强度或是系统抵抗噪声能力的数据，是以信号强度对噪声强度的比例为依据，此即
+<strong>信噪比（Signal to Noise Ratio, SNR）</strong>。</p>
+<p>噪声从来源上分类可分为外部噪声和内部噪声两种。外部噪声主要的来源是:</p>
+<ul>
+<li>大气层<br />
+</li>
+<li>外太空<br />
+</li>
+<li>人为噪声</li>
+</ul>
+<p>而内部的噪声主要是 <strong>热噪声（Thermal
+Noise）</strong>。这种噪声是电阻性元件内部
+<strong>电子随机移动（电流是宏观效应，即"电子的定向移动"，但在微观下也会存在不遵循这一趋势的部分电子，即为噪声）</strong>
+所产生的，它的强度和电阻的环境绝对温度成正比。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -247,7 +367,8 @@
 <p>小米还在耍猴。呸！</p>
 <p>10月末我又投了RIGOL和新华三。说实话比较想去RIGOL，虽然给钱不是很高（我自己也不值那么高罢——），但是做电子测试测量仪器对我还是很有吸引力的。新华三听说给的一般，但是干活少，也想试试吧，毕竟到这个时候了一个保底offer都没有，还是很让我焦虑的。</p>
 <h1 id="焦虑">焦虑？</h1>
-<p>嗯，不得不说最近非常浮躁且焦虑。通过一轮招聘和面试下来，我发现我不会的东西更多了。在大学里我没有好好学习，数学基础约等于没有= =，这就导致我在学习高阶知识和技术时非常被动。</p>
+<p>嗯，不得不说最近非常浮躁且焦虑。通过一轮招聘和面试下来，我发现我不会的东西更多了。在大学里我没有好好学习，数学基础约等于没有=
+=，这就导致我在学习高阶知识和技术时非常被动。</p>
 <p>比如最近在做电子信息综合实验，其实就是雷达信号仿真实验，先产生一个雷达信号，然后施加噪声，然后做相应的滤波、降噪、匹配滤波等处理，然后用数字解调将回波信号解调出来。这确实非常综合，是一套完整的射频数模混合信号链，不过我们不用做实物，只需要在Matlab中实现它——<br />
 即使这样，我也时常感到力不从心。设计FIR低通滤波器，这个我还算熟悉，查查资料折腾半天搞定了，但要做自适应滤波的时候我就犯了难，用LMS和RLS算法吧，它需要整定滤波器参数，我不会调...半天没出太好的效果。不过我也猜测是因为LFM雷达信号的特性导致这两种自适应滤波算法效果不佳，于是我又想尝试小波变换自适应降噪。然后我就卡在了它的子滤波器参数选定上。。。</p>
 <p>嗯，我怎么这么菜啊.jpg</p>
@@ -473,14 +594,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="微观尽头精密信号测量理论分析">微观尽头——精密信号测量:理论分析</h1>
-<p>在上一篇文章中，我们欣赏了HP 3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。</p>
+          <h1
+id="微观尽头精密信号测量理论分析">微观尽头——精密信号测量:理论分析</h1>
+<p>在上一篇文章中，我们欣赏了HP
+3458A的精妙绝伦的多斜率积分ADC架构原理，同时也对精密信号测量有了基本的概念，那么这次让我们来试着自己做一个精密信号测量电路。</p>
 <h2 id="商业数字万用表dmm">商业数字万用表(DMM)</h2>
-<p>我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的<a target="_blank" rel="noopener" href="https://www.tek.com/tektronix-and-keithley-digital-multimeter/dmm6500">DMM6500</a>。为什么是这款呢？因为我用过最高端的DMM是这个（</p>
+<p>我们可以参考市面上比较厉害的数字万用表的参数，比如吉时利的<a
+target="_blank" rel="noopener" href="https://www.tek.com/tektronix-and-keithley-digital-multimeter/dmm6500">DMM6500</a>。为什么是这款呢？因为我用过最高端的DMM是这个（</p>
 <p>这款6位半的数字万用表能测量10pA到10A的电流，1uΩ到100MΩ的电阻，以及100nV到1000V的电压，同时具有5英寸的电容触控屏，可以将采集到的数据以曲线、表格等形式呈现出来以供分析。（怎么搞得我像是打广告的（雾））</p>
 <p>这台万用表的核心ADC器件是一个16位、1MSPS的ADC，光靠这片ADC是无法实现6位半精度的（22位有效精度），我猜测他们应该是使用过采样算法将有效精度提升至了6位半。</p>
 <h2 id="evm">EVM</h2>
-<p>当然，光靠ADC本身是不能实现如此多的功能、也不能实现如此高的测量范围的，如果要做一台数字万用表，那么必须为ADC设计不同的前端电路来实现各种功能和档位切换，而这个系统对于验证阶段的我们来说太过于复杂。所以我的计划是设计一个ADC评估模块（Evaluation Module，EVM），先用这个模块简单地验证一下ADC和模拟前端的性能参数是否达标，同时也锻炼一下我的精密小信号电路、以及数模混合系统 PCB Layout的能力，积累经验（踩坑）。</p>
+<p>当然，光靠ADC本身是不能实现如此多的功能、也不能实现如此高的测量范围的，如果要做一台数字万用表，那么必须为ADC设计不同的前端电路来实现各种功能和档位切换，而这个系统对于验证阶段的我们来说太过于复杂。所以我的计划是设计一个ADC评估模块（Evaluation
+Module，EVM），先用这个模块简单地验证一下ADC和模拟前端的性能参数是否达标，同时也锻炼一下我的精密小信号电路、以及数模混合系统
+PCB Layout的能力，积累经验（踩坑）。</p>
 <p>所以我将设计一块这样的板子:</p>
 <ul>
 <li>搭载核心器件——ADC，型号为ADI的AD7177-2（32位集成式ADC）<br />
@@ -595,15 +721,27 @@
       
           <h1 id="微观尽头精密信号测量intro">微观尽头——精密信号测量:Intro</h1>
 <p>我们一般只会关心身边那些明显的、容易察觉的变化——比如温度变高了几度，车辆的行驶速度变快了几m/s，无所事事的一天又过去了...诸如此类。<br />
-但你有关注过一些微不足道的变化吗？比如空气中二氧化碳的浓度具体是多少 <strong>ppm（百万分之一）</strong> ？你的体重变化了几克？<br />
+但你有关注过一些微不足道的变化吗？比如空气中二氧化碳的浓度具体是多少
+<strong>ppm（百万分之一）</strong> ？你的体重变化了几克？<br />
 当然没有吧，因为这些细微的变化超出了人感知的能力，我们自身并不能感受到这些微不足道的变化。</p>
-<p>——当然上述多数是一些直观感受，我们只能对其有个大概的把握，并不能精确量化它们。如果在电子测量领域，我们就有许多种手段去量化这些变化。最常用的方法就是利用 <strong>传感器（sensor）</strong> 去将真实世界中的物理量转化为电信号，并用电子测量电路去对电信号进行处理并分析。</p>
+<p>——当然上述多数是一些直观感受，我们只能对其有个大概的把握，并不能精确量化它们。如果在电子测量领域，我们就有许多种手段去量化这些变化。最常用的方法就是利用
+<strong>传感器（sensor）</strong>
+去将真实世界中的物理量转化为电信号，并用电子测量电路去对电信号进行处理并分析。</p>
 <h1 id="such-as">Such as?</h1>
-<p>比如 <strong>电子体重秤</strong>。我选了一个烂大街的解决方案来举例子。<br />
-<strong>HX711</strong>是一片高度定制化的24位ADC,专门用于 <strong>桥式电路（Bridge Circuit），也叫惠斯通电桥（Wheatstone bridge）</strong> 测量（图中的细线红色方框）。</p>
-<p>紫色方框圈出来的是一个 <strong>应变片</strong>,本质上是一个电阻,它的阻值会随着形变的大小（所受压力）变化，而这个变化是近似线性的。设计一个与其接近匹配的桥式电路，测量中间节点的电压差，就可以实现 <strong>压力大小-&gt;电压大小</strong> 的转换。（你可以画4个电阻拼成一个桥，在上下两端加上电压，测量左右两端的电压，简单分析一下）</p>
+<p>比如
+<strong>电子体重秤</strong>。我选了一个烂大街的解决方案来举例子。<br />
+<strong>HX711</strong>是一片高度定制化的24位ADC,专门用于
+<strong>桥式电路（Bridge Circuit），也叫惠斯通电桥（Wheatstone
+bridge）</strong> 测量（图中的细线红色方框）。</p>
+<p>紫色方框圈出来的是一个
+<strong>应变片</strong>,本质上是一个电阻,它的阻值会随着形变的大小（所受压力）变化，而这个变化是近似线性的。设计一个与其接近匹配的桥式电路，测量中间节点的电压差，就可以实现
+<strong>压力大小-&gt;电压大小</strong>
+的转换。（你可以画4个电阻拼成一个桥，在上下两端加上电压，测量左右两端的电压，简单分析一下）</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/1.png" alt="" /><figcaption>HX711</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E5%BE%AE%E8%A7%82%E5%B0%BD%E5%A4%B4%E2%80%94%E2%80%94%E7%B2%BE%E5%AF%86%E4%BF%A1%E5%8F%B7%E6%B5%8B%E9%87%8F/1.png"
+alt="HX711" />
+<figcaption aria-hidden="true">HX711</figcaption>
 </figure>
           <!--noindex-->
             <div class="post-button">
@@ -708,16 +846,23 @@
       
           <h1 id="做一个锁定放大器">做一个锁定放大器！</h1>
 <p><strong>本文同步于emoe工作室</strong></p>
-<p>想必你已经康过 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/lock-in-amplifier-design/">上一篇文章</a></strong> 了~（什么？还没看？快点去啊( •_•)&gt;⌐■-■）</p>
-<p>根据上一篇文章所讲述的锁定放大器的原理，我制作了一个利用 <strong>高速比较器 + 模拟开关</strong> 实现的锁定放大器。<br />
+<p>想必你已经康过 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/lock-in-amplifier-design/">上一篇文章</a></strong>
+了~（什么？还没看？快点去啊( •_•)&gt;⌐■-■）</p>
+<p>根据上一篇文章所讲述的锁定放大器的原理，我制作了一个利用
+<strong>高速比较器 + 模拟开关</strong> 实现的锁定放大器。<br />
 使用KiCad设计，唔文件就不放了，挺简单的，如果你想要的话进群找我吧:p</p>
 <h1 id="pcb">PCB—</h1>
 <p>嗯，在某板厂打的骚紫色，4号下的单今天才发过来...无语子~<br />
 设计上我采用了4层板设计，主要信号线走在顶层上，拉不过去的话就走底层，中间层为2个电源层（正负轨），底层铺地平面。</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/%E7%BB%AD/addons11.jpg" alt="" /><figcaption>Soldiering</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/%E7%BB%AD/addons11.jpg"
+alt="Soldiering" />
+<figcaption aria-hidden="true">Soldiering</figcaption>
 </figure>
-<p>画简单板子我喜欢把所有元件都放在正面，这样焊接起来非常方便。我使用了巨好用的 <code>铁板烧</code>（恒温陶瓷PTC发热片）来当作加热台，它能加热到200多度的高温且恒温，非常适合用来配合锡膏焊接贴片元件。先给空板预热一下，然后用牙签沾一点锡膏点到焊盘上，锡膏在高温的（这个温度很讲究，既要让锡膏软化又不能让他直接变成液相金属锡）的流动性非常棒。点完锡膏之后就可以贴元件了。贴好就像上面这样。</p>
+<p>画简单板子我喜欢把所有元件都放在正面，这样焊接起来非常方便。我使用了巨好用的
+<code>铁板烧</code>（恒温陶瓷PTC发热片）来当作加热台，它能加热到200多度的高温且恒温，非常适合用来配合锡膏焊接贴片元件。先给空板预热一下，然后用牙签沾一点锡膏点到焊盘上，锡膏在高温的（这个温度很讲究，既要让锡膏软化又不能让他直接变成液相金属锡）的流动性非常棒。点完锡膏之后就可以贴元件了。贴好就像上面这样。</p>
 <p>然后就可以再次开启铁板烧，将锡膏全部熔化~</p>
           <!--noindex-->
             <div class="post-button">
@@ -821,18 +966,24 @@
 
       
           <h1 id="前言">前言</h1>
-<p>最近在CNPP同学处嫖到一片ADI公司生产的 <strong>AD630</strong> ，这是一款平衡调制/解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!</p>
+<p>最近在CNPP同学处嫖到一片ADI公司生产的 <strong>AD630</strong>
+，这是一款平衡调制/解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg" alt="" /><figcaption>我看不懂，但我大受震撼.jpg</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg"
+alt="我看不懂，但我大受震撼.jpg" />
+<figcaption aria-hidden="true">我看不懂，但我大受震撼.jpg</figcaption>
 </figure>
 <p>100dB是什么概念呢?</p>
-<p><span class="math display">\[ 
+<p><span class="math display">\[
 20\lg{S} = 100dB
 \]</span></p>
 <p><span class="math display">\[
 S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
 \]</span></p>
-<p>比如...我的信号Vpp为10uV，噪声的Vpp为1V，这时S就是100dB。而AD630 <strong>据说（可不是瞎说，他Datasheet上标的...）</strong> 能将我的信号从这汹涌的噪声洪流中将它还原出来...</p>
+<p>比如...我的信号Vpp为10uV，噪声的Vpp为1V，这时S就是100dB。而AD630
+<strong>据说（可不是瞎说，他Datasheet上标的...）</strong>
+能将我的信号从这汹涌的噪声洪流中将它还原出来...</p>
 <p>这不得来试一试？</p>
           <!--noindex-->
             <div class="post-button">
@@ -938,12 +1089,18 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
           <p>又是一年电赛年。</p>
 <p>在日常的繁忙（其实并不）训练中，人很容易感到疲惫与枯燥...所以得适当休息一会儿，比如此时此刻，我刚刚从OverWatch中退出，想写一篇日记记录近日的生活。</p>
 <h2 id="月初-繁忙之始-前夕">7月初-繁忙之始-前夕</h2>
-<p>6月底我结束了所有期末考试科目，但是我的队友（学弟）还没有。于是我就提前进入了“考后摸鱼周”。其实也并没有很摸，只是买了2个新游戏——《Metro Exodus》和《Dying Light》。前者好不容易下了下来结果发现我的垃圾本本不满足最低配置要求，带不动，遂把游戏文件拷进移动硬盘并放弃了24h爆肝通关的计划（。<br />
-不过后者倒是非常好玩，是个值得入手的游戏，同时也是非常耗肝的（ 我打了一下午之后肝不动了，就没玩了...</p>
+<p>6月底我结束了所有期末考试科目，但是我的队友（学弟）还没有。于是我就提前进入了“考后摸鱼周”。其实也并没有很摸，只是买了2个新游戏——《Metro
+Exodus》和《Dying
+Light》。前者好不容易下了下来结果发现我的垃圾本本不满足最低配置要求，带不动，遂把游戏文件拷进移动硬盘并放弃了24h爆肝通关的计划（。<br />
+不过后者倒是非常好玩，是个值得入手的游戏，同时也是非常耗肝的（
+我打了一下午之后肝不动了，就没玩了...</p>
 <h3 id="画画">画画</h3>
 <p>同时我开始尝试着学习一点点绘画...我买了几只朋友推荐的勾线笔和自动铅笔、樱花橡皮，以及一个康颂的素描本（朋友说我入门用这个奢侈了233）</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B5%9B%E6%97%A5%E8%AE%B0-1/eeLogs23.jpg" alt="" /><figcaption>Canson</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B5%9B%E6%97%A5%E8%AE%B0-1/eeLogs23.jpg"
+alt="Canson" />
+<figcaption aria-hidden="true">Canson</figcaption>
 </figure>
           <!--noindex-->
             <div class="post-button">
@@ -1046,10 +1203,14 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>本文首发于 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz">Emoe工作室</a></strong>。</p>
+          <p>本文首发于 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz">Emoe工作室</a></strong>。</p>
 <p>本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~</p>
 <h1 id="前言树莓派是什么">前言——树莓派是什么？</h1>
-<p><strong>树莓派（Raspberry Pi）</strong> 是基于Linux的单板电脑 <strong>（Single Board Computer,简称SBC）</strong>，由英国 <strong><a target="_blank" rel="noopener" href="https://www.raspberrypi.org/">树莓派基金会</a></strong> 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育<br />
+<p><strong>树莓派（Raspberry Pi）</strong> 是基于Linux的单板电脑
+<strong>（Single Board Computer,简称SBC）</strong>，由英国 <strong><a
+target="_blank" rel="noopener" href="https://www.raspberrypi.org/">树莓派基金会</a></strong>
+开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育<br />
 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的diy利器,原因在于以下几点:</p>
 <ol type="1">
 <li>树莓派的生态十分丰富,有大量公司、团体和个人为其完善了从硬件到软件的生态链<br />
@@ -1159,25 +1320,35 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="利用stm32的片上dac实现dds数字频率合成">利用STM32的片上DAC实现DDS（数字频率合成）</h1>
+          <h1
+id="利用stm32的片上dac实现dds数字频率合成">利用STM32的片上DAC实现DDS（数字频率合成）</h1>
 <h1 id="前言">前言</h1>
 <p>本篇文章参考了《新概念模拟电路-源电路与信号源》中的6.3节。<br />
 后续还会发布基于FPGA的DDS版本,敬请期待哦ovo</p>
 <p>本文用到的资源<br />
-- <a target="_blank" rel="noopener" href="https://www.st.com/en/microcontrollers-microprocessors/stm32f303cc.html">STM32F303CCT6 Overview</a><br />
-- <a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending the DAC performance of STM32 Microcontroller</a><br />
-- 本文示例代码 <strong><a target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/STM32_DAC_DDS">Github</a></strong></p>
+- <a
+target="_blank" rel="noopener" href="https://www.st.com/en/microcontrollers-microprocessors/stm32f303cc.html">STM32F303CCT6
+Overview</a><br />
+- <a
+target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/dm00129215-extending-the-dac-performance-of-stm32-microcontrollers-stmicroelectronics.pdf">Extending
+the DAC performance of STM32 Microcontroller</a><br />
+- 本文示例代码 <strong><a
+target="_blank" rel="noopener" href="https://github.com/Floyd-Fish/STM32_DAC_DDS">Github</a></strong></p>
 <h1 id="dds">DDS</h1>
-<p>Direct-Digital Synthesizer是一种频率合成技术,用于产生周期性波形。目前，从低频到上百MHz的正弦波、三角波的产生，绝大多数都用DDS完成。包括我们买到的信号源之类的，里面的核心也是DDS芯片。传统的模拟电路——即振荡器产生正弦、方波、三角波的方式在DDS面前都得叫大哥:D</p>
+<p>Direct-Digital
+Synthesizer是一种频率合成技术,用于产生周期性波形。目前，从低频到上百MHz的正弦波、三角波的产生，绝大多数都用DDS完成。包括我们买到的信号源之类的，里面的核心也是DDS芯片。传统的模拟电路——即振荡器产生正弦、方波、三角波的方式在DDS面前都得叫大哥:D</p>
 <p>DDS的优点有:<br />
 - 可精细选择输出频率，实现从低到高的频率选择。<br />
 - 可快速跳频，且可以保证相位连续，这在模拟电路方法中是难以实现的。<br />
 - 可实现正交输出，可实现相位设置<br />
 - 可实现正弦、三角波输出，配合比较器可实现同频同相方波输出<br />
-- 事实上，只要有波表，随便什么波形都能给你打出来。。（你甚至可以在示波器屏幕上看Badapple）</p>
+-
+事实上，只要有波表，随便什么波形都能给你打出来。。（你甚至可以在示波器屏幕上看Badapple）</p>
 <p>当然DDS也不是浑身是宝，他也有弊端:<br />
-- 在发出高质量的正弦波中,DDS无法实现超低失真度，这是最大的弊端。（因为是一个点一个点地突变,不可避免会引起非线性失真,即增加了高频谐波分量）<br />
-- DDS中使用的DAC位数不会很高（常见的14位）,其积分非线性INL不可能做到很小,其次DDS一般采用普通DAC,没有为降低失真度做出更多考虑<br />
+-
+在发出高质量的正弦波中,DDS无法实现超低失真度，这是最大的弊端。（因为是一个点一个点地突变,不可避免会引起非线性失真,即增加了高频谐波分量）<br />
+-
+DDS中使用的DAC位数不会很高（常见的14位）,其积分非线性INL不可能做到很小,其次DDS一般采用普通DAC,没有为降低失真度做出更多考虑<br />
 - 目前DDS实现的正弦波输出，失真度一般只能做到-80dB左右。</p>
           <!--noindex-->
             <div class="post-button">
@@ -1280,7 +1451,8 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="fate-stay-night相关专辑收藏">《Fate Stay Night》相关专辑收藏</h1>
+          <h1 id="fate-stay-night相关专辑收藏">《Fate Stay
+Night》相关专辑收藏</h1>
 <h1 id="前言">前言</h1>
 <p>在过去的时代,电子技术刚刚起步,互联网还没那么发达的年代,如果想要听最新的音乐的话,大概率是通过CD机和磁带机吧...<br />
 不过现在已经是2021年了。随着技术的发展,移动设备的处理能力和互联能力都大大提升,音乐和文化的传播形式逐渐从线下转为线上——那么这个时代的人很少需要通过CD/DVD来欣赏最新的音乐作品了。相伴地,一切被时代抛弃的物件们都有着它们最后的价值——其一就是收藏与怀旧。</p>
@@ -1404,127 +1576,28 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
 <h2 id="资料汇总">资料汇总</h2>
 <blockquote>
 <ul>
-<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>): https://github.com/Floyd-Fish/ADS8860-STM32F4<br />
+<li>ADS8860驱动代码(<strong>即将作废,预计将合并到下面的repo中</strong>):
+https://github.com/Floyd-Fish/ADS8860-STM32F4<br />
 </li>
-<li>本教程所有设计资源: https://github.com/Floyd-Fish/ADS8860_SignalChain<br />
+<li>本教程所有设计资源:
+https://github.com/Floyd-Fish/ADS8860_SignalChain<br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860 Datasheet</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/sbas569b/sbas569b.pdf?ts=1620574545702&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">ADS8860
+Datasheet</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189 Datasheet</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.ti.com/lit/ds/symlink/opa189.pdf?ts=1620632274466&amp;ref_url=https%253A%252F%252Fwww.ti.com%252Fproduct%252FOPA189%253Futm_source%253Dgoogle%2526utm_medium%253Dcpc%2526utm_campaign%253Dasc-null-null-gpn_en-cpc-pf-google-eu%2526utm_content%253Dopa189%2526ds_k%253DOPA189%2526dcm%253Dyes%2526gclid%253DCj0KCQjws-OEBhCkARIsAPhOkIbXuItYlW6Et8Z3MMR1tAOLKnAneXf7cq7DhdQKE5nrDy7c4v6gFe0aAjhkEALw_wcB%2526gclsrc%253Daw.ds">OPA2189
+Datasheet</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G Datasheet</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/REF01_02_03.pdf">REF03G
+Datasheet</a></li>
 </ul>
 </blockquote>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/05/16/%E4%B8%AD%E9%AB%98%E9%80%9F%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E9%87%87%E9%9B%86%E7%B3%BB%E7%BB%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
-      <meta itemprop="name" content="Floyd-Fish">
-      <meta itemprop="description" content="-Actually it doesn't exist">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="月之暗面">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/" class="post-title-link" itemprop="url">未来规划</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-01-06 23:38:30" itemprop="dateCreated datePublished" datetime="2021-01-06T23:38:30+08:00">2021-01-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 20:12:26" itemprop="dateModified" datetime="2022-01-30T20:12:26+08:00">2022-01-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%9F%E6%B4%BB/" itemprop="url" rel="index"><span itemprop="name">生活</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/" class="post-meta-item leancloud_visitors" data-flag-title="未来规划" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="迷茫是人生的常态吗">迷茫是人生的常态吗？</h1>
-<p>对此我心存疑问。不管怎么说，过去的4年我肯定是迷茫的(2016-2020)。</p>
-<p>接触到了太多未知的技术，反而一时失去了方向，随后更失去了学习的动力——<br />
-也跟我低下的自制力有关，总是管不住自己摸鱼的念头)</p>
-<p>总之是想借新时代的开端，梳理一下自己未来要学习的方向吧~<br />
-为此我做了个<code>5年计划</code>,象征着我接下来5年要前进的方向！</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/06/%E6%9C%AA%E6%9D%A5%E8%A7%84%E5%88%92/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1615,7 +1688,7 @@ S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -156,7 +156,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -272,49 +272,62 @@
       
         <h2 id="声明">声明</h2>
 <blockquote>
-<p>本文首发于我参与运营的网站<a target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-bootloader/">E萌工作室</a><br />
+<p>本文首发于我参与运营的网站<a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/stm32-bootloader/">E萌工作室</a><br />
 作者也是我，所以不存在什么侵权问题~</p>
 </blockquote>
 <h1 id="正文">正文</h1>
 <p>我们给STM32单片机下载程序通常会使用ST-LINK或者J-LINK等使用SWD接口的下载/调试器,可是我们现在要跟他们说再见辣——</p>
 <h2 id="事前准备">事前准备</h2>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubeprog.html">下载STM32CubeProgrammer</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubeprog.html">下载STM32CubeProgrammer</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">下载这个PDF</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">下载这个PDF</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stsw-stm32080.html">下载DFUSE软件,因为它包含了DFU驱动</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stsw-stm32080.html">下载DFUSE软件,因为它包含了DFU驱动</a></li>
 </ul>
 <h1 id="bootloader">Bootloader</h1>
 <p>提到bootloader,你可能会想到计算机中的引导程序,它是计算机开机完成自检后装载操作系统或者其他系统软件的计算机程序。<br />
-引导在英文中为<code>Boot</code>,是<code>Bootstrap</code>的缩写,源自于短语<code>Pull oneself up by one's Bootstraps.</code>,即<code>靠自己振作起来</code>。如果大部分软件需要通过其他已经运行的程序加载到计算机中,则必须存在一个将初始软件加载到计算机中的机制——也就是 <strong>Bootloader</strong>。</p>
+引导在英文中为<code>Boot</code>,是<code>Bootstrap</code>的缩写,源自于短语<code>Pull oneself up by one's Bootstraps.</code>,即<code>靠自己振作起来</code>。如果大部分软件需要通过其他已经运行的程序加载到计算机中,则必须存在一个将初始软件加载到计算机中的机制——也就是
+<strong>Bootloader</strong>。</p>
 <span id="more"></span>
 <p>是不是有点抽象？那么我们来举个栗子:</p>
 <blockquote>
 <p>你的电脑,装了windows系统,而我们运行的所有软件比如QQ,Steam,浏览器,Photoshop等,必须通过Windows这个<code>大软件</code>来加载到计算机中,那么Windows如何加载到计算机中呢？——答案当然是<code>Bootloader</code>咯</p>
 </blockquote>
 <h2 id="stm32的bootloader">STM32的Bootloader</h2>
-<p>我们不多说PC和手机的Bootloader啦,我们主要讲STM32,如果你想了解更多,请上Wiki: <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%95%9F%E5%8B%95%E7%A8%8B%E5%BC%8F">引导程序</a></p>
+<p>我们不多说PC和手机的Bootloader啦,我们主要讲STM32,如果你想了解更多,请上Wiki:
+<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%95%9F%E5%8B%95%E7%A8%8B%E5%BC%8F">引导程序</a></p>
 <p>我们说单片机也是一种微型计算机。我们为他编写代码,并且烧录进他的非易失性存储介质(如Flash),然后就可以让他运行我们期望的任务,实现相应的功能。</p>
 <p>我们可以这样定义一下，方便后续讲解:</p>
 <ul>
 <li>我们编写的代码——&gt; App (应用)<br />
 </li>
-<li>IAP——&gt; In application Programming (在应用编程,就是在单片机运行的过程中对代码存储介质进行重新编程)</li>
+<li>IAP——&gt; In application Programming
+(在应用编程,就是在单片机运行的过程中对代码存储介质进行重新编程)</li>
 </ul>
 <p>我们注意到,刚刚买回来的STM32像个脑袋进水的傻子一样——什么都不会做,这是因为我们没有给他烧录程序...等等,你不是说有bootloader吗？这个引导程序至少能做点什么吧？</p>
 <p>他确实能<code>"做点什么"</code>,它不能让你的单片机变得聪明(帮你写代码)起来,但是它可以帮你让单片机变得聪明~(帮你把你写好的代码编译出来的二进制文件烧录进去)</p>
 <h1 id="an2606">AN2606</h1>
 <p>看到这个奇怪的字符串序列，你是不是以为是什么神秘车牌?<br />
-是的是的,它是ST的应用手册(Application Note即缩写为AN)的编号, <strong><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">请在这里查看</a></strong></p>
+是的是的,它是ST的应用手册(Application Note即缩写为AN)的编号, <strong><a
+target="_blank" rel="noopener" href="https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf">请在这里查看</a></strong></p>
 <p>众所周知,读官方手册是开发者必备的技能——那么我们找到<code>General Bootloader description</code>章节,开始慢慢啃天书...</p>
 <p>在开头的Intro中:</p>
 <blockquote>
-<p>The bootloader is stored in the internal boot ROM memory (system memory) of STM32 devices. It is programmed by ST during production.</p>
+<p>The bootloader is stored in the internal boot ROM memory (system
+memory) of STM32 devices. It is programmed by ST during production.</p>
 </blockquote>
-<p>我们得知Bootloader是位于STM32单片机的内部只读存储器内的,也就是System Memory,而且这个Bootloader程序是单片机生产时就烧录好的。咱们接着读</p>
+<p>我们得知Bootloader是位于STM32单片机的内部只读存储器内的,也就是System
+Memory,而且这个Bootloader程序是单片机生产时就烧录好的。咱们接着读</p>
 <blockquote>
-<p>It's main task is to download the application program to the internal Flash memory through one of the available serial peripherals (USART, CAN, USB,I2C, SPI, etc.).</p>
+<p>It's main task is to download the application program to the internal
+Flash memory through one of the available serial peripherals (USART,
+CAN, USB,I2C, SPI, etc.).</p>
 </blockquote>
 <p>这个bootloader的主要任务是通过可用的串行接口(如I2C,SPI,USART,USB等)对单片机实行IAP(在应用编程)</p>
 <p>然后再往后看看,能找到支持使用Bootloader进行IAP的产品型号表:</p>
@@ -329,9 +342,11 @@
 </center>
 <p>在这段开头有一句话:</p>
 <blockquote>
-<p>The STM32F071xx/072xx bootloader is activated by applying pattern2 (described in Table 2: Bootloader activation patterns).</p>
+<p>The STM32F071xx/072xx bootloader is activated by applying pattern2
+(described in Table 2: Bootloader activation patterns).</p>
 </blockquote>
-<p>如果想要进入Bootloader模式,我们需要使用 <code>Pattern 2</code> (启动序列2),根据他的链接跳转到Pattern表格,如下:</p>
+<p>如果想要进入Bootloader模式,我们需要使用 <code>Pattern 2</code>
+(启动序列2),根据他的链接跳转到Pattern表格,如下:</p>
 <center>
 <p><img src="https://s1.ax1x.com/2020/07/02/NqwUED.png" alt="NqwUED.png" border="0" /></p>
 </center>
@@ -342,7 +357,8 @@
 <p><img src="https://s1.ax1x.com/2020/07/02/NqD3gs.md.png" alt="NqD3gs.png" border="0" /></p>
 </center>
 <p>这个表格列举了所有支持的烧录方式,可以看到F072的支持是比较全面的...包含了USART1/2,I2C,USB_DFU,表格中还详细列举了如果使用这些接口进行编程时,对单片机片上外设的具体需求</p>
-<p>我们在这里使用USB-DFU(USB-Device Firmware Update)啦,因为它只需要一个USB接口就可以跟ST-LINK分手,属于最简单的方式了!接下来实践一下试试~</p>
+<p>我们在这里使用USB-DFU(USB-Device Firmware
+Update)啦,因为它只需要一个USB接口就可以跟ST-LINK分手,属于最简单的方式了!接下来实践一下试试~</p>
 <p>STM32的BOOT0引脚只有一个,而BOOT1引脚一般默认为<code>PB2</code>引脚</p>
 <p>在这里<code>Pattern 2</code>是2个引脚都接高电平,不过请注意给2个引脚串接一个100k电阻,以防止过流/倒灌电流,给单片机造成损坏。我的测试板是这样接的,通过一个2位拨码开关切换启动模式,实测是没问题的...(不要问我为什么接地不串接100k电阻orz)</p>
 <center>
@@ -365,7 +381,8 @@
 <p><img src="https://s1.ax1x.com/2020/07/02/NqX5Ks.md.png" alt="NqX5Ks.png" border="0" /></p>
 </center>
 <p>连接上了之后,可以在右下角看到单片机的详情~<br />
-这时候我们就可以点击Open File,打开我们已经编译输出好的二进制文件(hex/axf/bin等)<img src="https://s1.ax1x.com/2020/07/02/NqXW8g.png" alt="NqXW8g.png" border="0" /></p>
+这时候我们就可以点击Open
+File,打开我们已经编译输出好的二进制文件(hex/axf/bin等)<img src="https://s1.ax1x.com/2020/07/02/NqXW8g.png" alt="NqXW8g.png" border="0" /></p>
 <center>
 <p><img src="https://s1.ax1x.com/2020/07/02/NqXhvj.md.png" alt="NqXhvj.png" border="0" /></p>
 </center>
@@ -376,7 +393,8 @@
 </center>
 <p>点击download旁边的小箭头,可以看到还有别的选项,我们这里只需要<code>点击下崽</code>,然后就可以把程序烧录进单片机,和ST-LINK和J-LINK彻底说掰掰~</p>
 <center>
-<p>&lt;-<strong>下崽成功！</strong>-&gt; <img src="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png" alt="NqXIrn.png" border="0" /></p>
+<p>&lt;-<strong>下崽成功！</strong>-&gt;
+<img src="https://s1.ax1x.com/2020/07/02/NqXIrn.md.png" alt="NqXIrn.png" border="0" /></p>
 </center>
 <p>此时，把USB线缆拔下来,将BOOT0和BOOT1拨回接地的状态,这样单片机下次上电的时候就会读取内部FLASH中的程序,而不是启动Bootloader啦~</p>
 <p>完成操作后接上电,发现单片机正常运行~</p>
@@ -517,7 +535,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

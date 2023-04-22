@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="运算放大器噪声分析 在精密模拟电路设计中，噪声分析 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。 之前🐟也写了有关噪声的3篇文章，分别是——  电路中的噪声  精密低噪声电源设计  噪声放大器(Noise Amplifier)构建指南  这3篇">
+  <meta name="description" content="运算放大器噪声分析 在精密模拟电路设计中，噪声分析 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。 之前🐟也写了有关噪声的3篇文章，分别是——  电路中的噪声  精密低噪声电源设计  噪声放大器(Noise Amplifier)构建指南  这">
 <meta property="og:type" content="article">
 <meta property="og:title" content="运算放大器噪声分析">
 <meta property="og:url" content="https://floydfish.xyz/2022/08/27/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="运算放大器噪声分析 在精密模拟电路设计中，噪声分析 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。 之前🐟也写了有关噪声的3篇文章，分别是——  电路中的噪声  精密低噪声电源设计  噪声放大器(Noise Amplifier)构建指南  这3篇">
+<meta property="og:description" content="运算放大器噪声分析 在精密模拟电路设计中，噪声分析 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。 之前🐟也写了有关噪声的3篇文章，分别是——  电路中的噪声  精密低噪声电源设计  噪声放大器(Noise Amplifier)构建指南  这">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/noise_model.png">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/exceeding_noise.png">
@@ -151,7 +151,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -260,20 +260,26 @@
 
       
         <h1 id="运算放大器噪声分析">运算放大器噪声分析</h1>
-<p>在精密模拟电路设计中，<strong>噪声分析</strong> 是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。</p>
+<p>在精密模拟电路设计中，<strong>噪声分析</strong>
+是必不可少的。无论是使用无源器件如电阻电容等，还是有源器件如运算放大器、仪表放大器之类，噪声就像恼人的蚊子一样，始终盘旋在耳边。这次我们来讲讲运算放大器的噪声模型，以及分析方法。</p>
 <p>之前🐟也写了有关噪声的3篇文章，分别是——</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">电路中的噪声</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">电路中的噪声</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-amplifier-building-instruction/">噪声放大器(Noise Amplifier)构建指南</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-amplifier-building-instruction/">噪声放大器(Noise
+Amplifier)构建指南</a></li>
 </ul>
 <p>这3篇文章由浅入深、循序渐进地探讨了噪声对电路的影响，以及如何测量噪声。这次杀个回马枪，回归理论和魔电~</p>
 <span id="more"></span>
 <h1 id="回顾热噪声">回顾热噪声</h1>
 <blockquote>
-<p>热噪声的学名叫 约翰逊-奈奎斯特噪声（Johnson-Nyquist Noise），也可称作约翰逊噪声、奈奎斯特噪声。热噪声是由于热搅动导致导体内部的电荷载体达到平衡状态时的电子噪声，<strong>与所施加的电压无关</strong>。</p>
+<p>热噪声的学名叫 约翰逊-奈奎斯特噪声（Johnson-Nyquist
+Noise），也可称作约翰逊噪声、奈奎斯特噪声。热噪声是由于热搅动导致导体内部的电荷载体达到平衡状态时的电子噪声，<strong>与所施加的电压无关</strong>。</p>
 </blockquote>
 <p>诚然，任何具有电阻的导体中都存在热噪声。一个理想电阻器的热噪声接近白噪声，其功率谱密度在整个频谱范围内几乎是不间断(连续)的(极高频时并未如此,不过这往往超出了中低频模拟电路的考虑范围)。限定噪声的带宽时,一个电阻的噪声等效模型如下所示，可等效为一个理想电阻串联一个交流噪声源。其热噪声的幅度近似为高斯分布。</p>
 <center>
@@ -283,14 +289,22 @@
 <p><span class="math display">\[
 V_{Noise} = \sqrt{4kTR} \ \ (V/\sqrt{Hz})
 \]</span></p>
-<p>其中，T为绝对温度(摄氏度+273.15),k为玻尔兹曼常数(<span class="math inline">\(k=1.38*10^{-23} J/K\)</span>)，R是电阻的阻值。一个1kΩ电阻在25°C室温下产生的噪声谱密度是 <span class="math inline">\(4nV/\sqrt{Hz}\)</span>，记住这一点，对于快速计算很有帮助。</p>
+<p>其中，T为绝对温度(摄氏度+273.15),k为玻尔兹曼常数(<span
+class="math inline">\(k=1.38*10^{-23}
+J/K\)</span>)，R是电阻的阻值。一个1kΩ电阻在25°C室温下产生的噪声谱密度是
+<span
+class="math inline">\(4nV/\sqrt{Hz}\)</span>，记住这一点，对于快速计算很有帮助。</p>
 <p>噪声谱密度要转换为实际电压值，需要对频率作积分。如果指定了计算的噪声带宽B的话，也可以直接使用下式计算出噪声电压真有效值:</p>
 <p><span class="math display">\[
 V_{Noise} = \sqrt{4kTBR} \ \ (V)
 \]</span></p>
-<p>比如上面说过一个1k电阻的电压噪声谱密度是 <span class="math inline">\(4nV/\sqrt{Hz}\)</span>，如果我们计算的噪声带宽是10kHz，那么乘以 <span class="math inline">\(\sqrt{10^4}=100\)</span>，就可以计算出一个1k电阻在10kHz带宽内产生的噪声电压真有效值为400nVrms。</p>
+<p>比如上面说过一个1k电阻的电压噪声谱密度是 <span
+class="math inline">\(4nV/\sqrt{Hz}\)</span>，如果我们计算的噪声带宽是10kHz，那么乘以
+<span
+class="math inline">\(\sqrt{10^4}=100\)</span>，就可以计算出一个1k电阻在10kHz带宽内产生的噪声电压真有效值为400nVrms。</p>
 <h1 id="超越噪声">超越噪声</h1>
-<p>可是很不幸的是，没有理想的元器件。实际生产的电阻器由于生产工艺、材料特性以及各种其他因素导致电阻器的噪声密度谱曲线并不是理想的一马平川(图中紫色曲线)。在极低频区域，电阻中也会存在1/f噪声，这些意料之外的多出来的噪声被视作 <strong>超越噪声</strong>。</p>
+<p>可是很不幸的是，没有理想的元器件。实际生产的电阻器由于生产工艺、材料特性以及各种其他因素导致电阻器的噪声密度谱曲线并不是理想的一马平川(图中紫色曲线)。在极低频区域，电阻中也会存在1/f噪声，这些意料之外的多出来的噪声被视作
+<strong>超越噪声</strong>。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/exceeding_noise.png"  border="0"/></p>
 </center>
@@ -311,7 +325,11 @@ V_{Noise} = \sqrt{4kTBR} \ \ (V)
 <p>简单的电压噪声模型</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/v_noise.png"  border="0"/></p>
 </center>
-<p>OpAmp的输入电压噪声以噪声谱密度表示,单位通常是 <span class="math inline">\(nv/\sqrt{Hz}\)</span>。这个参数通常会标注在器件的数据手册中，其大小因器件而异。通常所说的低噪声运算放大器的输入电压噪声密度在 <span class="math inline">\(10nV/\sqrt{Hz}\)</span> 以下，最低的能做到 <span class="math inline">\(0.9nV/\sqrt{Hz}\)</span>。而通用运放的噪声可能要大得多，10几甚至几十都是有可能的。但总的来说，现代OpAmp的电压噪声水平基本在这个数量级上，不会有很大的跨度。</p>
+<p>OpAmp的输入电压噪声以噪声谱密度表示,单位通常是 <span
+class="math inline">\(nv/\sqrt{Hz}\)</span>。这个参数通常会标注在器件的数据手册中，其大小因器件而异。通常所说的低噪声运算放大器的输入电压噪声密度在
+<span class="math inline">\(10nV/\sqrt{Hz}\)</span> 以下，最低的能做到
+<span
+class="math inline">\(0.9nV/\sqrt{Hz}\)</span>。而通用运放的噪声可能要大得多，10几甚至几十都是有可能的。但总的来说，现代OpAmp的电压噪声水平基本在这个数量级上，不会有很大的跨度。</p>
 <p>双极性(BJT)输入级的运放电压噪声往往低于JFET输入级的运放，但其实他们的选择各有利弊，比如JFET输入级具有极高输入阻抗。在工程中这些往往需要权衡:)</p>
 <h2 id="电流噪声">电流噪声</h2>
 <center>
@@ -319,10 +337,17 @@ V_{Noise} = \sqrt{4kTBR} \ \ (V)
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/i_noise.png"  border="0"/></p>
 </center>
 <p>电流噪声的变化范围可就比电压噪声大很多了，甚至能跨数量级(图中所示的0.1fA至10pA)。数据手册中不一定会给出电流噪声值，但在简单的BJT或JFET等器件中却可以计算得出，因为在这类情况下，所有OpAmp输入偏置电流均流入输入结点，电流噪声就是偏置电流的肖特基噪声(或称散粒噪声)。</p>
-<p>散粒噪声的噪声谱密度是<span class="math inline">\(\sqrt{2I_B q} /\sqrt{Hz}\)</span>，其中<span class="math inline">\(I_B\)</span>表示放大器内的输入偏置电流，q表示电子电荷量(<span class="math inline">\(1.6*10^{-19}C\)</span>)。不过在偏置补偿或电流反馈运算放大器中，外部偏置电流是两个内部电流之间的“差值”，因此无法计算出电流噪声。</p>
+<p>散粒噪声的噪声谱密度是<span class="math inline">\(\sqrt{2I_B q}
+/\sqrt{Hz}\)</span>，其中<span
+class="math inline">\(I_B\)</span>表示放大器内的输入偏置电流，q表示电子电荷量(<span
+class="math inline">\(1.6*10^{-19}C\)</span>)。不过在偏置补偿或电流反馈运算放大器中，外部偏置电流是两个内部电流之间的“差值”，因此无法计算出电流噪声。</p>
 <p>只有在OpAmp的偏置电流有流动路径(比如流过接在输入端的电阻)时，才需要考虑电流噪声，因为此时电流噪声会在流过的阻抗上产生电压，等效转换为电压噪声。在运放的输入端保持相对较低的阻抗可以最小化电流噪声对系统噪声的贡献。但阻抗太小，输入电流会过大，所以也需要权衡设计~</p>
 <h2 id="合并上述噪声源">合并上述噪声源</h2>
-<p>在合并前，我们需要了解一点计算规则。<strong>不相关</strong>的噪声电压以 <strong>方和根</strong> 的形式相加，当然对于功率来说，直接照常相加就好。比如说有均方根噪声电压 <span class="math inline">\(V_1,V_2,V_3\)</span>，他们对系统累计的噪声电压贡献是:</p>
+<p>在合并前，我们需要了解一点计算规则。<strong>不相关</strong>的噪声电压以
+<strong>方和根</strong>
+的形式相加，当然对于功率来说，直接照常相加就好。比如说有均方根噪声电压
+<span
+class="math inline">\(V_1,V_2,V_3\)</span>，他们对系统累计的噪声电压贡献是:</p>
 <p><span class="math display">\[
 V_{total} = \sqrt{V_1^2 + V_2^2 + V_3^2}
 \]</span></p>
@@ -349,6 +374,10 @@ NG = 1 + {R_2 \over R_1} \cdots 从B至输出
 \]</span></p>
 <p>分析电路的增益和噪声源，可以得出如下各个独立噪声源的计算表格:</p>
 <table>
+<colgroup>
+<col style="width: 45%" />
+<col style="width: 54%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>噪声源的电压噪声</th>
@@ -361,7 +390,8 @@ NG = 1 + {R_2 \over R_1} \cdots 从B至输出
 <td><span class="math inline">\(NG = 1+{R_2 \over R_1}\)</span></td>
 </tr>
 <tr class="even">
-<td>同相输入电流流入R3产生的电压噪声:<span class="math inline">\(I_{N_+}R_3\)</span></td>
+<td>同相输入电流流入R3产生的电压噪声:<span
+class="math inline">\(I_{N_+}R_3\)</span></td>
 <td><span class="math inline">\(NG = 1+{R_2 \over R_1}\)</span></td>
 </tr>
 <tr class="odd">
@@ -377,32 +407,46 @@ NG = 1 + {R_2 \over R_1} \cdots 从B至输出
 <td>1</td>
 </tr>
 <tr class="even">
-<td>反相输入电流流入R2产生的电压噪声:<span class="math inline">\(I_{N_-}R_2\)</span></td>
+<td>反相输入电流流入R2产生的电压噪声:<span
+class="math inline">\(I_{N_-}R_2\)</span></td>
 <td>1</td>
 </tr>
 </tbody>
 </table>
 <p>然后将上述表格中的各个噪声源所贡献的电压噪声乘以其对应的增益因子，以方和根形式相加，再乘以计算噪声限定的带宽(BandWidth,BW)，即可得到最终的噪声电压均方根值。（如果不乘以带宽，得到的是输出电压噪声谱密度）</p>
 <p><span class="math display">\[
-V_{Noise} = BW \cdot \sqrt{4kTR_3\cdot (1+{R_2\over R_1})^2 + (I_{N_+}R_3)^2\cdot (1+{R_2\over R_1})^2 + \\
-V_N^2\cdot (1+{R_2\over R_1})^2 + 4kTR_1 \cdot {R_2^2 \over R_1^2} + 4kTR_2 + (I_{N_-}R_2)^2} \\
+V_{Noise} = BW \cdot \sqrt{4kTR_3\cdot (1+{R_2\over R_1})^2 +
+(I_{N_+}R_3)^2\cdot (1+{R_2\over R_1})^2 + \\
+V_N^2\cdot (1+{R_2\over R_1})^2 + 4kTR_1 \cdot {R_2^2 \over R_1^2} +
+4kTR_2 + (I_{N_-}R_2)^2} \\
 BW = 1.57\cdot f_{CL}
 \]</span></p>
-<p>其中，带宽BW等于1.57乘以运算放大器的闭环带宽<span class="math inline">\(f_{CL}\)</span>。为什么要乘以1.57呢？</p>
+<p>其中，带宽BW等于1.57乘以运算放大器的闭环带宽<span
+class="math inline">\(f_{CL}\)</span>。为什么要乘以1.57呢？</p>
 <h2 id="等效噪声带宽enb">等效噪声带宽(ENB)</h2>
-<p>我们打断一下计算，中断进入这一小节，让我们看看什么是 <strong>等效噪声带宽(Equivalent Noise BandWidth)</strong>。</p>
-<p>给定一个系统的传输函数 <span class="math inline">\(H(\jmath\omega)\)</span>，其等效噪声带宽定义为:</p>
+<p>我们打断一下计算，中断进入这一小节，让我们看看什么是
+<strong>等效噪声带宽(Equivalent Noise BandWidth)</strong>。</p>
+<p>给定一个系统的传输函数 <span
+class="math inline">\(H(\jmath\omega)\)</span>，其等效噪声带宽定义为:</p>
 <p><span class="math display">\[
-ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 d\omega
+ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over
+H(max)}|^2 d\omega
 \]</span></p>
-<p>其中，<span class="math inline">\(H(max)\)</span>是传输函数<span class="math inline">\(H(\jmath\omega)\)</span>的最大值。看完这个数学公式云里雾里的，还是看图直观一些。</p>
+<p>其中，<span class="math inline">\(H(max)\)</span>是传输函数<span
+class="math inline">\(H(\jmath\omega)\)</span>的最大值。看完这个数学公式云里雾里的，还是看图直观一些。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/enb_figure.png"  border="0"/></p>
 </center>
-<p>一个理想的滤波器的响应是 <strong>"砖墙式"</strong> 的，也就是在截止频率之前的所有频率信号无衰减地通过，截止频率之后的所有频率信号的衰减都是无穷大。从幅频特性曲线来看，它的响应就像一面墙，所以叫 <strong>"brickwall"</strong>。</p>
+<p>一个理想的滤波器的响应是 <strong>"砖墙式"</strong>
+的，也就是在截止频率之前的所有频率信号无衰减地通过，截止频率之后的所有频率信号的衰减都是无穷大。从幅频特性曲线来看，它的响应就像一面墙，所以叫
+<strong>"brickwall"</strong>。</p>
 <p>而实际的滤波器是不可能具有砖墙式的响应的，一个低通滤波器的幅频特性曲线如实线所示，它在截止频率(-3dB频率)之后的增益是缓慢下降的。</p>
-<p>现在我们构建一个虚拟的砖墙式滤波器B，让B的曲线所围成的面积和实际滤波器A的曲线在第一象限与坐标轴围成的面积相等，此时砖墙式滤波器的 <span class="math inline">\(\Delta f\)</span> 的值，就是实际滤波器A的 <strong>等效噪声带宽(ENB)</strong>。</p>
-<p>等效噪声带宽和实际滤波器截止频率<span class="math inline">\(f_{3dB}\)</span>的关系取决于 <strong>传输函数中的极点个数</strong>。一阶系统有一个极点，其换算系数为1.57。这就是之前我们分析的单极点运放噪声模型的噪声等效带宽和运放的闭环带宽之间的乘数关系咯。</p>
+<p>现在我们构建一个虚拟的砖墙式滤波器B，让B的曲线所围成的面积和实际滤波器A的曲线在第一象限与坐标轴围成的面积相等，此时砖墙式滤波器的
+<span class="math inline">\(\Delta f\)</span> 的值，就是实际滤波器A的
+<strong>等效噪声带宽(ENB)</strong>。</p>
+<p>等效噪声带宽和实际滤波器截止频率<span
+class="math inline">\(f_{3dB}\)</span>的关系取决于
+<strong>传输函数中的极点个数</strong>。一阶系统有一个极点，其换算系数为1.57。这就是之前我们分析的单极点运放噪声模型的噪声等效带宽和运放的闭环带宽之间的乘数关系咯。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/pole_enb.png"  border="0"/></p>
 </center>
@@ -414,22 +458,28 @@ ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 
 </ul>
 <p>将滤波器的非理想考虑进来，将"本应衰减完却未衰减"的高频成分能量积分，然后折合到低频处的平均能量水平并依此进行噪声带宽拓展，这样就可以得出等效噪声带宽。详细的数学推导与计算过程请参考附录<code>Equivalent Noise Bandwidth</code>。</p>
 <h2 id="噪声源贡献占比">噪声源贡献占比</h2>
-<p>回到我们的数学表达式上来。可以看到，选用不同的电阻值、不同的电路结构都会对运算放大器的总输出噪声造成影响。有时候运放自身的输入噪声占主导地位，有时又是电阻的热噪声占主导地位，有时又是电流噪声...选择不同的电阻组合和增益将会让噪声反复横跳，所以Be Careful, design with patience.</p>
+<p>回到我们的数学表达式上来。可以看到，选用不同的电阻值、不同的电路结构都会对运算放大器的总输出噪声造成影响。有时候运放自身的输入噪声占主导地位，有时又是电阻的热噪声占主导地位，有时又是电流噪声...选择不同的电阻组合和增益将会让噪声反复横跳，所以Be
+Careful, design with patience.</p>
 <h1 id="利用仿真工具对噪声进行仿真">利用仿真工具对噪声进行仿真</h1>
 <p>单极点运算放大器的模型非常简单，看上去也便于计算。然而对于稍微复杂一点的电路，再想要手算噪声参数就困难多了。<br />
 好在我们有计算机辅助设计（CAD）工具。对于电路来说，spice是EE必不可少的趁手利器~。🐟用小巧强大的LTSpice搭建了一个仿真模型，对一个运算放大器的噪声进行仿真。</p>
-<p>选用的运算放大器是Linear Technology生产的<a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/1028fd.pdf">LT1028</a>超低噪声运算放大器，其电压噪声密度典型值在1kHz时为 <span class="math inline">\(1nV/\sqrt{Hz}\)</span>，算得上是最顶级的低噪声运放之一了。</p>
+<p>选用的运算放大器是Linear Technology生产的<a
+target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/1028fd.pdf">LT1028</a>超低噪声运算放大器，其电压噪声密度典型值在1kHz时为
+<span
+class="math inline">\(1nV/\sqrt{Hz}\)</span>，算得上是最顶级的低噪声运放之一了。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/lt1128_noise_plot.png"  border="0"/></p>
 </center>
 <p>然后我搭建了一个增益为10（噪声增益为11）的反相放大器电路，电阻值故意选的hin大，就是为了引入更多的噪声XD<br />
-编辑仿真命令(Edit Simulation cmd)，选择Noise分析，选择源和输出信号，配置扫描参数。spice语法为:</p>
+编辑仿真命令(Edit Simulation
+cmd)，选择Noise分析，选择源和输出信号，配置扫描参数。spice语法为:</p>
 <pre class="line-numbers language-spice" data-language="spice"><code class="language-spice">.noise V(&lt;out&gt;[,&lt;ref&gt;]) &lt;src&gt; &lt;oct,dec,lin&gt; &lt;Npoints&gt; &lt;StartFreq&gt; &lt;EndFreq&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>编辑完后，仿真语句会出现在schematic上，请注意<strong>输出源不能直接写标签名字，要用V()</strong>括起来，具体可以看我的电路图</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/lt1128_1.png"  border="0"/></p>
 </center>
-<p>运行仿真，点一下输出节点即可看到输出电压噪声密度曲线。可以看到，在此电路配置下，在1kHz-100kHz频段内的输出电压噪声密度达到了 <span class="math inline">\(116.7nV/\sqrt{Hz}\)</span>。</p>
+<p>运行仿真，点一下输出节点即可看到输出电压噪声密度曲线。可以看到，在此电路配置下，在1kHz-100kHz频段内的输出电压噪声密度达到了
+<span class="math inline">\(116.7nV/\sqrt{Hz}\)</span>。</p>
 <p>鸭类鸭类，太大了。我们来减少一个噪声源，再看看输出噪声如何。把同相输入端的接地电阻R6咔了，再跑一次:</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/lt1128_2.png"  border="0"/></p>
@@ -438,7 +488,10 @@ ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/lt1128_3.png"  border="0"/></p>
 </center>
-<p>将电阻缩小了20倍，1kHz-100kHz频段内输出噪声谱密度直接降到了 <span class="math inline">\(14nV/\sqrt{Hz}\)</span>的水准。如果除以电路增益10，折合输入噪声就是 <span class="math inline">\(1.4nV/\sqrt{Hz}\)</span>，仅仅比运算放大器自身的输入电压噪声密度高出一点点，现在才能较好发挥这颗低噪声运算放大器的性能了~</p>
+<p>将电阻缩小了20倍，1kHz-100kHz频段内输出噪声谱密度直接降到了 <span
+class="math inline">\(14nV/\sqrt{Hz}\)</span>的水准。如果除以电路增益10，折合输入噪声就是
+<span
+class="math inline">\(1.4nV/\sqrt{Hz}\)</span>，仅仅比运算放大器自身的输入电压噪声密度高出一点点，现在才能较好发挥这颗低噪声运算放大器的性能了~</p>
 <p>同时还有个小tip，按住ctrl键鼠标左键单击曲线图的标题(V(onoise))，可以得到在所展示的积分带宽内的电压噪声真有效值（相当于软件帮你把电压噪声谱密度对频率积分值给算出来咯）。</p>
 <p>可以看到，针对上图的电路配置，该电路在0.1Hz至10MHz内的输出噪声真有效值为30.582uVrms，非常惊艳的性能。</p>
 <center>
@@ -450,7 +503,9 @@ ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E8%BF%90%E7%AE%97%E6%94%BE%E5%A4%A7%E5%99%A8%E5%99%AA%E5%A3%B0%E5%88%86%E6%9E%90/lt1128_2_pole.png"  border="0"/></p>
 </center>
-<p>在500Ω反馈电阻上并联一个10nF电容，它们所构成的低通截止点为<span class="math inline">\({1\over 2\pi RC} = 31.83kHz\)</span>。从输出电压噪声谱密度曲线中找到该频率点，同时与通带内的噪声电压密度所比较，其比值是0.707倍关系(-3dB)，符合计算结果(无视极低频段的超越噪声哦)。</p>
+<p>在500Ω反馈电阻上并联一个10nF电容，它们所构成的低通截止点为<span
+class="math inline">\({1\over 2\pi RC} =
+31.83kHz\)</span>。从输出电压噪声谱密度曲线中找到该频率点，同时与通带内的噪声电压密度所比较，其比值是0.707倍关系(-3dB)，符合计算结果(无视极低频段的超越噪声哦)。</p>
 <h1 id="噪声的统计性质">噪声的统计性质</h1>
 <p>我们常常有一个困惑，如何将电压的峰峰值与真有效值对应起来。但实际上它们并没有确定的换算公式，比如正弦波的真有效值是峰峰值除以0.707(2分之根号2)，或者峰峰值是真有效值乘以1.414(根号2)，但是这个换算关系对于其他的波形就很难适用了。</p>
 <p>其背后的原因是，真有效值反映了信号能量的大小，如果想要精确计算一个周期信号的真有效值，在已知其数学表达式的情况下可以用积分的方式求解。但更多的信号是无规律可言的，即使采用傅里叶分析技术去测量真有效值，也难以做到高精度。真有效值测量又是一个大坑咯，不展开讲了，不然这篇文章又要拖更了...</p>
@@ -461,21 +516,36 @@ ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 
 <p>最常用的乘积因数是6.6，即电压噪声瞬时值99.9%的时间内不会超过6.6倍电压噪声真有效值(rms)。所以如果你测量到一个白噪声的峰峰值为6.6Vpp，那么它的真有效值大约就是1.0Vrms。</p>
 <h1 id="参考附录">参考附录</h1>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-047_cn.pdf">Mini-Tutorial 47:运算放大器噪声</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-047_cn.pdf">Mini-Tutorial
+47:运算放大器噪声</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-048_cn.pdf">Mini-Tutorial 48:运算放大器噪声关系：1/f噪声、均方根(RMS)噪声与等效噪声带宽</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-048_cn.pdf">Mini-Tutorial
+48:运算放大器噪声关系：1/f噪声、均方根(RMS)噪声与等效噪声带宽</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-049_cn.pdf">Mini-Tutorial 49:单极点系统的运算放大器总输出噪声计算</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-049_cn.pdf">Mini-Tutorial
+49:单极点系统的运算放大器总输出噪声计算</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-050_cn.pdf">Mini-Tutorial 50:二阶系统的运算放大器总输出噪声计算</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/cn/training-seminars/tutorials/mt-050_cn.pdf">Mini-Tutorial
+50:二阶系统的运算放大器总输出噪声计算</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.k-state.edu/edl/docs/pubs/technical-resources/Technote1.pdf">Equivalent Noise Bandwidth</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.k-state.edu/edl/docs/pubs/technical-resources/Technote1.pdf">Equivalent
+Noise Bandwidth</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/1028fd.pdf">LT1028 datasheet</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/en/technical-documentation/data-sheets/1028fd.pdf">LT1028
+datasheet</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.allaboutcircuits.com/technical-articles/Noise-Analysis-Using-LTspice-Tutorial/">LTSpice Noise Analyze</a><br />
+<li><a
+target="_blank" rel="noopener" href="https://www.allaboutcircuits.com/technical-articles/Noise-Analysis-Using-LTspice-Tutorial/">LTSpice
+Noise Analyze</a><br />
 </li>
-<li><a target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">魔法电路-电路中的噪声</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/noise-in-circuits/">魔法电路-电路中的噪声</a></li>
 </ul>
 
     </div>
@@ -597,7 +667,7 @@ ENB = \Delta f = {1\over 2\pi} \int_0^\infty |{H(\jmath\omega) \over H(max)}|^2 
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

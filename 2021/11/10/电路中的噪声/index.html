@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="最近🐟在精密测量的巨坑中打滚，最近在做的 EmoeMetrology项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接 噪声定义 噪声（Noise）在电子学中指，信号在传输过程中会受到一些 外在能量所产生信号（如杂散电磁场）的干扰 ，这些能量即噪声。噪声通常会造成信号的失真">
+  <meta name="description" content="最近🐟在精密测量的巨坑中打滚，最近在做的 EmoeMetrology项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接 噪声定义 噪声（Noise）在电子学中指，信号在传输过程中会受到一些 外在能量所产生信号（如杂散电磁场）的干扰 ，这些能量即噪声。噪声通常会造成信号的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="电路中的噪声">
 <meta property="og:url" content="https://floydfish.xyz/2021/11/10/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="最近🐟在精密测量的巨坑中打滚，最近在做的 EmoeMetrology项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接 噪声定义 噪声（Noise）在电子学中指，信号在传输过程中会受到一些 外在能量所产生信号（如杂散电磁场）的干扰 ，这些能量即噪声。噪声通常会造成信号的失真">
+<meta property="og:description" content="最近🐟在精密测量的巨坑中打滚，最近在做的 EmoeMetrology项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接 噪声定义 噪声（Noise）在电子学中指，信号在传输过程中会受到一些 外在能量所产生信号（如杂散电磁场）的干扰 ，这些能量即噪声。噪声通常会造成信号的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/2.png">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/1.png">
@@ -149,7 +149,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -263,9 +263,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近🐟在精密测量的巨坑中打滚，最近在做的 <a target="_blank" rel="noopener" href="https://www.emoe.xyz/emoe-metrology-design/">EmoeMetrology</a>项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接</p>
+        <p>最近🐟在精密测量的巨坑中打滚，最近在做的 <a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/emoe-metrology-design/">EmoeMetrology</a>项目中，我遇到了疑似关于闪烁噪声的问题，遂作此文，整理一些有关于电路中的噪声的问题，以及消除噪声的方法。多数资料来源于Wiki，以及ADI的技术文档。在文章末尾会贴出链接</p>
 <h1 id="噪声定义">噪声定义</h1>
-<p>噪声（Noise）在电子学中指，信号在传输过程中会受到一些 <strong>外在能量所产生信号（如杂散电磁场）的干扰</strong> ，这些能量即噪声。噪声通常会造成信号的失真。其来源除了来自系统外部，亦有可能由接收系统本身产生。噪声的强度通常都是与信号带宽成正比，所以当信号带宽越宽，噪声的干扰也会越大。所以在评估噪声强度或是系统抵抗噪声能力的数据，是以信号强度对噪声强度的比例为依据，此即 <strong>信噪比（Signal to Noise Ratio, SNR）</strong>。</p>
+<p>噪声（Noise）在电子学中指，信号在传输过程中会受到一些
+<strong>外在能量所产生信号（如杂散电磁场）的干扰</strong>
+，这些能量即噪声。噪声通常会造成信号的失真。其来源除了来自系统外部，亦有可能由接收系统本身产生。噪声的强度通常都是与信号带宽成正比，所以当信号带宽越宽，噪声的干扰也会越大。所以在评估噪声强度或是系统抵抗噪声能力的数据，是以信号强度对噪声强度的比例为依据，此即
+<strong>信噪比（Signal to Noise Ratio, SNR）</strong>。</p>
 <p>噪声从来源上分类可分为外部噪声和内部噪声两种。外部噪声主要的来源是:</p>
 <ul>
 <li>大气层<br />
@@ -274,20 +278,27 @@
 </li>
 <li>人为噪声</li>
 </ul>
-<p>而内部的噪声主要是 <strong>热噪声（Thermal Noise）</strong>。这种噪声是电阻性元件内部 <strong>电子随机移动（电流是宏观效应，即"电子的定向移动"，但在微观下也会存在不遵循这一趋势的部分电子，即为噪声）</strong> 所产生的，它的强度和电阻的环境绝对温度成正比。</p>
+<p>而内部的噪声主要是 <strong>热噪声（Thermal
+Noise）</strong>。这种噪声是电阻性元件内部
+<strong>电子随机移动（电流是宏观效应，即"电子的定向移动"，但在微观下也会存在不遵循这一趋势的部分电子，即为噪声）</strong>
+所产生的，它的强度和电阻的环境绝对温度成正比。</p>
 <span id="more"></span>
 <h1 id="噪声的特性与分类">噪声的特性与分类</h1>
 <p>噪声虽作为一个随机信号，仍然具有统计学上的特征属性。功率谱密度（功率的频谱分布）即是噪声的特征之一，从而人们可以通过它来区分不同类型的噪声。在一些噪声扮演着重要角色的研究领域中（例如声学、电子工程和物理），这种噪声分类方法通常会给予不同的功率谱密度一个不同的“色彩”称谓，也就是说不同种类的噪声会被命名为不同的颜色。但是在不同的专业领域间，或许会有不同的术语称谓。</p>
 <p>本文主要讲讲电子学领域中的噪声以及对应的颜色。但在这之前我们先了解一下各类不同噪声的统计特性，然后再去关注工程中实际的噪声特性。（不然很容易弄混淆）</p>
 <h2 id="白噪声">1.白噪声</h2>
-<p>白噪声的名称来自 <strong>白光</strong>，表示在全频域内 <strong>单位频域下都分布有相同的能量密度</strong>，在线性空间内它具有平坦的频谱。换句话说，一定频域内的白噪声在其中任意给定的带宽内都具有相等的功率（功率谱密度的定义）。例如在40赫兹至60赫兹频域内的白噪声具有和4000赫兹至4020赫兹频域内相同的功率。</p>
-<p>需要注意的是，具有无限长带宽的白噪声只是一个理论上的概念，<strong>因为在任意频率上都存在相等的功率会导致最终的噪声总功率为无穷大</strong>。在实际应用中的白噪声是指在某一特定频域内的谱密度函数是平坦的噪声，一般称之为 <strong>带限白噪声（Band-Limited）</strong>。</p>
+<p>白噪声的名称来自 <strong>白光</strong>，表示在全频域内
+<strong>单位频域下都分布有相同的能量密度</strong>，在线性空间内它具有平坦的频谱。换句话说，一定频域内的白噪声在其中任意给定的带宽内都具有相等的功率（功率谱密度的定义）。例如在40赫兹至60赫兹频域内的白噪声具有和4000赫兹至4020赫兹频域内相同的功率。</p>
+<p>需要注意的是，具有无限长带宽的白噪声只是一个理论上的概念，<strong>因为在任意频率上都存在相等的功率会导致最终的噪声总功率为无穷大</strong>。在实际应用中的白噪声是指在某一特定频域内的谱密度函数是平坦的噪声，一般称之为
+<strong>带限白噪声（Band-Limited）</strong>。</p>
 <center>
 <p>白噪声的频谱，一马平川。</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/2.png" alt="White Noise Spectrum" border="0"/></p>
 </center>
 <h2 id="闪烁噪声粉红噪声">2.闪烁噪声（粉红噪声）</h2>
-<p>闪烁噪声又称 <strong>1/f</strong> 噪声、 <strong>粉红噪声（粉红噪声的名称源于这种功率谱下的可见光视觉颜色为粉色。）</strong>，所有的半导体器件在工作时都会有闪烁噪声，它是 <strong>由于材料而产生的一种基本现象</strong>，在一个特定的噪声拐点下，噪声密度将呈指数增加，而且在低频时将非常大。</p>
+<p>闪烁噪声又称 <strong>1/f</strong> 噪声、
+<strong>粉红噪声（粉红噪声的名称源于这种功率谱下的可见光视觉颜色为粉色。）</strong>，所有的半导体器件在工作时都会有闪烁噪声，它是
+<strong>由于材料而产生的一种基本现象</strong>，在一个特定的噪声拐点下，噪声密度将呈指数增加，而且在低频时将非常大。</p>
 <p>更广义的，1/f噪声通常宽泛地指任何一种带有如下所示的功率谱密度的噪声:</p>
 <p><span class="math display">\[
 S(f) \varpropto 1/f^\alpha \\
@@ -300,7 +311,9 @@ f为频率，且 0 &lt; \alpha &lt; 2,\alpha一般趋近于1
 <h2 id="布朗噪声红噪声棕色噪声">3.布朗噪声（红噪声&amp;棕色噪声）</h2>
 <p>布朗噪音又称作棕色噪音或红噪音，是由布朗运动造成的，又称作随机移动噪音。</p>
 <p>因此，Brown这个词正确来说是指称发现布朗运动的罗伯特·布朗，<strong>而非来自颜色的棕色（真有趣）</strong>；至于红噪音的名词则类比于白噪音的由来，因为此种噪音在相当于可见光谱的红光端具有较高的能量强度故得名。</p>
-<p>布朗噪音的能量谱密度与其频率的平方成反比，意即该噪音在较低频时有较大的能量， <strong>甚至比粉红噪音还多！</strong>。 当频率上升两倍时，布朗噪音的能量变衰减6分贝(也就每当频率增加一个数量级，能量变衰减20分贝)。</p>
+<p>布朗噪音的能量谱密度与其频率的平方成反比，意即该噪音在较低频时有较大的能量，
+<strong>甚至比粉红噪音还多！</strong>。
+当频率上升两倍时，布朗噪音的能量变衰减6分贝(也就每当频率增加一个数量级，能量变衰减20分贝)。</p>
 <center>
 <p>布朗噪声的频谱图，越往高频衰减得越快（不过这图倒是看不太出来）</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/3.png" alt="Brown Noise Spectrum" border="0"/></p>
@@ -309,7 +322,8 @@ f为频率，且 0 &lt; \alpha &lt; 2,\alpha一般趋近于1
 <h1 id="工程中的噪声">工程中的噪声</h1>
 <p>上述有色噪声都是从数学和统计学角度出发去研究噪声的特性的，在实际的工程中，会有更加奇怪、更加令人捉摸不透的噪声（毕竟理论终归是理论，总会有欠缺的）。我们来盘点一下工程中的噪声</p>
 <h2 id="热噪声">1.热噪声</h2>
-<p>热噪声的学名叫 <strong>约翰逊-奈奎斯特噪声（Johnson-Nyquist Noise）</strong>，也可称作约翰逊噪声、奈奎斯特噪声。热噪声是由于热搅动导致导体内部的电荷载体达到平衡状态时的电子噪声，<strong>与所施加的电压无关</strong>。</p>
+<p>热噪声的学名叫 <strong>约翰逊-奈奎斯特噪声（Johnson-Nyquist
+Noise）</strong>，也可称作约翰逊噪声、奈奎斯特噪声。热噪声是由于热搅动导致导体内部的电荷载体达到平衡状态时的电子噪声，<strong>与所施加的电压无关</strong>。</p>
 <p>一个理想电阻器的热噪声接近白噪声——也就是功率谱密度在整个频谱范围内几乎是不间断的（然而在极高频的时候并不如此）。限定噪声的带宽时，热噪声近似为高斯分布。</p>
 <h3 id="热噪声电压与功率">热噪声电压与功率</h3>
 <p>单边功率谱密度（或电压变化（均方）带宽每Hz）由下式给出:</p>
@@ -322,7 +336,9 @@ R是电阻值（欧姆）
 <p>比如，一个1k的电阻器在室温以及10kHz带宽下的RMS噪声电压是400nV。<br />
 还有一个有用的经验法则——50Ω在室温下及1Hz带宽下对应于1nV的噪声。</p>
 <h2 id="散粒噪声">2.散粒噪声</h2>
-<p>散粒噪声是一种实验观测中的读出噪声，当观测中数量有限的携带能量的粒子（例如电路中的电子或光学仪器中的光子） <strong>数量少</strong> 到能够引发数据读取中出现可观测到的统计涨落，这种读出的统计涨落被称作散粒噪声。这种噪声在电子学、通信和基础物理领域是相当重要的概念。这种噪声的强度随着平均电流强度或平均光强度增加，但是由于电流强度或光强度的增加会使信号本身的强度增加相对散粒噪声的增加更快，<strong>增加电流强度或光强度实际是提升了信噪比</strong>。这也就是为什么测量、观测微弱信号是如此困难了。</p>
+<p>散粒噪声是一种实验观测中的读出噪声，当观测中数量有限的携带能量的粒子（例如电路中的电子或光学仪器中的光子）
+<strong>数量少</strong>
+到能够引发数据读取中出现可观测到的统计涨落，这种读出的统计涨落被称作散粒噪声。这种噪声在电子学、通信和基础物理领域是相当重要的概念。这种噪声的强度随着平均电流强度或平均光强度增加，但是由于电流强度或光强度的增加会使信号本身的强度增加相对散粒噪声的增加更快，<strong>增加电流强度或光强度实际是提升了信噪比</strong>。这也就是为什么测量、观测微弱信号是如此困难了。</p>
 <p>散粒噪声的本质在于，通过测量到的电流强度或光强度能够给出收集到的电子或光子的平均数量，但无法得知任意时刻实际收集到的电子或光子数量。实际的数量可能会高于、低于或相当于平均的数量，其分布按平均值遵循泊松分布。由于泊松分布在大量粒子数时趋向于正态分布，在大量粒子存在时信号中的散粒噪声会呈现正态分布。散粒噪声的标准差此时等于平均粒子数的平方根，信噪比从而为</p>
 <p><span class="math display">\[
 SNR = {N \over {\sqrt N} } = \sqrt N \\
@@ -332,13 +348,17 @@ N是采集到的平均粒子数，N很大时信噪比也会很大。
 <p>这就引出了一个很有意思的结论，可以解释摄影中的一个问题。<br />
 在正常日光下拍摄和夜景拍摄，使用同样的ISO，夜景的噪点明显地会更高。这就是散粒噪声的一种体现咯</p>
 <h2 id="闪烁噪声粉红噪声-1">3.闪烁噪声（粉红噪声）</h2>
-<p><strong>1/f</strong> 噪声通常是相对于直流电压或电流，因电阻变动而产生的电压或电流变动。就算在没有直流电流流经，电阻器中亦存在因温度变化产生的闪烁噪声。锰镍铜合金则是例外，因为其电阻率的温度系数非常小。在电子电路中，闪烁噪声主要分布在低频，高频噪声大多由白色噪声贡献。然而在震荡器当中，低频噪声会被混合至靠近载波的高频段，产生相位噪声。</p>
-<p>闪烁噪声可由频界频率 Fc 描述其性质，代表由闪烁噪声支配的低频段与由白色噪声支配的高频段之交界处。以常见的半导体元件来说，MOSFET的临界频率相对较高(可高达数GHz)，而JFET与BJT则较低(在2 kHz以下)。此类噪声属于高斯分布，且在时域上具可反转性，产生原因大致上可归因于FET与电阻器中的线性机制，以及BJT中的非线性机制。</p>
+<p><strong>1/f</strong>
+噪声通常是相对于直流电压或电流，因电阻变动而产生的电压或电流变动。就算在没有直流电流流经，电阻器中亦存在因温度变化产生的闪烁噪声。锰镍铜合金则是例外，因为其电阻率的温度系数非常小。在电子电路中，闪烁噪声主要分布在低频，高频噪声大多由白色噪声贡献。然而在震荡器当中，低频噪声会被混合至靠近载波的高频段，产生相位噪声。</p>
+<p>闪烁噪声可由频界频率 Fc
+描述其性质，代表由闪烁噪声支配的低频段与由白色噪声支配的高频段之交界处。以常见的半导体元件来说，MOSFET的临界频率相对较高(可高达数GHz)，而JFET与BJT则较低(在2
+kHz以下)。此类噪声属于高斯分布，且在时域上具可反转性，产生原因大致上可归因于FET与电阻器中的线性机制，以及BJT中的非线性机制。</p>
 <center>
 <p>功率谱密度中闪烁噪声与热噪声的交界</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/4.png" alt="Fc in Flickering Noise" border="0"/></p>
 </center>
-<p>闪烁噪声也容易出现在碳膜电阻与薄膜电阻 ，此时它们被视为超越噪声，也就是它们使得整体噪声量总和超越了所有种类电阻器都具有的温度噪声。相反地，绕线电阻则存在最少的闪烁噪声。<strong>既然闪烁噪声是基于和直流电流的比较，当电流非常低时，温度噪声（也就是热噪声）将成为电阻器噪声的主要来源</strong>，也就是使用绕线电阻并无法在噪声上获得太多改善。</p>
+<p>闪烁噪声也容易出现在碳膜电阻与薄膜电阻
+，此时它们被视为超越噪声，也就是它们使得整体噪声量总和超越了所有种类电阻器都具有的温度噪声。相反地，绕线电阻则存在最少的闪烁噪声。<strong>既然闪烁噪声是基于和直流电流的比较，当电流非常低时，温度噪声（也就是热噪声）将成为电阻器噪声的主要来源</strong>，也就是使用绕线电阻并无法在噪声上获得太多改善。</p>
 <h1 id="来点具象化的">来点具象化的</h1>
 <p>我们就拿电路中最常用的模拟器件——运算放大器为例子，分析一下它的噪声行为。</p>
 <p>本节翻译自ADI的技术文章-MT048，我发现Wiki上的那张图就是出自这里（大概）</p>
@@ -347,18 +367,27 @@ N是采集到的平均粒子数，N很大时信噪比也会很大。
 </center>
 <h3 id="f-转折频率">1/f 转折频率</h3>
 <p>在高频时，运放的噪声趋近于白噪声（因为1/f噪声的特性，频率越高其谱密度越小），这对于绝大多数运放都适用。但是在低频段，噪声功率谱密度以3dB对数上升，就如上图所示。这个区间的噪声谱密度与频率F成反比，所以电压噪声密度是和频率F的平方根成反比的（功率与电压成平方关系）。</p>
-<p>因为这个原因，这一段区间内的噪声被称为1/f噪声（ADI说某些老旧教材仍称其为flicker noise，看来这个说法已经过时了。）</p>
-<p>这个噪声开始增加的频率点被称为 <strong>1/f 转折频率（Fc）</strong>，很显然的这个值越低越好。对于同一个运放来说，它的电压、电流 1/f转折频率不一定是一样的。一个电流反馈的运放可能有3个1/f转折频率:电压一个，反相输入电流一个、同相输入电流一个。</p>
+<p>因为这个原因，这一段区间内的噪声被称为1/f噪声（ADI说某些老旧教材仍称其为flicker
+noise，看来这个说法已经过时了。）</p>
+<p>这个噪声开始增加的频率点被称为 <strong>1/f
+转折频率（Fc）</strong>，很显然的这个值越低越好。对于同一个运放来说，它的电压、电流
+1/f转折频率不一定是一样的。一个电流反馈的运放可能有3个1/f转折频率:电压一个，反相输入电流一个、同相输入电流一个。</p>
 <p>描述1/f噪声的通用公式（电压、电流均适用）如下:</p>
 <p><span class="math display">\[
 e_n,i_n, = k {\sqrt F_c} {\sqrt{1\over f}} \\
 k是白噪声电压或电流的幅度，F_c是 {1\over f} 转折频率
 \]</span></p>
-<p>最好的低频低噪声放大器的 1 1Hz到10Hz，使用JFET的器件和更通用的器件可能会到100Hz。高速运放为了在高频区域的表现，通常会舍弃部分低频性能，可能会导致他们的 1/f 转折频率只有1kHz到2kHz。虽然他们通常用于宽带应用，而且通常是高频下，所以这些低频性能不是那么的重要。但当这些高速器件用在低频时（比如音频），可能会有严重的性能恶化。</p>
+<p>最好的低频低噪声放大器的 1折频率约为
+1Hz到10Hz，使用JFET的器件和更通用的器件可能会到100Hz。高速运放为了在高频区域的表现，通常会舍弃部分低频性能，可能会导致他们的
+1/f
+转折频率只有1kHz到2kHz。虽然他们通常用于宽带应用，而且通常是高频下，所以这些低频性能不是那么的重要。但当这些高速器件用在低频时（比如音频），可能会有严重的性能恶化。</p>
 <h3 id="rms噪声计算">RMS噪声计算</h3>
-<p>噪声谱密度是频率的函数，为了得到 <strong>RMS（Root Mean Square，均方根）</strong> 噪声，我们需要对噪声功率谱密度在整个带宽上（这个带宽是多少，取决于我们对哪些部分感兴趣，哪些部分可以被忽略）作频率的积分:</p>
+<p>噪声谱密度是频率的函数，为了得到 <strong>RMS（Root Mean
+Square，均方根）</strong>
+噪声，我们需要对噪声功率谱密度在整个带宽上（这个带宽是多少，取决于我们对哪些部分感兴趣，哪些部分可以被忽略）作频率的积分:</p>
 <p><span class="math display">\[
-V_{n, rms} (F_L, F_C) = V_{nw} \sqrt{F_C} \sqrt{ \int_{F_L}^{F_C} {1\over f}df} = \\
+V_{n, rms} (F_L, F_C) = V_{nw} \sqrt{F_C} \sqrt{ \int_{F_L}^{F_C}
+{1\over f}df} = \\
 v_{nw} \sqrt{F_C} \ln[{F_C\over F_L}]   \\
 v_{nw}是在&#39;白噪声区间&#39;的电压噪声谱密度 \\
 F_L是在 1/f 区间内我们感兴趣的最低频率，F_C是 1/f 转折频率
@@ -369,24 +398,34 @@ V_{n,rms}(F_C, F_H)=V_{nw} \sqrt{F_H - F_C}
 \]</span></p>
 <p>然后可以把上面2个式子加起来，就能得到从FL到FH频率段内总的RMS噪声:</p>
 <p><span class="math display">\[
-V_{n, rms}(F_L, F_H) = V_{nw} \sqrt{F_C \ln [{F_C \over F_H}] + (F_H - F_C)}
+V_{n, rms}(F_L, F_H) = V_{nw} \sqrt{F_C \ln [{F_C \over F_H}] + (F_H -
+F_C)}
 \]</span></p>
-<p>在绝大多数情境下，低频峰峰值噪声通常指 <strong>0.1Hz到10Hz</strong> 带宽内的噪声。如何测量呢？很简单，用一个0.1Hz到10Hz的带通滤波器，将这一段的噪声提取出来再放大就可以测量了。以下是测试OP213运放的1/f噪声的测试样例。</p>
+<p>在绝大多数情境下，低频峰峰值噪声通常指 <strong>0.1Hz到10Hz</strong>
+带宽内的噪声。如何测量呢？很简单，用一个0.1Hz到10Hz的带通滤波器，将这一段的噪声提取出来再放大就可以测量了。以下是测试OP213运放的1/f噪声的测试样例。</p>
 <center>
-<p>"所谓的噪声啊，就是噪声吧（雾" <img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/6.jpg" alt="OP213 0.1Hz~10Hz 1/f noise wavefrom" border="0"/></p>
+<p>"所谓的噪声啊，就是噪声吧（雾"
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/6.jpg" alt="OP213 0.1Hz~10Hz 1/f noise wavefrom" border="0"/></p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/7.jpg" alt="OP213 0.1Hz~10Hz 1/f noise test figure" border="0"/></p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/8.jpg" alt="OP213 0.1Hz~10Hz 1/f noise calculation" border="0"/></p>
 </center>
 <h1 id="消除1f噪声的技术">消除1/f噪声的技术</h1>
 <p>本节参考了ADI的模拟对话文章——如何消除或降低1/f噪声。</p>
-<p>可用的一种方法是 <strong>斩波（CHOPPING）稳定技术</strong>。这是一种降低放大器失调电压的技术，因为1/f噪声是接近直流的低频噪声，所以这种技术也能有效降低1/f噪声。</p>
-<p>斩波稳定的工作原理如下: 对输入级的信号进行交替或斩波，然后再对输出级的信号进行斩波，这相当于利用正弦波进行调制。（是不是有点眼熟？像不像之前我发的另一篇文章 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/lock-in-amplifier-design/">锁定放大器</a></strong>？）</p>
+<p>可用的一种方法是
+<strong>斩波（CHOPPING）稳定技术</strong>。这是一种降低放大器失调电压的技术，因为1/f噪声是接近直流的低频噪声，所以这种技术也能有效降低1/f噪声。</p>
+<p>斩波稳定的工作原理如下:
+对输入级的信号进行交替或斩波，然后再对输出级的信号进行斩波，这相当于利用正弦波进行调制。（是不是有点眼熟？像不像之前我发的另一篇文章
+<strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/lock-in-amplifier-design/">锁定放大器</a></strong>？）</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/10.png" alt="Chopping Amplifier" border="0"/></p>
 </center>
-<p>参考上面的ADA4522架构框图，输入信号在CHOP-IN级调制到斩波频率，在CHOP-OUT级，输入信号同步解调回到原始频率，同时放大器输入级的失调和1/f噪声会被调制到斩波频率。除了降低初始失调电压之外，失调相对于共模电压的变化也会缩小，从而获得非常好的直流线性度和高共模抑制比（CMRR）。斩波还会降低失调电压温漂。因此采用斩波技术的放大器常被称为 <strong>零漂移（Zero-Offset）放大器</strong> 。</p>
-<p>但需要注意一点，这种放大器 <strong>仅仅消除了放大器自身的 1/f 噪声，任何其他来源的 1/f 噪声会不受影响地通过</strong>。</p>
-<p>使用斩波技术的缺点也是显而易见的，它会将开关伪像引入输出并提高输入偏置电流，在示波器上查看时可以看到放大器输出上的毛刺和纹波，用频谱分析仪查看时可以在噪声频谱密度中看到噪声尖峰，这些高频能量是在CHOPPING的时候混入信号的。不过ADI也有最新的技术去最大化减小这种开关伪像。就是图中的 <code>Offset and Ripple Correction Loop</code>。</p>
+<p>参考上面的ADA4522架构框图，输入信号在CHOP-IN级调制到斩波频率，在CHOP-OUT级，输入信号同步解调回到原始频率，同时放大器输入级的失调和1/f噪声会被调制到斩波频率。除了降低初始失调电压之外，失调相对于共模电压的变化也会缩小，从而获得非常好的直流线性度和高共模抑制比（CMRR）。斩波还会降低失调电压温漂。因此采用斩波技术的放大器常被称为
+<strong>零漂移（Zero-Offset）放大器</strong> 。</p>
+<p>但需要注意一点，这种放大器 <strong>仅仅消除了放大器自身的 1/f
+噪声，任何其他来源的 1/f 噪声会不受影响地通过</strong>。</p>
+<p>使用斩波技术的缺点也是显而易见的，它会将开关伪像引入输出并提高输入偏置电流，在示波器上查看时可以看到放大器输出上的毛刺和纹波，用频谱分析仪查看时可以在噪声频谱密度中看到噪声尖峰，这些高频能量是在CHOPPING的时候混入信号的。不过ADI也有最新的技术去最大化减小这种开关伪像。就是图中的
+<code>Offset and Ripple Correction Loop</code>。</p>
 <center>
 <p>时域中的输出电压噪声</p>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/11.png" alt="High-Frequency Noise Ripple" border="0"/></p>
@@ -395,7 +434,9 @@ V_{n, rms}(F_L, F_H) = V_{nw} \sqrt{F_C \ln [{F_C \over F_H}] + (F_H - F_C)}
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%94%B5%E8%B7%AF%E4%B8%AD%E7%9A%84%E5%99%AA%E5%A3%B0/12.jpg" alt="Lock-in Amplifier" border="0"/></p>
 </center>
-<p>传感器输出正弦波调制信号以控制光源。利用光电检测器电路检测信号。一旦信号通过信号调理级，便可进行解调。利用相同正弦波调制和解调信号。解调使传感器输出回到直流段，但也将信号调理级的1/f噪声移至调制频率。解调既可在模拟域中完成，也可在ADC转换之后的数字域中完成。利用非常窄的低通滤波器（例如0.01 Hz）抑制DC以上的噪声，这样只剩下原始传感器输出，以及极低的残留噪声。这里要求传感器输出恰好在DC，因此正弦波的精度和保真度很重要。同样的，此方法 <strong>可消除信号调理电路的1/f噪声，但不能消除传感器的1/f噪声</strong>。</p>
+<p>传感器输出正弦波调制信号以控制光源。利用光电检测器电路检测信号。一旦信号通过信号调理级，便可进行解调。利用相同正弦波调制和解调信号。解调使传感器输出回到直流段，但也将信号调理级的1/f噪声移至调制频率。解调既可在模拟域中完成，也可在ADC转换之后的数字域中完成。利用非常窄的低通滤波器（例如0.01
+Hz）抑制DC以上的噪声，这样只剩下原始传感器输出，以及极低的残留噪声。这里要求传感器输出恰好在DC，因此正弦波的精度和保真度很重要。同样的，此方法
+<strong>可消除信号调理电路的1/f噪声，但不能消除传感器的1/f噪声</strong>。</p>
 <h2 id="小结语">小结语</h2>
 <blockquote>
 <p>1/f噪声会限制精密直流信号链的性能。然而，可以利用斩波和交流激励等技术来消除1/f噪声。采用这些技术需权衡利弊，但现代放大器和Σ-Δ型转换器已解决这些问题，使得零漂移产品更容易使用且终端应用范围更广。</p>
@@ -407,16 +448,25 @@ V_{n, rms}(F_L, F_H) = V_{nw} \sqrt{F_C \ln [{F_C \over F_H}] + (F_H - F_C)}
 <li>有时读数非常稳定，能连续保持几分钟不跳动，但有时候会非常不稳定。</li>
 </ul>
 <p>我十分怀疑这种现象是前端电路的1/f噪声所致，因为它非常符合1/f噪声的特性。</p>
-<p>但是我现在手头没有测量微纳级别噪声的设备，光靠示波器是无法测量到这个级别的信号的，需要搭配噪声放大电路。所以我的下一个计划是做一些噪声放大电路的研究，参考一些模电之神 <strong>Jim Williams</strong>的电路，试着做一个看看。（但是看了下元器件选型要求，感觉自己完全做不起。）</p>
+<p>但是我现在手头没有测量微纳级别噪声的设备，光靠示波器是无法测量到这个级别的信号的，需要搭配噪声放大电路。所以我的下一个计划是做一些噪声放大电路的研究，参考一些模电之神
+<strong>Jim
+Williams</strong>的电路，试着做一个看看。（但是看了下元器件选型要求，感觉自己完全做不起。）</p>
 <p>这次就这样了。下次再见 :)</p>
 <h1 id="引用参考">引用&amp;参考</h1>
-<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9B%9C%E8%A8%8A">噪声-Wiki</a><br />
-<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E7%BA%A6%E7%BF%B0%E9%80%8A%EF%BC%8D%E5%A5%88%E5%A5%8E%E6%96%AF%E7%89%B9%E5%99%AA%E5%A3%B0">约翰逊-奈奎斯特噪声-Wiki</a><br />
-<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B2%89%E7%BA%A2%E5%99%AA%E5%A3%B0">粉红噪声-Wiki</a><br />
-<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%A3%E7%B2%92%E5%99%AA%E5%A3%B0">散粒噪声-Wiki</a><br />
-<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%99%AA%E5%A3%B0%E7%9A%84%E9%A2%9C%E8%89%B2#%E7%81%B0%E5%99%AA%E5%A3%B0">噪声的颜色-Wiki</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.analog.com/media/en/training-seminars/tutorials/MT-048.pdf">运算放大器噪声关系:1/f噪声、RMS噪声和等效噪声带宽</a><br />
-<a target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/understanding-and-eliminating-1-f-noise.html">如何消除或降低1/f噪声</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9B%9C%E8%A8%8A">噪声-Wiki</a><br />
+<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E7%BA%A6%E7%BF%B0%E9%80%8A%EF%BC%8D%E5%A5%88%E5%A5%8E%E6%96%AF%E7%89%B9%E5%99%AA%E5%A3%B0">约翰逊-奈奎斯特噪声-Wiki</a><br />
+<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%B2%89%E7%BA%A2%E5%99%AA%E5%A3%B0">粉红噪声-Wiki</a><br />
+<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%A3%E7%B2%92%E5%99%AA%E5%A3%B0">散粒噪声-Wiki</a><br />
+<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%99%AA%E5%A3%B0%E7%9A%84%E9%A2%9C%E8%89%B2#%E7%81%B0%E5%99%AA%E5%A3%B0">噪声的颜色-Wiki</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.analog.com/media/en/training-seminars/tutorials/MT-048.pdf">运算放大器噪声关系:1/f噪声、RMS噪声和等效噪声带宽</a><br />
+<a
+target="_blank" rel="noopener" href="https://www.analog.com/cn/analog-dialogue/articles/understanding-and-eliminating-1-f-noise.html">如何消除或降低1/f噪声</a></p>
 
     </div>
 
@@ -538,7 +588,7 @@ V_{n, rms}(F_L, F_H) = V_{nw} \sqrt{F_C \ln [{F_C \over F_H}] + (F_H - F_C)}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

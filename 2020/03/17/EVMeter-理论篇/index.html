@@ -144,7 +144,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -260,7 +260,8 @@
       
         <h1 id="evmeter-理论篇">EVMeter-理论篇</h1>
 <p>一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。<br />
-直到我看到了一个 <strong><a target="_blank" rel="noopener" href="http://www.kevinkadooka.com/other-cameras">老外做的测光表</a></strong></p>
+直到我看到了一个 <strong><a
+target="_blank" rel="noopener" href="http://www.kevinkadooka.com/other-cameras">老外做的测光表</a></strong></p>
 <p>其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好)<br />
 难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333</p>
 <h1 id="ev-exposure-value">EV-Exposure Value</h1>
@@ -273,7 +274,8 @@
 <p>其中N是光圈(F value),t是曝光时间(快门),单位秒(s).</p>
 <h2 id="ev-lightlux">EV &amp; Light(Lux)</h2>
 <p>在给定照明条件下所采用的F值与曝光时间由下式给出:</p>
-<p><span class="math display">\[ {N^2 \over t} = {LS \over K} \]</span></p>
+<p><span class="math display">\[ {N^2 \over t} = {LS \over K}
+\]</span></p>
 <p>其中:<br />
 - N是相对光圈(F值)<br />
 - t是曝光时间,单位秒(s)<br />
@@ -281,9 +283,11 @@
 - S是ISO指数<br />
 - K是反射式测光表校正常数</p>
 <p>代入等式右边，得到曝光值:</p>
-<p><span class="math display">\[ E_v = \log_2{LS \over K} \]</span><br />
+<p><span class="math display">\[ E_v = \log_2{LS \over K}
+\]</span><br />
 同样也可以由入射式测光结果计算拍摄参数:<br />
-<span class="math display">\[ {N^2 \over t} = {ES \over C} \]</span><br />
+<span class="math display">\[ {N^2 \over t} = {ES \over C}
+\]</span><br />
 其中: - E是照度<br />
 - C是入射式测光表校正常数<br />
 当然也有:<br />
@@ -299,17 +303,25 @@
 <p>该式的推导如下:<br />
 已知<br />
 <span class="math display">\[ EV = log_2{N^2 \over t}  \]</span><br />
-<span class="math display">\[ {N^2 \over t} = {LS \over K} \]</span><br />
-<span class="math display">\[ \Longrightarrow L = 2^{EV}*{K \over S} \]</span><br />
-<span class="math display">\[ while K=12.5,S=100, \Longrightarrow L = 2^{EV}*0.125=2^{EV-3} \]</span></p>
-<p>入射式测光表的情况比反射式测光表要复杂得多，因为校正常数C与传感器类型有关。有两种传感器很常见：平面型（余弦响应）和半球型（心形响应）。用平面型传感器测量照度时，C 的典型值是250，而照度的单位是勒克斯（lux）。在 C = 250时，照度与感光度100下的曝光值的关系为:<br />
+<span class="math display">\[ {N^2 \over t} = {LS \over K}
+\]</span><br />
+<span class="math display">\[ \Longrightarrow L = 2^{EV}*{K \over S}
+\]</span><br />
+<span class="math display">\[ while K=12.5,S=100, \Longrightarrow L =
+2^{EV}*0.125=2^{EV-3} \]</span></p>
+<p>入射式测光表的情况比反射式测光表要复杂得多，因为校正常数C与传感器类型有关。有两种传感器很常见：平面型（余弦响应）和半球型（心形响应）。用平面型传感器测量照度时，C
+的典型值是250，而照度的单位是勒克斯（lux）。在 C =
+250时，照度与感光度100下的曝光值的关系为:<br />
 <span class="math display">\[ E = 2.5*2^{EV} \]</span></p>
 <p>推导如下:<br />
 已知</p>
 <p><span class="math display">\[ EV = log_2{N^2 \over t} \]</span><br />
-<span class="math display">\[ {N^2 \over t} = {ES \over C} \]</span><br />
-<span class="math display">\[ \Longrightarrow E = 2^{EV}*{C \over S} \]</span><br />
-<span class="math display">\[ while C=250,S=100, \Longrightarrow L = 2.5*2^{EV} \]</span></p>
+<span class="math display">\[ {N^2 \over t} = {ES \over C}
+\]</span><br />
+<span class="math display">\[ \Longrightarrow E = 2^{EV}*{C \over S}
+\]</span><br />
+<span class="math display">\[ while C=250,S=100, \Longrightarrow L =
+2.5*2^{EV} \]</span></p>
 <blockquote>
 <p>尽管（用平面型传感器）测量得到的照度可以用以指示对于一个平面物体的曝光，这一办法对于通常的场景却不是那么有用，因为这些场景中的许多元素都不是平的，其相对于相机的朝向也各不相同。半球型传感器在测量影像曝光时更为实用。对于半球型传感器，C值通常在320（美能达）和340（世光）之间。如果对“照度”的定义不那么严格的话，半球型传感器所测得的结果可以说是指示了“场景照度”。</p>
 </blockquote>
@@ -430,17 +442,23 @@
 </tr>
 </tbody>
 </table>
-<h1 id="对于不同的iso这次是感光度了的修正">对于不同的ISO(这次是感光度了)的修正</h1>
+<h1
+id="对于不同的iso这次是感光度了的修正">对于不同的ISO(这次是感光度了)的修正</h1>
 <p>以上给出的所有数据都是在ISO=100的条件下测得的。<br />
 如果你了解过ISO和曝光补偿,那么你应该知道该怎么做了~</p>
 <p>对于某一感光度S，应当以这一感光度高出（低于）ISO100的曝光挡数进行增减，用公式表示为：</p>
-<p><span class="math display">\[ EV_S = EV_{100} + log_2{S \over 100}.\]</span></p>
+<p><span class="math display">\[ EV_S = EV_{100} + log_2{S \over
+100}.\]</span></p>
 <p>比如,ISO400比ISO100高出2档:<br />
-<span class="math display">\[ EV_{400} = EV_{100} + log_2{400 \over 100} = EV_{100} + 2. \]</span></p>
+<span class="math display">\[ EV_{400} = EV_{100} + log_2{400 \over 100}
+= EV_{100} + 2. \]</span></p>
 <p>对于更低的感光度，以这一感光度低于ISO100的曝光挡数降低曝光值（增加曝光）。比如ISO50比ISO100低了一挡。</p>
-<p><span class="math display">\[ EV_{50} = EV_{100} + log_2{50 \over 100} = EV_{100} - 1. \]</span></p>
+<p><span class="math display">\[ EV_{50} = EV_{100} + log_2{50 \over
+100} = EV_{100} - 1. \]</span></p>
 <h1 id="使用ev表示的曝光补偿">使用EV表示的曝光补偿</h1>
-<p>许多现代照相机都允许设置曝光补偿，并通常用EV这个词来表示。在这种情况下， <strong>EV指的是相机测光数据减去实际曝光值的差。</strong> 比如+1EV的曝光补偿意味着增加一档曝光，不管是通过延长曝光时间还是更小的f值。</p>
+<p>许多现代照相机都允许设置曝光补偿，并通常用EV这个词来表示。在这种情况下，
+<strong>EV指的是相机测光数据减去实际曝光值的差。</strong>
+比如+1EV的曝光补偿意味着增加一档曝光，不管是通过延长曝光时间还是更小的f值。</p>
 <p>在这里，EV的含义和先前刻度系统中的EV（曝光值）恰好是相反的。增加曝光对应于减少曝光值（-EV），因此+1EV的曝光补偿意味着更小的EV（曝光值）；反过来，-1EV的曝光补偿的结果是更大的EV。例如，测得某一比中性灰更亮的物体的EV为16，并设定+1EV的曝光补偿以修正曝光，那么最终的拍摄参数对应于EV15（而不是17）。</p>
 <h1 id="再进一步">再进一步!</h1>
 <p>我们使用相机M档进行拍摄的操作一般是——</p>
@@ -454,7 +472,8 @@
 <p>这个流程应该适用于现在主流的数码相机。。</p>
 <p>那么我们也可以根据这个流程来设计测光表的算法:<br />
 - 输入3个参数<br />
-- 根据传感器获取的光照度和指定的ISO来计算被拍摄场景的EV值，记作EVr(Real)<br />
+-
+根据传感器获取的光照度和指定的ISO来计算被拍摄场景的EV值，记作EVr(Real)<br />
 - 根据3个参数算出EV值，记作EVt(theoretical)<br />
 - 两者做差，得到曝光补偿</p>
 <p>当然,也可以更直接一些:<br />
@@ -466,7 +485,8 @@
 <p>给定ISO、光圈值,计算快门时间:</p>
 <p><span class="math display">\[ t = {N^2 \over S*E} * C  \]</span></p>
 <p>给定光圈值、快门时间,计算ISO:</p>
-<p><span class="math display">\[ S = { { N^2 * E } \over t} * {1 \over C} \]</span></p>
+<p><span class="math display">\[ S = { { N^2 * E } \over t} * {1 \over
+C} \]</span></p>
 <p>给定快门时间、ISO,计算光圈F值:<br />
 <span class="math display">\[ N = \sqrt {S*E*t \over C} \]</span></p>
 <p>式中,各参数含义如下:<br />
@@ -474,7 +494,8 @@
 - N-光圈F值,典型的如f2.8、f4、f5.6......<br />
 - S-ISO值,典型的如100、200、320、400、800、1600......<br />
 - E-入射式测光传感器得到的照度值,单位lux(勒克斯),由传感器给出<br />
-- C-平面型传感器测量照度时的校正常数,默认250,需要根据硬件结构等不定因素适当调整</p>
+-
+C-平面型传感器测量照度时的校正常数,默认250,需要根据硬件结构等不定因素适当调整</p>
 <p>至此，我们的理论部分就算作结束了~接下来就是激动人心的画板子写代码time了！(orz)</p>
 <h1 id="codeworks">Codeworks</h1>
 <p>今天我调了半天,写出了初代曝光参数计算算法,数据结构和C没学好(我太菜了),所以并不会做优化。。。在x86平台上使用vscode编写,g++编译调试,测试初步通过。</p>
@@ -546,7 +567,8 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>注意这里返回的是16位长无符号整数,因为我们最后要显示的是1/x秒，而不是长达5、6位的小数。。。</p>
 <p>分析完这个,那么其他的算法对我们来说应该都是小case了。。。除后面有一个需要开根号取对数的操作有点绕,别的都ok</p>
-<p>要注意的是,在计算光圈的最近标准值时,index那里的逻辑需要反过来,因为iso和shutter都是从小到大排序建表的, <strong>而光圈数值是这样建的,可物理意义是反过来的</strong></p>
+<p>要注意的是,在计算光圈的最近标准值时,index那里的逻辑需要反过来,因为iso和shutter都是从小到大排序建表的,
+<strong>而光圈数值是这样建的,可物理意义是反过来的</strong></p>
 <h2 id="test">Test!</h2>
 <p>以下是几个测试结果，从结果初步来看，效果不错~</p>
 <blockquote>
@@ -569,9 +591,12 @@
 <p>当然是激动人心的实践环节~<br />
 请看下集~</p>
 <h2 id="reference">Reference</h2>
-<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9B%9D%E5%85%89%E5%80%BC">Wikipedia-EV</a><br />
-<a target="_blank" rel="noopener" href="https://photo.stackexchange.com/questions/10093/how-to-calculate-lux-from-ev">StackExchange</a><br />
-<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5401738/how-to-convert-between-lux-and-exposure-value">StackOverflow</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9B%9D%E5%85%89%E5%80%BC">Wikipedia-EV</a><br />
+<a
+target="_blank" rel="noopener" href="https://photo.stackexchange.com/questions/10093/how-to-calculate-lux-from-ev">StackExchange</a><br />
+<a
+target="_blank" rel="noopener" href="https://stackoverflow.com/questions/5401738/how-to-convert-between-lux-and-exposure-value">StackOverflow</a></p>
 
     </div>
 
@@ -694,7 +719,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截铜">
+  <meta name="description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PCB设计基础-退耦技术">
 <meta property="og:url" content="https://floydfish.xyz/2022/08/14/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截铜">
+<meta property="og:description" content="在上一篇文章 PCB设计基础-常识篇 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——退耦技术。 无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。 导线不是导线 看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。 拿起一截">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/copper_wire.jpg">
 <meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_parastic.png">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -260,7 +260,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在上一篇文章 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/pcb_design_basic_common_sense/">PCB设计基础-常识篇</a></strong> 中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——<strong>退耦技术</strong>。</p>
+        <p>在上一篇文章 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/pcb_design_basic_common_sense/">PCB设计基础-常识篇</a></strong>
+中,相信你已经对PCB设计有了初步的了解。这次我们来了解一个非常重要的知识——<strong>退耦技术</strong>。</p>
 <p>无论是设计数字电路还是模拟电路、高速电路还是精密电路，退耦技术都是保证电路性能的有力技术保障。不过想要深入地理解退耦的原理，还是比较痛苦的...我们先从导线的物理模型讲起。</p>
 <h1 id="导线不是导线">导线不是导线</h1>
 <p>看起来有些分裂的一句话，不过往后看，相信会略微颠覆一些你的认知。</p>
@@ -268,16 +270,26 @@
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/copper_wire.jpg" border="0"/></p>
 </center>
-<p>我相信你第一个想到的是它的 <strong>电阻</strong>。没错，我也是这么想的。但是这是对于直流信号来说的最主要的参数。但对于交变电流，它的身份一下子复杂了几个维度。</p>
+<p>我相信你第一个想到的是它的
+<strong>电阻</strong>。没错，我也是这么想的。但是这是对于直流信号来说的最主要的参数。但对于交变电流，它的身份一下子复杂了几个维度。</p>
 <span id="more"></span>
 <h2 id="寄生参数">寄生参数</h2>
-<p><strong>寄生参数(Parastic elements)</strong> 是一个电子元器件所拥有的除自身本应有的参数之外的参数，而这个寄生参数通常是我们 <strong>不想要的</strong>。比如一个电阻器，我们只希望它拥有电阻这一个属性，然而在真实世界中它同样会具有电感值和电容值，而多出来的电感&amp;电容值就是寄生参数。</p>
+<p><strong>寄生参数(Parastic elements)</strong>
+是一个电子元器件所拥有的除自身本应有的参数之外的参数，而这个寄生参数通常是我们
+<strong>不想要的</strong>。比如一个电阻器，我们只希望它拥有电阻这一个属性，然而在真实世界中它同样会具有电感值和电容值，而多出来的电感&amp;电容值就是寄生参数。</p>
 <center>
 <p>一个贴片封装的1206陶瓷电容，同时具有寄生电感、寄生电容和等效串联电阻(ESR)参数<br />
-(选自信号完整性与电源完整性分析-Eric Bogatin) <img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_parastic.png" border="0"/></p>
+(选自信号完整性与电源完整性分析-Eric Bogatin)
+<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_parastic.png" border="0"/></p>
 </center>
-<p>通常来说，我们的电路如果工作在较低频率段或者直流，这些寄生参数所带来的影响可以忽略不计，但一旦来到 <strong>高速及射频(300kHz数量级以上)</strong> 的领域，我们电路的性能往往由这些寄生参数所决定。</p>
-<p>举个例子，我们去 <strong><a target="_blank" rel="noopener" href="https://www.murata.com/zh-cn">村田(Murata)的官网</a></strong> 找到SimSurfing选型工具，然后随便点开一个电容的 <strong>阻抗-频率特性</strong> 图表，可以看到在低频区域(约250kHz以下)该电容呈现了电容的特性——频率越高，阻抗越小，而在该转折点之后，反倒呈现了电感的特性——频率越高，阻抗越大。</p>
+<p>通常来说，我们的电路如果工作在较低频率段或者直流，这些寄生参数所带来的影响可以忽略不计，但一旦来到
+<strong>高速及射频(300kHz数量级以上)</strong>
+的领域，我们电路的性能往往由这些寄生参数所决定。</p>
+<p>举个例子，我们去 <strong><a
+target="_blank" rel="noopener" href="https://www.murata.com/zh-cn">村田(Murata)的官网</a></strong>
+找到SimSurfing选型工具，然后随便点开一个电容的
+<strong>阻抗-频率特性</strong>
+图表，可以看到在低频区域(约250kHz以下)该电容呈现了电容的特性——频率越高，阻抗越小，而在该转折点之后，反倒呈现了电感的特性——频率越高，阻抗越大。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/murata_c.png" border="0"/></p>
 </center>
@@ -296,7 +308,8 @@
 </center>
 <p>我重写一下就是:</p>
 <p><span class="math display">\[
-寄生电感= 0.0002 * L[\ln{ 2L \over (W+H)} + 0.2235({W+H \over L})+0.5] (uH)
+寄生电感= 0.0002 * L[\ln{ 2L \over (W+H)} + 0.2235({W+H \over L})+0.5]
+(uH)
 \]</span></p>
 <h3 id="导线焊盘的寄生电容">导线、焊盘的寄生电容</h3>
 <p>别忘了，<strong>任何两个彼此绝缘的导体之间都可以看作一个电容</strong>。对于PCB上的走线、焊盘都是如此。</p>
@@ -326,12 +339,21 @@
 </ul>
 <p>而在设计时,需要根据具体的应用和需求来做决定。</p>
 <h1 id="去耦decoupling">去耦(decoupling)</h1>
-<p>如果电源引脚上存在纹波或噪声，大多数IC的性能将会有所下降:数字IC的噪声裕量会降低、时钟抖动可能会增加，如果纹波较为严重，甚至会达到不能正常工作的程度。而模拟IC(运算放大器等)则是会在输出中直接耦合了电源纹波或噪声。🐟之前写的 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong> 中对于这一块有详细的介绍。</p>
-<p>退耦，又称 <strong>去耦(decoupling)</strong> ，意思是 <code>去除电源轨上的耦合噪声</code>。用于去耦的电容就被称作 <strong>去耦电容(decoupling capacitor)</strong>。本文的重点就要讲解如何去耦~</p>
-<p>顺便，<strong>几乎所有的IC的参考设计中</strong> 都会添加去耦电容。至少🐟看了这么多数据手册，无论是opa、adc/dac、mcu、FPGA、flash、...，它们的reference design的电路图中无一例外地在电源轨上添加了去耦电容。</p>
+<p>如果电源引脚上存在纹波或噪声，大多数IC的性能将会有所下降:数字IC的噪声裕量会降低、时钟抖动可能会增加，如果纹波较为严重，甚至会达到不能正常工作的程度。而模拟IC(运算放大器等)则是会在输出中直接耦合了电源纹波或噪声。🐟之前写的
+<strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong>
+中对于这一块有详细的介绍。</p>
+<p>退耦，又称 <strong>去耦(decoupling)</strong> ，意思是
+<code>去除电源轨上的耦合噪声</code>。用于去耦的电容就被称作
+<strong>去耦电容(decoupling
+capacitor)</strong>。本文的重点就要讲解如何去耦~</p>
+<p>顺便，<strong>几乎所有的IC的参考设计中</strong>
+都会添加去耦电容。至少🐟看了这么多数据手册，无论是opa、adc/dac、mcu、FPGA、flash、...，它们的reference
+design的电路图中无一例外地在电源轨上添加了去耦电容。</p>
 <h2 id="纹波噪声从何而来">纹波&amp;噪声从何而来？</h2>
 <p>我们来设想一个数模混合系统。在这个电路中,3.3V电源轨上接了一个工作频率160MHz的单片机，同时还接了一个低压运算放大器,用于调理某个传感器的信号,并将调理好的信号送入ADC进行采样。</p>
-<p>通常我们的直觉是,用电器消耗的电流是恒定的——即从上电那一刻，电源输出的电流就不再变化。然而仅仅是美好的幻想。单片机在空闲时消耗的电流和执行计算任务或操作外设时消耗的电流有很大的差别。而工作在160MHz主频下的单片机的电源是时刻变化的:<strong>可能上一微秒需要1mA电流，下一微秒就会需要5mA。</strong>。而不断快速变化的电流就会在电源轨的导线(具有电阻和电感)上产生不断变化的电压，也就产生了高频 <strong>纹波(Ripple)</strong>。你可以拿示波器看看高速数字器件的电源轨，很dirty的。</p>
+<p>通常我们的直觉是,用电器消耗的电流是恒定的——即从上电那一刻，电源输出的电流就不再变化。然而仅仅是美好的幻想。单片机在空闲时消耗的电流和执行计算任务或操作外设时消耗的电流有很大的差别。而工作在160MHz主频下的单片机的电源是时刻变化的:<strong>可能上一微秒需要1mA电流，下一微秒就会需要5mA。</strong>。而不断快速变化的电流就会在电源轨的导线(具有电阻和电感)上产生不断变化的电压，也就产生了高频
+<strong>纹波(Ripple)</strong>。你可以拿示波器看看高速数字器件的电源轨，很dirty的。</p>
 <h2 id="电容类型">电容类型</h2>
 <p>我们首先来看一个实际电容的更为复杂的等效电路。它有寄生和等效参数如下:</p>
 <ul>
@@ -351,7 +373,8 @@
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/cap_bode.png" border="0"/></p>
 </center>
-<p>这些阻抗-频率曲线的 <strong>谷处</strong> 的宽度、位置和凹凸程度都取决于电容的各项寄生参数。虽然不同电容的曲线不同，但都有着同样的规律——即低频区域由ESR主导，高频区域由ESL主导，转折点由自谐振频率决定。<br />
+<p>这些阻抗-频率曲线的 <strong>谷处</strong>
+的宽度、位置和凹凸程度都取决于电容的各项寄生参数。虽然不同电容的曲线不同，但都有着同样的规律——即低频区域由ESR主导，高频区域由ESL主导，转折点由自谐振频率决定。<br />
 铝电解电容具有较高的ESR，所以阻抗曲线随着频率从0慢慢升高,逐渐趋近于一个较大的值(约几百mΩ)，而陶瓷电容的ESR较小,所以能降低到更低的值。下表是部分不同类型的电容的特性对比:</p>
 <table>
 <colgroup>
@@ -405,7 +428,9 @@
 <ol type="1">
 <li>铝电解电容</li>
 </ol>
-<p>多数去耦应用中不建议使用"通用型铝电解电容"，但 <strong>高频型铝电解电容</strong> 被设计成可以在数百kHz的频率下处理高频脉冲电流，且具有低损耗特性，在某些场景下高频铝电解可以媲美固态钽电容，但通用铝电解电容不推荐。</p>
+<p>多数去耦应用中不建议使用"通用型铝电解电容"，但
+<strong>高频型铝电解电容</strong>
+被设计成可以在数百kHz的频率下处理高频脉冲电流，且具有低损耗特性，在某些场景下高频铝电解可以媲美固态钽电容，但通用铝电解电容不推荐。</p>
 <ol start="2" type="1">
 <li>钽电容</li>
 </ol>
@@ -415,6 +440,13 @@
 </ol>
 <p>陶瓷电容，或多层陶瓷(MLCC)具有尺寸紧凑和低损耗特性，通常是数MHz以上的首选电容材料。但是陶瓷电容分为多种介质种类，不同介质的MLCC电气性能相差很大。下表是一些常见类型的陶瓷电容对比:</p>
 <table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 11%" />
+<col style="width: 48%" />
+<col style="width: 7%" />
+<col style="width: 25%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>材质</th>
@@ -460,8 +492,11 @@
 </ol>
 <p>薄膜型电容一般要使用绕线和长引脚，这将极大增加ESL，因此不太适合用于电源去耦场合。相对的，薄膜型电容更适合用于音频场合。</p>
 <h3 id="电容去耦技术小结">电容去耦技术小结</h3>
-<p>多层陶瓷(MLCC)表面贴装电容的极低电感设计可提供近乎最佳的高频&amp;射频旁路，因此在10MHz或更高频率下的去耦电容多数会选择使用MLCC。封装体积更小的陶瓷芯片电容工作频率范围 <strong>可达1GHz</strong>。对于高频应用中的这些及其他电容，可通过选择自谐振频率高于最高工作频率的电容，确保去耦电容的有效性。</p>
-<p>当然，一般推荐的做法是—— <strong>使用一个大容量(10uF-100uF)的电解电容并联若干小容量的陶瓷电容</strong> 来完成去耦。去耦电容的原理和使用方法如下:</p>
+<p>多层陶瓷(MLCC)表面贴装电容的极低电感设计可提供近乎最佳的高频&amp;射频旁路，因此在10MHz或更高频率下的去耦电容多数会选择使用MLCC。封装体积更小的陶瓷芯片电容工作频率范围
+<strong>可达1GHz</strong>。对于高频应用中的这些及其他电容，可通过选择自谐振频率高于最高工作频率的电容，确保去耦电容的有效性。</p>
+<p>当然，一般推荐的做法是——
+<strong>使用一个大容量(10uF-100uF)的电解电容并联若干小容量的陶瓷电容</strong>
+来完成去耦。去耦电容的原理和使用方法如下:</p>
 <ul>
 <li>大电容的作用是充当IC的动态电荷库,在芯片的输出功率动态变化时,电容就近给芯片提供能量,无需从远端的电源获取。<br />
 </li>
@@ -469,7 +504,8 @@
 </li>
 <li>去耦电容应该尽可能靠近芯片,同时具有最短的回流路径,这对PCB布局布线提出了要求<br />
 </li>
-<li>Impotant: <strong>所有的去耦电容都应该使用尽可能短的连接线连接到一块低阻抗地平面，以最小化引线电感</strong>(同时可满足最短回流路径)</li>
+<li>Impotant:
+<strong>所有的去耦电容都应该使用尽可能短的连接线连接到一块低阻抗地平面，以最小化引线电感</strong>(同时可满足最短回流路径)</li>
 </ul>
 <p>下图展示了电容去耦的正确布线技术。左图中,电容一端紧靠着IC的正电源引脚,另一端通过过孔直接接入PCB下方的完整地平面,这样就可以实现最短的去耦路径。而右图中,去耦电容的另一端通过一段导线连接到IC的GND引脚，看似是较短路径，实则这一段导线的ESL和ESR远不如完整地平面的小。并且，这样连接同时还形成了一个闭合的环路，这将使得该电源环路更容易被其他电路干扰，同时更容易导致各种信号完整性问题。</p>
 <center>
@@ -480,13 +516,16 @@
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/decoupling_2.png" border="0"/></p>
 </center>
 <h2 id="劲更大的lc去耦与磁珠">劲更大的LC去耦与磁珠</h2>
-<p>同样的，在🐟之前写的 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong> 中已经详细地介绍了无源LC滤波器在电源去耦中的应用。当时我使用LC滤波器的目的是为了滤除在LDO输出端由上级开关电源产生的纹波,其实也相当于去耦，不过去耦一般是相对于负载来说的，而电源芯片一般就叫滤波了~</p>
+<p>同样的，在🐟之前写的 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/precision-power-supply-design/">精密低噪声电源设计-理论篇</a></strong>
+中已经详细地介绍了无源LC滤波器在电源去耦中的应用。当时我使用LC滤波器的目的是为了滤除在LDO输出端由上级开关电源产生的纹波,其实也相当于去耦，不过去耦一般是相对于负载来说的，而电源芯片一般就叫滤波了~</p>
 <h3 id="磁珠与电感的区别">磁珠与电感的区别</h3>
 <p>之前的文章中提到了,使用LC滤波器会导致该电路有谐振点。如果选择元件不恰当，反而会增强目标频段的纹波和噪声。</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/lc_adi.png" border="0"/></p>
 </center>
-<p>正常走线的寄生电感也会和电容产生谐振点。例如一个0.1uF的电容和具有1nH ESL的走线将在16MHz左右产生谐振。单纯地使用LC来完成去耦,可能会出现谐振增强的现象。具体增强与否与电路Q值有关，如果在电感后串入一个小电阻,可以有效降低Q值，避免这种增强现象。</p>
+<p>正常走线的寄生电感也会和电容产生谐振点。例如一个0.1uF的电容和具有1nH
+ESL的走线将在16MHz左右产生谐振。单纯地使用LC来完成去耦,可能会出现谐振增强的现象。具体增强与否与电路Q值有关，如果在电感后串入一个小电阻,可以有效降低Q值，避免这种增强现象。</p>
 <p>当然这个小电阻需要尽可能地小，以降低电阻的压降。也可以使用铁氧体磁珠来代替小电阻完成这一工作，磁珠的直流导通电阻接近于0。铁氧体磁珠在谐振频率下主要呈现为阻性，所以使用磁珠也会降低电路的有效Q值。典型铁氧体磁珠的阻抗-频率曲线如下图所示:</p>
 <center>
 <p><img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/PCB%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80-%E9%80%80%E8%80%A6%E6%8A%80%E6%9C%AF/ferrite_bead.png" border="0"/></p>
@@ -624,7 +663,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

@@ -20,23 +20,13 @@
     var CONFIG = {"hostname":"floydfish.xyz","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":24,"offset":16,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="本文首发于 Emoe工作室。 本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~ 前言——树莓派是什么？ 树莓派（Raspberry Pi） 是基于Linux的单板电脑 （Single Board Computer,简称SBC），由英国 树莓派基金会 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的diy">
+  <meta name="description" content="本文首发于 Emoe工作室。 本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~ 前言——树莓派是什么？ 树莓派（Raspberry Pi） 是基于Linux的单板电脑 （Single Board Computer,简称SBC），由英国 树莓派基金会 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的d">
 <meta property="og:type" content="article">
 <meta property="og:title" content="把闲置的树莓派变成一个监视器">
 <meta property="og:url" content="https://floydfish.xyz/2021/06/30/%E6%8A%8A%E9%97%B2%E7%BD%AE%E7%9A%84%E6%A0%91%E8%8E%93%E6%B4%BE%E5%8F%98%E6%88%90%E4%B8%80%E4%B8%AA%E7%9B%91%E8%A7%86%E5%99%A8/index.html">
 <meta property="og:site_name" content="月之暗面">
-<meta property="og:description" content="本文首发于 Emoe工作室。 本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~ 前言——树莓派是什么？ 树莓派（Raspberry Pi） 是基于Linux的单板电脑 （Single Board Computer,简称SBC），由英国 树莓派基金会 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的diy">
+<meta property="og:description" content="本文首发于 Emoe工作室。 本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~ 前言——树莓派是什么？ 树莓派（Raspberry Pi） 是基于Linux的单板电脑 （Single Board Computer,简称SBC），由英国 树莓派基金会 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的d">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/5.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/6.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/7.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/1.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/2.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/4.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/3.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/9.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/8.png">
-<meta property="og:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/IMG_9925.jpg">
 <meta property="article:published_time" content="2021-06-30T02:17:51.000Z">
 <meta property="article:modified_time" content="2022-03-02T12:09:43.871Z">
 <meta property="article:author" content="Floyd-Fish">
@@ -44,7 +34,6 @@
 <meta property="article:tag" content="教程">
 <meta property="article:tag" content="树莓派">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/5.png">
 
 <link rel="canonical" href="https://floydfish.xyz/2021/06/30/%E6%8A%8A%E9%97%B2%E7%BD%AE%E7%9A%84%E6%A0%91%E8%8E%93%E6%B4%BE%E5%8F%98%E6%88%90%E4%B8%80%E4%B8%AA%E7%9B%91%E8%A7%86%E5%99%A8/">
 
@@ -149,7 +138,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">45</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">46</span></a>
 
   </li>
   </ul>
@@ -263,10 +252,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>本文首发于 <strong><a target="_blank" rel="noopener" href="https://www.emoe.xyz">Emoe工作室</a></strong>。</p>
+        <p>本文首发于 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz">Emoe工作室</a></strong>。</p>
 <p>本文是树莓派板块下的第一篇文章,所以先介绍一下树莓派吧~</p>
 <h1 id="前言树莓派是什么">前言——树莓派是什么？</h1>
-<p><strong>树莓派（Raspberry Pi）</strong> 是基于Linux的单板电脑 <strong>（Single Board Computer,简称SBC）</strong>，由英国 <strong><a target="_blank" rel="noopener" href="https://www.raspberrypi.org/">树莓派基金会</a></strong> 开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育<br />
+<p><strong>树莓派（Raspberry Pi）</strong> 是基于Linux的单板电脑
+<strong>（Single Board Computer,简称SBC）</strong>，由英国 <strong><a
+target="_blank" rel="noopener" href="https://www.raspberrypi.org/">树莓派基金会</a></strong>
+开发，目的是以低价硬件及自由软件促进学校的基本计算机科学教育<br />
 当然,他也不仅仅只用来做教育,树莓派也可以成为广大爱好者玩家手中的diy利器,原因在于以下几点:</p>
 <ol type="1">
 <li>树莓派的生态十分丰富,有大量公司、团体和个人为其完善了从硬件到软件的生态链<br />
@@ -280,7 +273,10 @@
 <p>我们拿最新版的树莓派4B举例子。</p>
 <ul>
 <li><p>硬件</p>
-<p>树莓派的主CPU是博通公司的BCM系列SoC（System on Chip）,最新版的树莓派4B使用的是 <strong>BCM2711</strong>,具有4核心1.5GHz A72（Quad-core Cortex-A72 （ARM v8） 64-bit SoC @ 1.5 GHz）,这颗SoC具有丰富的外设比如GPIO、SPI、I2C、PWM、UART、PCIe总线、HDMI等,在树莓派4B上外设接口如下:</p>
+<p>树莓派的主CPU是博通公司的BCM系列SoC（System on
+Chip）,最新版的树莓派4B使用的是 <strong>BCM2711</strong>,具有4核心1.5GHz
+A72（Quad-core Cortex-A72 （ARM v8） 64-bit SoC @ 1.5
+GHz）,这颗SoC具有丰富的外设比如GPIO、SPI、I2C、PWM、UART、PCIe总线、HDMI等,在树莓派4B上外设接口如下:</p>
 <ul>
 <li>2 x Micro HDMI接口（4k@60fps）<br />
 </li>
@@ -302,15 +298,23 @@
 </ul></li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/5.png" alt="" /><figcaption>interface</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/5.png"
+alt="interface" />
+<figcaption aria-hidden="true">interface</figcaption>
 </figure>
 <ul>
 <li><p>软件</p>
-<p>树莓派能运行Raspbian(基于Debian的树莓派定制操作系统)、Ubuntu等嵌入式Linux操作系统,当然也有Windows IoT等奇怪的系统,甚至还有人在上面移植了RTOS...</p>
-<p>当你已经可以运行Linux on ARM之后,你就可以把它当作一台标准计算机使用了<sub>你可以在上面运行gcc、python解释器,配合使用各种库与软件包,能解锁这片SBC的全部潜力</sub></p></li>
+<p>树莓派能运行Raspbian(基于Debian的树莓派定制操作系统)、Ubuntu等嵌入式Linux操作系统,当然也有Windows
+IoT等奇怪的系统,甚至还有人在上面移植了RTOS...</p>
+<p>当你已经可以运行Linux on
+ARM之后,你就可以把它当作一台标准计算机使用了<sub>你可以在上面运行gcc、python解释器,配合使用各种库与软件包,能解锁这片SBC的全部潜力</sub></p></li>
 </ul>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/6.png" alt="" /><figcaption>os</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/6.png"
+alt="os" />
+<figcaption aria-hidden="true">os</figcaption>
 </figure>
 <ul>
 <li><p>应用</p>
@@ -341,7 +345,10 @@
 <p>国外的树莓派开源社区，有非常多的开源项目分享，是个找灵感的好地方</p>
 </blockquote>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/7.png" alt="" /><figcaption>oshw</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/7.png"
+alt="oshw" />
+<figcaption aria-hidden="true">oshw</figcaption>
 </figure>
 <p>总之树莓派是个非常强大的开发平台,<code>虽然也有同类产品的性能比他更优秀,但树莓派仍然是我认为的最好的入门嵌入式、Linux开发平台之一</code>。为什么？因为别的产品的生态远没有树莓派丰富，非专业人员拿到手根本不会用啊喂。。</p>
 <h1 id="emoemonitor">EmoeMonitor</h1>
@@ -353,33 +360,48 @@
 </li>
 <li>我想做个能实时显示服务器的资源使用情况的监视器,使远端数据可视化,就像钟表一样。<br />
 </li>
-<li>额外的，我想玩玩IoT,搭建一个MQTT Broker并跑一套前后端来实现室内的电器控制与环境感测</li>
+<li>额外的，我想玩玩IoT,搭建一个MQTT
+Broker并跑一套前后端来实现室内的电器控制与环境感测</li>
 </ul>
 <p>基于以上需求,我就有了这个项目的原动力~<br />
 那么我需要做什么呢?怎么做?</p>
 <h1 id="原理图-pcb">原理图 &amp; PCB</h1>
 <p>我想的是使用一块外接TFT作为数据可视化的窗口。但是网上卖的3.5寸左右TFT全都是与树莓派平行的，我要它能够直立起来,免得我伸脖子去看(</p>
 <p>既然在淘宝上找不到类似的产品，那就只能自己造轮子咯——<br />
-我之前做 <strong>EmoePower</strong> 的时候买了3倍的物料,所以还剩下2块2.8寸 320x240分辨率的TFT屏幕,所以我直接用这块屏了~<br />
+我之前做 <strong>EmoePower</strong>
+的时候买了3倍的物料,所以还剩下2块2.8寸
+320x240分辨率的TFT屏幕,所以我直接用这块屏了~<br />
 老样子,使用KiCad绘制原理图与PCB,非常简单,用一个40pin排母夹住板子边缘就可以让PCB直立起来。<br />
 当然,我发挥了传统艺能,在板子后面贴了2个传感器。</p>
 <ol type="1">
 <li>原理图</li>
 </ol>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/1.png" alt="" /><figcaption>sch</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/1.png"
+alt="sch" />
+<figcaption aria-hidden="true">sch</figcaption>
 </figure>
 <ol start="2" type="1">
 <li>PCB</li>
 </ol>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/2.png" alt="" /><figcaption>pcb</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/2.png"
+alt="pcb" />
+<figcaption aria-hidden="true">pcb</figcaption>
 </figure>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/4.png" alt="" /><figcaption>pcb_front</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/4.png"
+alt="pcb_front" />
+<figcaption aria-hidden="true">pcb_front</figcaption>
 </figure>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/3.png" alt="" /><figcaption>pcb_back</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/3.png"
+alt="pcb_back" />
+<figcaption aria-hidden="true">pcb_back</figcaption>
 </figure>
 <p>式姐好好看！</p>
 <h1 id="软件">软件</h1>
@@ -392,8 +414,10 @@
 </ul>
 <p>这时候闲着无聊的宋学姐贴了过来,了解了我的需求之后,他用java写了一个server~<br />
 github链接如下</p>
-<p><strong><a target="_blank" rel="noopener" href="https://github.com/jinyi-x/ServerResourceProbe">ServerResourceProbe-Github</a></strong></p>
-<p>它会获取服务器的CPU与内存使用情况,还有服务器的运行时间(他偷了个懒,获取的是Java Server运行的时间...),将这些数据打包发给Client。</p>
+<p><strong><a
+target="_blank" rel="noopener" href="https://github.com/jinyi-x/ServerResourceProbe">ServerResourceProbe-Github</a></strong></p>
+<p>它会获取服务器的CPU与内存使用情况,还有服务器的运行时间(他偷了个懒,获取的是Java
+Server运行的时间...),将这些数据打包发给Client。</p>
 <p>在客户端(Client)，跟服务器的接口对接上后,获取到的数据将被保存到一个本地的json文件中以待使用。</p>
 <h2 id="点屏方案">点屏方案</h2>
 <p>说到这个我可就不困了啊)<br />
@@ -435,25 +459,41 @@ github链接如下</p>
 <h2 id="blinka与micropython">Blinka与MicroPython</h2>
 <p>标准的Python是没有底层硬件的API的,也就是说使用标准Python不能控制底层硬件的行为。</p>
 <p>而MicroPython是专为嵌入式处理器量身剪裁的<code>轻量级</code>Python解释器框架,通常是针对特定的处理器平台进行定制化,在MicroPython中就可以使用能直接控制硬件的API和函数。MicroPython可以在很多硬件平台上运行,比如STM32、AVR单片机(Arduino)、ESP32、K210等处理器上。</p>
-<p>这是MicroPython的官方网站,还挺好玩的(主要是方便偷懒): <strong>https://micropython.org/</strong></p>
-<p>但是我们使用的是运行在树莓派上的标准Python,就像在普通的电脑上的Python一样,是不具有MicroPython的直通底层API的。这时候有许多第三方库就站出来了——比如 <strong>RPi.GPIO</strong>库,它就提供了所有直通树莓派底层硬件接口的Python函数。当然还有别的库,比如 <strong>GPIO Zero</strong>。</p>
+<p>这是MicroPython的官方网站,还挺好玩的(主要是方便偷懒):
+<strong>https://micropython.org/</strong></p>
+<p>但是我们使用的是运行在树莓派上的标准Python,就像在普通的电脑上的Python一样,是不具有MicroPython的直通底层API的。这时候有许多第三方库就站出来了——比如
+<strong>RPi.GPIO</strong>库,它就提供了所有直通树莓派底层硬件接口的Python函数。当然还有别的库,比如
+<strong>GPIO Zero</strong>。</p>
 <p>那么为什么还要Blinka呢...<br />
-简单来说,Blinka是 <strong>"套娃之娃"</strong>。它相当于一个翻译官,将Python代码翻译成底层硬件操作代码。（当然这个过程貌似是调用RPi.GPIO实现的）使用Blinka的好处是,它将所有与硬件操作相关的Python语法规范化了,这个规范当然就是<code>CircuitPython</code>的规范咯（CircuitPython是一种MicroPython的变体）。Blinka是Adafruit开发出来用于在不同硬件平台上快速移植CircuitPython代码的。(Linux小企鹅比蟒蛇还是可爱点)</p>
+简单来说,Blinka是
+<strong>"套娃之娃"</strong>。它相当于一个翻译官,将Python代码翻译成底层硬件操作代码。（当然这个过程貌似是调用RPi.GPIO实现的）使用Blinka的好处是,它将所有与硬件操作相关的Python语法规范化了,这个规范当然就是<code>CircuitPython</code>的规范咯（CircuitPython是一种MicroPython的变体）。Blinka是Adafruit开发出来用于在不同硬件平台上快速移植CircuitPython代码的。(Linux小企鹅比蟒蛇还是可爱点)</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/9.png" alt="" /><figcaption>Py&amp;Linux</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/9.png"
+alt="Py&amp;Linux" />
+<figcaption aria-hidden="true">Py&amp;Linux</figcaption>
 </figure>
 <blockquote>
 <p>比如说,我有3块开发板,STM32F4、树莓派4B、ESP32,我如果想要点亮一个LED,需要写3套不同框架下的代码。但如果使用MicroPython框架,我只需要一份代码就可以了~<br />
 以下是MicroPython支持的处理器平台（图源Adafruit）</p>
 </blockquote>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/8.png" alt="" /><figcaption>cPy</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/8.png"
+alt="cPy" />
+<figcaption aria-hidden="true">cPy</figcaption>
 </figure>
-<p>而我为什么不用别的Python库呢？因为别的Python库没有 <strong>ili9341（这块LCD屏幕的控制器）</strong> 的驱动库,而Adafruit家有一个库叫 <code>adafruit_rgb_display</code> ,这个库中包含了多达十几种屏幕控制器,其中就包含了ili9341。</p>
-<p>这是Adafruit编写的Blinka的安装过程，请参考: <strong>https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi</strong></p>
+<p>而我为什么不用别的Python库呢？因为别的Python库没有
+<strong>ili9341（这块LCD屏幕的控制器）</strong>
+的驱动库,而Adafruit家有一个库叫 <code>adafruit_rgb_display</code>
+,这个库中包含了多达十几种屏幕控制器,其中就包含了ili9341。</p>
+<p>这是Adafruit编写的Blinka的安装过程，请参考:
+<strong>https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi</strong></p>
 <p>我还是简要概括1下Setup吧...</p>
-<h3 id="install-blinka-on-raspberry-pi">Install Blinka on Raspberry Pi</h3>
-<p>我运行的OS是 <strong>树莓派爱好者基地</strong> 编译的基于Debian的64位发行版,当然推荐使用官方Raspbian系统。</p>
+<h3 id="install-blinka-on-raspberry-pi">Install Blinka on Raspberry
+Pi</h3>
+<p>我运行的OS是 <strong>树莓派爱好者基地</strong>
+编译的基于Debian的64位发行版,当然推荐使用官方Raspbian系统。</p>
 <ol type="1">
 <li><p>事前工作——当然是装好Raspbian系统辣</p></li>
 <li><p>升级树莓派与Python3（注意,python2不支持）<br />
@@ -628,7 +668,10 @@ x <span class="token operator">=</span> <span class="token number">0</span>
 <p>看我使用柔焦滤镜拍出来的——<br />
 （焦锐奶化，毒德大学（bushi））</p>
 <figure>
-<img src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/IMG_9925.jpg" alt="" /><figcaption>monitor</figcaption>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E6%A0%91%E8%8E%93%E6%B4%BE-%E7%9B%91%E8%A7%86%E5%99%A8/IMG_9925.jpg"
+alt="monitor" />
+<figcaption aria-hidden="true">monitor</figcaption>
 </figure>
 <h1 id="fin"><del>Fin</del></h1>
 <p>如果你对这个项目感兴趣，或者想要看看我的PCB设计文件,请联系我(因为不是什么大项目所以懒得开个repo了...)</p>
@@ -740,7 +783,8 @@ x <span class="token operator">=</span> <span class="token number">0</span>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%E6%A0%91%E8%8E%93%E6%B4%BE%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">前言——树莓派是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">树莓派能做什么?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#emoemonitor"><span class="nav-number">2.</span> <span class="nav-text">EmoeMonitor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE-pcb"><span class="nav-number">3.</span> <span class="nav-text">原理图 &amp; PCB</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7"><span class="nav-number">4.1.</span> <span class="nav-text">服务器资源监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%82%B9%E5%B1%8F%E6%96%B9%E6%A1%88"><span class="nav-number">4.2.</span> <span class="nav-text">点屏方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#blinka%E4%B8%8Emicropython"><span class="nav-number">4.3.</span> <span class="nav-text">Blinka与MicroPython</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#install-blinka-on-raspberry-pi"><span class="nav-number">4.3.1.</span> <span class="nav-text">Install Blinka on Raspberry Pi</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coding..."><span class="nav-number">4.4.</span> <span class="nav-text">Coding...</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">运行效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fin"><span class="nav-number">6.</span> <span class="nav-text">Fin</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80%E6%A0%91%E8%8E%93%E6%B4%BE%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">前言——树莓派是什么？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E8%8E%93%E6%B4%BE%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">树莓派能做什么?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#emoemonitor"><span class="nav-number">2.</span> <span class="nav-text">EmoeMonitor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE-pcb"><span class="nav-number">3.</span> <span class="nav-text">原理图 &amp; PCB</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BD%AF%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">软件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7"><span class="nav-number">4.1.</span> <span class="nav-text">服务器资源监控</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%82%B9%E5%B1%8F%E6%96%B9%E6%A1%88"><span class="nav-number">4.2.</span> <span class="nav-text">点屏方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#blinka%E4%B8%8Emicropython"><span class="nav-number">4.3.</span> <span class="nav-text">Blinka与MicroPython</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#install-blinka-on-raspberry-pi"><span class="nav-number">4.3.1.</span> <span class="nav-text">Install Blinka on Raspberry
+Pi</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#coding..."><span class="nav-number">4.4.</span> <span class="nav-text">Coding...</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">运行效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fin"><span class="nav-number">6.</span> <span class="nav-text">Fin</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -756,7 +800,7 @@ x <span class="token operator">=</span> <span class="token number">0</span>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
