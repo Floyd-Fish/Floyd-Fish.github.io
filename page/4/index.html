@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">51</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">52</span></a>
 
   </li>
   </ul>
@@ -161,6 +161,127 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" class="post-title-link" itemprop="url">神奇的锁定放大器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-03 15:47:19" itemprop="dateCreated datePublished" datetime="2021-08-03T15:47:19+08:00">2021-08-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-02 20:16:42" itemprop="dateModified" datetime="2022-03-02T20:16:42+08:00">2022-03-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="神奇的锁定放大器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言">前言</h1>
+<p>最近在CNPP同学处嫖到一片ADI公司生产的 <strong>AD630</strong>
+，这是一款平衡调制/解调器IC，有非常多的用途，其中之一就是锁定放大器，具体作用体现在——它能从相对于信号100dB的噪声中恢复出被噪声淹没的信号!</p>
+<figure>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/1.jpg"
+alt="我看不懂，但我大受震撼.jpg" />
+<figcaption aria-hidden="true">我看不懂，但我大受震撼.jpg</figcaption>
+</figure>
+<p>100dB是什么概念呢?</p>
+<p><span class="math display">\[
+20\lg{S} = 100dB
+\]</span></p>
+<p><span class="math display">\[
+S = {Vpp(noise)\over{Vpp(Signal)}} = 10^5 = 10万倍
+\]</span></p>
+<p>比如...我的信号Vpp为10uV，噪声的Vpp为1V，这时S就是100dB。而AD630
+<strong>据说（可不是瞎说，他Datasheet上标的...）</strong>
+能将我的信号从这汹涌的噪声洪流中将它还原出来...</p>
+<p>这不得来试一试？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/03/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1499,116 +1620,6 @@ type-c数据线即可轻松升级......等等等等(坑逐渐扩张.jpg)</p>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
-      <meta itemprop="name" content="Floyd-Fish">
-      <meta itemprop="description" content="-Actually it doesn't exist">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="月之暗面">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" class="post-title-link" itemprop="url">EVMeter-理论篇</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-17 19:17:53" itemprop="dateCreated datePublished" datetime="2020-03-17T19:17:53+08:00">2020-03-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 20:14:12" itemprop="dateModified" datetime="2022-01-30T20:14:12+08:00">2022-01-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" class="post-meta-item leancloud_visitors" data-flag-title="EVMeter-理论篇" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="evmeter-理论篇">EVMeter-理论篇</h1>
-<p>一直对单反的自动测光原理很感兴趣,可没学过光学和光电传感器相关知识的我一直都不知道怎样实现它。<br />
-直到我看到了一个 <strong><a
-target="_blank" rel="noopener" href="http://www.kevinkadooka.com/other-cameras">老外做的测光表</a></strong></p>
-<p>其实很简单，只需要一个普通的光强传感器(精度越高越好,动态范围越大越好)<br />
-难的部分(也是困扰我的部分)是计算的算法,好在查wiki可以查到,还以为是什么相机厂商的黑科技呢(23333</p>
-<h1 id="ev-exposure-value">EV-Exposure Value</h1>
-<p>曝光值代表能够给出同样曝光的所有相机光圈和快门的组合。这一概念是在一九五零年代在德国发展起来的，被试图用以简化在等价的拍摄参数之间进行选择的过程。曝光值同样也可以表示曝光刻度上的一个级差，1EV对应于两倍的曝光比例并通常被称为“一挡”</p>
-<p>曝光值最早是使用符号Ev来表示,ISO标准中(不是感光的那个ISO,是国际标准化组织)延续了这一标记法,但在其他地方EV这个缩写更常见~</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1680,7 +1691,7 @@ target="_blank" rel="noopener" href="http://www.kevinkadooka.com/other-cameras">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-count">52</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
