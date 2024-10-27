@@ -133,7 +133,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">52</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">53</span></a>
 
   </li>
   </ul>
@@ -161,6 +161,127 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
+      <meta itemprop="name" content="Floyd-Fish">
+      <meta itemprop="description" content="-Actually it doesn't exist">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="月之暗面">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" class="post-title-link" itemprop="url">做一个锁定放大器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-13 01:50:12" itemprop="dateCreated datePublished" datetime="2021-08-13T01:50:12+08:00">2021-08-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-02 20:18:29" itemprop="dateModified" datetime="2022-03-02T20:18:29+08:00">2022-03-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="做一个锁定放大器" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="做一个锁定放大器">做一个锁定放大器！</h1>
+<p><strong>本文同步于emoe工作室</strong></p>
+<p>想必你已经康过 <strong><a
+target="_blank" rel="noopener" href="https://www.emoe.xyz/lock-in-amplifier-design/">上一篇文章</a></strong>
+了~（什么？还没看？快点去啊( •_•)&gt;⌐■-■）</p>
+<p>根据上一篇文章所讲述的锁定放大器的原理，我制作了一个利用
+<strong>高速比较器 + 模拟开关</strong> 实现的锁定放大器。<br />
+使用KiCad设计，唔文件就不放了，挺简单的，如果你想要的话进群找我吧:p</p>
+<h1 id="pcb">PCB—</h1>
+<p>嗯，在某板厂打的骚紫色，4号下的单今天才发过来...无语子~<br />
+设计上我采用了4层板设计，主要信号线走在顶层上，拉不过去的话就走底层，中间层为2个电源层（正负轨），底层铺地平面。</p>
+<figure>
+<img
+src="https://emoe-blog.oss-cn-hangzhou.aliyuncs.com/article_img/%E7%A5%9E%E5%A5%87%E7%9A%84%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/%E7%BB%AD/addons11.jpg"
+alt="Soldiering" />
+<figcaption aria-hidden="true">Soldiering</figcaption>
+</figure>
+<p>画简单板子我喜欢把所有元件都放在正面，这样焊接起来非常方便。我使用了巨好用的
+<code>铁板烧</code>（恒温陶瓷PTC发热片）来当作加热台，它能加热到200多度的高温且恒温，非常适合用来配合锡膏焊接贴片元件。先给空板预热一下，然后用牙签沾一点锡膏点到焊盘上，锡膏在高温的（这个温度很讲究，既要让锡膏软化又不能让他直接变成液相金属锡）的流动性非常棒。点完锡膏之后就可以贴元件了。贴好就像上面这样。</p>
+<p>然后就可以再次开启铁板烧，将锡膏全部熔化~</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/08/13/%E5%81%9A%E4%B8%80%E4%B8%AA%E9%94%81%E5%AE%9A%E6%94%BE%E5%A4%A7%E5%99%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1495,131 +1616,6 @@ alt="JUMdfS.md.png" /></a></p>
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://floydfish.xyz/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://0.gravatar.com/avatar/3d822406e357734f231535566345e4e7?s=400&d=mm">
-      <meta itemprop="name" content="Floyd-Fish">
-      <meta itemprop="description" content="-Actually it doesn't exist">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="月之暗面">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" class="post-title-link" itemprop="url">EVMeter-石剑篇</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-03-18 23:19:50" itemprop="dateCreated datePublished" datetime="2020-03-18T23:19:50+08:00">2020-03-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-30 20:14:28" itemprop="dateModified" datetime="2022-01-30T20:14:28+08:00">2022-01-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%B5%E5%AD%90/" itemprop="url" rel="index"><span itemprop="name">电子</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" class="post-meta-item leancloud_visitors" data-flag-title="EVMeter-石剑篇" title="阅读次数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="evmeter-石剑篇">EVMeter-石剑篇</h1>
-<p>在阅读本文之前，你也许应该看看 <strong><a
-href="https://floydfish.xyz/2020/03/17/EVMeter-%E7%90%86%E8%AE%BA%E7%AF%87/">EVMeter-理论篇</a></strong></p>
-<h1 id="设计蓝图">设计蓝图</h1>
-<p>继上次我们分析了测光表的原理，并do了一点math之后，我们得到了lux与曝光参数之间的直接关联，由此我们可以设计一个测光表，我想让它具有这样的特性:</p>
-<ul>
-<li>使用高精度平面入射型光传感器,直接输出lux值<br />
-</li>
-<li>配备辅助RGB传感器，同时可以得到色温数据(其实就是一个光传感器+拜尔滤色镜)<br />
-</li>
-<li>使用0.96英寸128x64的OLED屏幕实现数据可视化,并提供良好的UI互动界面<br />
-</li>
-<li>使用3个按键进行人机交互,其中一个切换功能键，另外2个调整数据<br />
-</li>
-<li>小型化，电路板大小3x5cm,配备3D打印外壳,可以直接安装到相机的热靴上<br />
-</li>
-<li>使用锂电池供电,尽量采用低功耗设计思路,使用600mAh的电池,同时提供micro-usb接口充电<br />
-</li>
-<li>具有升级接口(ST-LINK),方便后续调试、升级算法<br />
-</li>
-<li>具有掉电保存上次操作设置的功能。使用外接EEPROM实现(因为便宜(￣▽￣)")</li>
-</ul>
-<p>并且,这是初代鸡。我还想给他添加更多更酷的特性，比如用旋转编码器(类似单反上的拨轮)来代替3个笨拙的按键,使用镀漆的航空铝型材做外壳,将micro-usb升级成type-c,并且板载ST-LINK,只需一根usb
-type-c数据线即可轻松升级......等等等等(坑逐渐扩张.jpg)</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/18/EVMeter-%E7%9F%B3%E5%89%91%E7%AF%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1691,7 +1687,7 @@ type-c数据线即可轻松升级......等等等等(坑逐渐扩张.jpg)</p>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
